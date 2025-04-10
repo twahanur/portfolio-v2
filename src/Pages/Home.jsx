@@ -28,7 +28,7 @@ const MainTitle = memo(() => (
       <span className="relative inline-block">
         <span className="absolute -inset-2 bg-gradient-to-r from-[#6366f1] to-[#a855f7] blur-2xl opacity-20"></span>
         <span className="relative bg-gradient-to-r from-white via-blue-100 to-purple-200 bg-clip-text text-transparent">
-          Web
+          Junior
         </span>
       </span>
       <br />
@@ -80,7 +80,7 @@ const SocialLink = memo(({ icon: Icon, link }) => (
 const TYPING_SPEED = 100;
 const ERASING_SPEED = 50;
 const PAUSE_DURATION = 2000;
-const WORDS = ["Worst Case handler", "Backend Developer", "Junior Developer"];
+const WORDS = ["Backend Developer", "Junior Developer","Fullstack Developer","Programming Enthusiast", "Tech Explorer"];
 const TECH_STACK = ["React", "Next", "Node.js", "Prisma", "Postgresql", "MongoDB"];
 const SOCIAL_LINKS = [
   { icon: Github, link: "https://github.com/twahanur" },
@@ -162,9 +162,9 @@ const Home = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#030014] overflow-hidden" id="Home">
+    <div className="min-h-screen  bg-[#030014] overflow-hidden" id="Home">
       <div className={`relative z-10 transition-all duration-1000 ${isLoaded ? "opacity-100" : "opacity-0"}`}>
-        <div className="container mx-auto px-[5%] sm:px-6 lg:px-[0%] min-h-screen">
+        <div className="container mx-auto px-[5%] sm:px-6 lg:px-[5%] min-h-screen">
           <div className="flex flex-col lg:flex-row items-center justify-center h-screen md:justify-between gap-0 sm:gap-12 lg:gap-20">
             {/* Left Column */}
             <div className="w-full lg:w-1/2 space-y-6 sm:space-y-8 text-left lg:text-left order-1 lg:order-1 lg:mt-0"
