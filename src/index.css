@@ -114,7 +114,13 @@ body {
 	}
   }
 
-
+a#logo{
+	display: none !important;
+	height: 200px !important;
+	width: 200px !important;
+	color: red !important;
+	background-color: blueviolet !important;
+}
 
   .container {
 	width: 100%;
