@@ -191,3 +191,10 @@ a#logo{
 	user-select: none;
 	cursor: default;
   }
+
+  .outline-text {
+	color: transparent;
+	-webkit-text-stroke: 1.5px #a855f7; /* Violet-pink stroke */
+	text-stroke: 1.5px #a855f7;
+  }
+  
