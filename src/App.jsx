@@ -11,7 +11,7 @@ import ContactPage from "./Pages/Contact";
 import ProjectDetails from "./components/ProjectDetail";
 import WelcomeScreen from "./Pages/WelcomeScreen";
 import { AnimatePresence } from 'framer-motion';
-import SplineViewer from "./components/SplineViewer";
+
 
 const LandingPage = ({ showWelcome, setShowWelcome }) => {
   return (
@@ -24,7 +24,11 @@ const LandingPage = ({ showWelcome, setShowWelcome }) => {
 
       {!showWelcome && (
         <>
+        <div className="sticky top-0 z-50 bg-[#030014] backdrop-blur-sm shadow-lg">
+
           <Navbar />
+
+        </div>
           <AnimatedBackground />
           <Home />
           <About />
