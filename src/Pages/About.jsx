@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import DecryptedText from "../components/AnimationComponents/DecryotedText";
 
 // Memoized Components
 const Header = memo(() => (
@@ -23,7 +24,13 @@ const Header = memo(() => (
         data-aos="zoom-in-up"
         data-aos-duration="600"
       >
-        About Me
+        <DecryptedText
+          text="About Me"
+          speed={120}
+          sequential={false}
+          animateOn="view"
+          revealDirection="center"
+        />
       </h2>
     </div>
     <p
@@ -32,7 +39,12 @@ const Header = memo(() => (
       data-aos-duration="800"
     >
       <Sparkles className="w-5 h-5 text-purple-400" />
-      Transforming ideas into digital experiences
+      <DecryptedText
+        text="Transforming ideas into digital experiences"
+        speed={50}
+        sequential={false}
+        animateOn="view"
+      />
       <Sparkles className="w-5 h-5 text-purple-400" />
     </p>
   </div>
@@ -224,14 +236,26 @@ const AboutPage = () => {
               data-aos-duration="1000"
             >
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#6366f1] to-[#a855f7]">
-                Hello, I'm
+                <DecryptedText
+                  text="Hello, I'm"
+                  speed={50}
+                  sequential={true}
+                  animateOn="view"
+
+                />
               </span>
               <span
                 className="block mt-2 text-gray-200"
                 data-aos="fade-right"
                 data-aos-duration="1300"
               >
-                Twahanur Rahman
+                <DecryptedText
+                  text="Twahanur Rahman"
+                  speed={120}
+                  sequential={true}
+                  animateOn="view"
+
+                />
               </span>
             </h2>
 
@@ -240,10 +264,8 @@ const AboutPage = () => {
               data-aos="fade-right"
               data-aos-duration="1500"
             >
-              self-dependent, enthusiastic, responsible, and deeply interested
-              in learning new things. I work for mobile and web applications. At
-              the moment, I am looking for a suitable opportunity that gives me
-              a scope to utilize my creativity, knowledge, and skill.
+              self-dependent, enthusiastic, responsible, and deeply interested in learning new things. I work for mobile and web applications. At the moment, I am looking for a suitable opportunity that gives me a scope to utilize my creativity, knowledge, and skill.
+              
             </p>
 
             <div className="flex flex-col lg:flex-row items-center lg:items-start gap-4 lg:gap-4 lg:px-0 w-full">
