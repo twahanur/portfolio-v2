@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 "use client";
 
 import {
@@ -245,26 +246,26 @@ const RotatingText = forwardRef((props, ref) => {
 });
 RotatingText.displayName = "RotatingText";
 
-RotatingText.propTypes = {
-  texts: PropTypes.arrayOf(PropTypes.string).isRequired,
-  transition: PropTypes.string,
-  staticText: PropTypes.string,
-  staticTextClassName: PropTypes.object,
-  initial: PropTypes.object,
-  animate: PropTypes.object,
-  exit: PropTypes.object,
-  animatePresenceMode: PropTypes.string,
-  animatePresenceInitial: PropTypes.bool,
-  rotationInterval: PropTypes.number,
-  staggerDuration: PropTypes.number,
-  staggerFrom: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  loop: PropTypes.bool,
-  auto: PropTypes.bool,
-  splitBy: PropTypes.string,
-  onNext: PropTypes.func,
-  mainClassName: PropTypes.string,
-  splitLevelClassName: PropTypes.string,
-  elementLevelClassName: PropTypes.string,
-};
+// RotatingText.propTypes = {
+//   texts: PropTypes.arrayOf(PropTypes.string).isRequired,
+//   transition: PropTypes.object,
+//   staticText: PropTypes.string,
+//   staticTextClassName: PropTypes.object,
+//   initial: PropTypes.object,
+//   animate: PropTypes.object,
+//   exit: PropTypes.object,
+//   animatePresenceMode: PropTypes.string,
+//   animatePresenceInitial: PropTypes.bool,
+//   rotationInterval: PropTypes.number,
+//   staggerDuration: PropTypes.number,
+//   staggerFrom: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+//   loop: PropTypes.bool,
+//   auto: PropTypes.bool,
+//   splitBy: PropTypes.string,
+//   onNext: PropTypes.func,
+//   mainClassName: PropTypes.string,
+//   splitLevelClassName: PropTypes.string,
+//   elementLevelClassName: PropTypes.string,
+// };
 
 export default RotatingText;

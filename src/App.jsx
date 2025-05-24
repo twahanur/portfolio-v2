@@ -13,6 +13,7 @@ import WelcomeScreen from "./Pages/WelcomeScreen";
 import { AnimatePresence } from "framer-motion";
 import ClickSpark from "./components/AnimationComponents/ClickSpark";
 import SplashCursor from "./components/AnimationComponents/SplashCursor";
+import Blog from "./Pages/Blog";
 
 const LandingPage = ({ showWelcome, setShowWelcome }) => {
   return (
@@ -37,9 +38,11 @@ const LandingPage = ({ showWelcome, setShowWelcome }) => {
               <Navbar />
             </div>
             <AnimatedBackground />
+
             <Home />
             <About />
             <Portofolio />
+            <Blog />
             <ContactPage />
             <footer>
               <center>
