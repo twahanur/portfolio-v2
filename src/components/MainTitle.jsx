@@ -14,7 +14,7 @@ const MainTitle = memo(() => {
               showBorder={false}
               className="bg-transparent"
             >
-              Junior
+              Fullstack
             </GradientText>
           </span>
         </span>

@@ -2,10 +2,10 @@
 
 import { Link } from 'react-router-dom';
 import { BookText } from 'lucide-react';
+import { useState } from 'react';
 
 const BlogCard = ({ Img, Title, Description, id }) => {
-
-  console.log(Img, Title, Description, id);
+const [isImageLoaded, setIsImageLoaded] = useState(false)
   const handleDetails = (e) => {
     if (!id) {
       e.preventDefault();
@@ -21,13 +21,21 @@ const BlogCard = ({ Img, Title, Description, id }) => {
         <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-pink-500/10 opacity-50 group-hover:opacity-70 transition-opacity duration-300"></div>
     
         <div className="relative p-5 z-10">
-          <div className="relative overflow-hidden rounded-lg">
-            <img
-              src={Img}
-              alt={Title}
-              className="w-full max-h-44 h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
-            />
-          </div>
+          <div className="relative w-full h-44 md:h-64 rounded-2xl overflow-hidden">
+                <img
+                  src={Img}
+                  alt={Title}
+                  className={`w-full h-full object-cover rounded-2xl transition-opacity duration-500 ${
+                    isImageLoaded ? "opacity-100" : "opacity-0"
+                  }`}
+                  onLoad={() => setIsImageLoaded(true)}
+                />
+                {!isImageLoaded && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-gray-800/50 rounded-2xl">
+                    <div className="w-12 h-12 border-4 border-blue-500/30 border-t-blue-500 rounded-full animate-spin" />
+                  </div>
+                )}
+              </div>
           
           <div className="mt-4 space-y-3">
             <h3 className="text-xl font-semibold bg-gradient-to-r from-blue-200 via-purple-200 to-pink-200 bg-clip-text text-transparent">

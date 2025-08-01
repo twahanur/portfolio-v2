@@ -139,13 +139,11 @@ export default function FullWidthTabs() {
     try {
       const projectCollection = collection(db, "projects");
       const certificateCollection = collection(db, "certificates");
-      const blogCollection = collection(db, "blogs");
 
-      const [projectSnapshot, certificateSnapshot, blogSnapshot] =
+      const [projectSnapshot, certificateSnapshot] =
         await Promise.all([
           getDocs(projectCollection),
           getDocs(certificateCollection),
-          getDocs(blogCollection),
         ]);
 
       const projectData = projectSnapshot.docs.map((doc) => ({
@@ -155,8 +153,6 @@ export default function FullWidthTabs() {
       }));
 
       const certificateData = certificateSnapshot.docs.map((doc) => doc.data());
-      const blogData = blogSnapshot.docs.map((doc) => doc.data());
-      // console.log("Fetching data from Firestore...", blogData);
 
       setProjects(projectData);
       setCertificates(certificateData);
@@ -197,6 +193,7 @@ export default function FullWidthTabs() {
       className="md:px-[10%] px-[5%] w-full sm:mt-0 mt-[3rem] bg-[#030014] overflow-hidden"
       id="Portofolio"
     >
+      
       {/* Header section - unchanged */}
       <PortfolioHeader />
 

@@ -17,6 +17,9 @@ const BlogHeader = () => {
             revealDirection="center"
           />
         </h2>
+       <p className="text-slate-400 max-w-2xl mx-auto text-sm md:text-base mt-2">
+          Dive into insightful articles on programming, web development, and emerging technologies. &quot;Tech Talk&quot; is where I share lessons learned, tips, and deep dives from real-world coding experiences and ongoing explorations in the tech world
+        </p>
       </div>
     </div>
   );

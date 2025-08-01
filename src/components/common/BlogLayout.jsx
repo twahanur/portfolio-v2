@@ -3,7 +3,7 @@ import Navbar from "../Navbar";
 
 const BlogLayout = () => (
   <>
-  <Navbar/>
+  {/* <Navbar/> */}
     <BlogDetails />
     <footer>
       <center>

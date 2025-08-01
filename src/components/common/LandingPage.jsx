@@ -10,6 +10,9 @@ import Portofolio from "../../Pages/Portofolio";
 import Blog from "../../Pages/Blog";
 import ContactPage from "../../Pages/Contact";
 import PropTypes from "prop-types";
+import Education from "../../Pages/Education";
+import Footer from "../../Pages/Footer";
+import TargetCursor from "../AnimationComponents/TargetCursor";
 
 const LandingPage = ({ showWelcome, setShowWelcome }) => {
   return (
@@ -23,6 +26,10 @@ const LandingPage = ({ showWelcome, setShowWelcome }) => {
       {!showWelcome && (
         <>
         <SplashCursor/>
+        <TargetCursor
+                spinDuration={2}
+                hideDefaultCursor={false}
+              />
           <ClickSpark
             sparkColor="#fff"
             sparkSize={10}
@@ -37,21 +44,11 @@ const LandingPage = ({ showWelcome, setShowWelcome }) => {
 
             <Home />
             <About />
+            <Education />
             <Portofolio />
             <Blog />
             <ContactPage />
-            <footer>
-              <center>
-                <hr className="my-3 border-gray-400 opacity-15 sm:mx-auto lg:my-6 text-center" />
-                <span className="block text-sm pb-4 text-gray-500 text-center dark:text-gray-400">
-                  © 2023{" "}
-                  <a href="https://flowbite.com/" className="hover:underline">
-                    Twahanur™
-                  </a>
-                  . All Rights Reserved.
-                </span>
-              </center>
-            </footer>
+            <Footer />
           </ClickSpark>
         </>
       )}

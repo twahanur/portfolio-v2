@@ -82,13 +82,15 @@ const PortfolioAppbar = ({value, handleChange}) => {
             }}
           >
             <Tab
+            className='cursor-target'
               icon={
-                <Code className="mb-2 w-5 h-5 transition-all duration-300" />
+                <Code className="mb-2 w-5 h-5   transition-all duration-300" />
               }
               label="Projects"
               {...a11yProps(0)}
             />
             <Tab
+            className='cursor-target'
               icon={
                 <Award className="mb-2 w-5 h-5 transition-all duration-300" />
               }
@@ -96,6 +98,7 @@ const PortfolioAppbar = ({value, handleChange}) => {
               {...a11yProps(1)}
             />
             <Tab
+            className='cursor-target'
               icon={
                 <Boxes className="mb-2 w-5 h-5 transition-all duration-300" />
               }

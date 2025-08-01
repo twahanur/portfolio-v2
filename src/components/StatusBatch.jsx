@@ -13,7 +13,7 @@ const StatusBadge = memo(() => {
         <div className="relative px-3 sm:px-4 py-2 rounded-full bg-black/40 backdrop-blur-xl border border-white/10">
           <span className="bg-gradient-to-r from-[#6366f1] to-[#a855f7] text-transparent bg-clip-text sm:text-sm text-[0.7rem] font-medium flex items-center">
             <Sparkles className="sm:w-4 sm:h-4 w-3 h-3 mr-2 text-blue-400" />
-            Ready to Innovate
+            Driven by Logic, Inspired by Innovation
           </span>
         </div>
       </div>

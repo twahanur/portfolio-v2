@@ -10,7 +10,6 @@ import {
   useState,
 } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import PropTypes from "prop-types";
 import GradientText from "./GradientText";
 
 function cn(...classes) {
@@ -60,18 +59,7 @@ const RotatingText = forwardRef((props, ref) => {
         needsSpace: i !== words.length - 1,
       }));
     }
-    if (splitBy === "words") {
-      return currentText.split(" ").map((word, i, arr) => ({
-        characters: [word],
-        needsSpace: i !== arr.length - 1,
-      }));
-    }
-    if (splitBy === "lines") {
-      return currentText.split("\n").map((line, i, arr) => ({
-        characters: [line],
-        needsSpace: i !== arr.length - 1,
-      }));
-    }
+
     // For a custom separator
     return currentText.split(splitBy).map((part, i, arr) => ({
       characters: [part],
@@ -82,16 +70,7 @@ const RotatingText = forwardRef((props, ref) => {
   const getStaggerDelay = useCallback(
     (index, totalChars) => {
       const total = totalChars;
-      if (staggerFrom === "first") return index * staggerDuration;
       if (staggerFrom === "last") return (total - 1 - index) * staggerDuration;
-      if (staggerFrom === "center") {
-        const center = Math.floor(total / 2);
-        return Math.abs(center - index) * staggerDuration;
-      }
-      if (staggerFrom === "random") {
-        const randomIndex = Math.floor(Math.random() * total);
-        return Math.abs(randomIndex - index) * staggerDuration;
-      }
       return Math.abs(staggerFrom - index) * staggerDuration;
     },
     [staggerFrom, staggerDuration]

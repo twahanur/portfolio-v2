@@ -11,7 +11,6 @@ import TechStack from "../components/TechStack";
 import CTAButton from "../components/CTAButton";
 import SocialLinkBtn from "../components/SocialLink";
 import { DataStore } from "../assets/DataStore";
-import TypingEffect from "../components/TypingEffect";
 
 import Magnet from "../components/AnimationComponents/Magnet";
 import RotatingText from "../components/AnimationComponents/RotetingText";
@@ -78,7 +77,7 @@ const Home = () => {
                 {/* <TypingEffect /> */}
                 <RotatingText
                   texts={DataStore.WORDS}
-                  staticText="Call me : "
+                  staticText="Role : "
                   staticTextClassName="text-gray-400"
                   mainClassName="overflow-hidden py-0.5 sm:py-1 md:py-2 text-3xl rounded-lg"
                   staggerFrom={"last"}
@@ -97,9 +96,7 @@ const Home = () => {
                   data-aos="fade-up"
                   data-aos-delay="1000"
                 >
-                  Self-dependent, enthusiastic, and responsible developer
-                  skilled in mobile and web apps, seeking opportunities to apply
-                  creativity, knowledge, and skills.
+                  ✨ A curious mind crafting scalable systems — I specialize in building backend services that power modern applications.
                 </p>
 
                 {/* Tech Stack */}
@@ -127,6 +124,7 @@ const Home = () => {
                   data-aos-delay="1400"
                 >
                   <CTAButton
+                  
                     href="#Portofolio"
                     text="Projects"
                     icon={ExternalLink}
