@@ -82,7 +82,7 @@ const TimelineCard = ({ data }) => {
         date={item.date}
         icon={section.icon}
         iconStyle={{ background: section.color, color: "#fff" }}
-        contentStyle={{ background: "transparent", boxShadow: "none", padding: "0" }}
+        contentStyle={{ background: "transparent", boxShadow: "none", padding: "0" ,color:"white"}}
         contentArrowStyle={{ borderRight: `7px solid ${section.color}` }}
       >
         {/* --- Pure Tailwind Card Starts Here --- */}
@@ -108,7 +108,7 @@ const TimelineCard = ({ data }) => {
   });
 
   return (
-    <div className="py-8 bg-slate-50 dark:bg-slate-900">
+    <div className="py-8">
       <VerticalTimeline>
         {timelineElements}
         <VerticalTimelineElement
