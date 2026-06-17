@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useMemo, useEffect, useRef } from "react";
-import { motion, useScroll, useTransform, useSpring } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { GraduationCap, Briefcase, Award, ArrowUpRight } from "lucide-react";
 
 const TimelineCard = ({ data }) => {
@@ -21,17 +21,26 @@ console.log(data)
     const elements = [];
 
     // Helper to extract year for watermark
-    const extractYear = (item) => {
-      if (item.passingYear) return String(item.passingYear);
-      if (item.year) return String(item.year);
-      const yearMatch = (item.endDate || item.period || item.date || "").match(/\d{4}/);
-      return yearMatch ? yearMatch[0] : "";
-    };
+ const extractYear = (item) => {
+  if (item.passingYear) return String(item.passingYear);
+  if (item.year) return String(item.year);
+
+  const value = String(item.endDate || item.period || item.date || "");
+
+  // Present / Current handle
+  if (/^(present|current)$/i.test(value.trim())) {
+    return value;
+  }
+
+  const yearMatch = value.match(/\d{4}/);
+
+  return yearMatch ? yearMatch[0] : "";
+};
 
     // 1. Map Experience
     if (data.employmentHistory && Array.isArray(data.employmentHistory)) {
       data.employmentHistory.forEach((item) => {
-        const dateStr = item.startDate && item.endDate ? `${item.startDate.split('-')[0] || item.startDate} – ${item.endDate.split('-')[0] || item.endDate}` : item.period || item.date;
+        const dateStr = item.startDate && item.endDate ? `${item.startDate} – ${item.endDate}` : item.period || item.date;
         elements.push({
           id: `exp-${item.id || item.company}-${item.position}`,
           type: "experience",
@@ -116,19 +125,14 @@ console.log(data)
     return timelineElements.filter((el) => el.type === activeTab);
   }, [timelineElements, activeTab]);
 
-  // Scroll Progress and Spring smoothing for continuous fluid line fill
+  // Scroll Progress for continuous fluid line fill in real-time
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start center", "end center"],
+    trackContentSize: true,
   });
 
-  const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 70,
-    damping: 26,
-    restDelta: 0.001
-  });
-
-  const pathLength = useTransform(smoothProgress, [0.02, 0.98], [0, 1]);
+  const pathLength = useTransform(scrollYProgress, [0.02, 0.98], [0, 1]);
 
   // Measure coordinates of circles relative to container
   const updatePoints = () => {
@@ -150,10 +154,20 @@ console.log(data)
   useEffect(() => {
     updatePoints();
     window.addEventListener("resize", updatePoints);
-    const timer = setTimeout(updatePoints, 120);
+    window.addEventListener("scroll", updatePoints);
+    
+    const t1 = setTimeout(updatePoints, 100);
+    const t2 = setTimeout(updatePoints, 500);
+    const t3 = setTimeout(updatePoints, 1000);
+    const t4 = setTimeout(updatePoints, 2000);
+
     return () => {
       window.removeEventListener("resize", updatePoints);
-      clearTimeout(timer);
+      window.removeEventListener("scroll", updatePoints);
+      clearTimeout(t1);
+      clearTimeout(t2);
+      clearTimeout(t3);
+      clearTimeout(t4);
     };
   }, [filteredElements]);
 
@@ -257,7 +271,7 @@ console.log(data)
                     }`}
                   >
                     {/* Experience Card (takes 80% of width) */}
-                    <div className="w-[80%]" data-aos={isEven ? "fade-right" : "fade-left"}>
+                    <div className="w-[90%]" data-aos={isEven ? "fade-right" : "fade-left"}>
                       <div className="relative bg-[#060713]/85 backdrop-blur-2xl border border-slate-800/70 hover:border-indigo-500/30 rounded-2xl p-7 md:p-9 transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_0_35px_rgba(99,102,241,0.12)] overflow-hidden group">
                         
                         {/* Left edge accent glow */}

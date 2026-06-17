@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Github, Linkedin, Instagram, Facebook, Twitter, Youtube, Globe } from "lucide-react";
 import Magnet from "../components/AnimationComponents/Magnet";
 import SocialLinkBtn from "../components/SocialLink";
+import { fetchAiContext } from "../lib/api";
 
 const Footer = () => {
   const [year] = useState(new Date().getFullYear());
@@ -12,25 +13,21 @@ const Footer = () => {
   useEffect(() => {
     const fetchSocials = async () => {
       try {
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
-        const res = await fetch(`${apiUrl}/api/ai-context`);
-        if (res.ok) {
-          const payload = await res.json();
-          if (payload.success && payload.data?.profile) {
-            const p = payload.data.profile;
-            const socials = [];
-            if (p.github) socials.push({ icon: Github, link: p.github });
-            if (p.linkedin) socials.push({ icon: Linkedin, link: p.linkedin });
-            if (p.instagram) socials.push({ icon: Instagram, link: p.instagram });
-            if (p.facebook) socials.push({ icon: Facebook, link: p.facebook });
-            if (p.twitter) socials.push({ icon: Twitter, link: p.twitter });
-            if (p.youtube) socials.push({ icon: Youtube, link: p.youtube });
-            if (p.stackoverflow) socials.push({ icon: Globe, link: p.stackoverflow });
-            if (p.medium) socials.push({ icon: Globe, link: p.medium });
-            if (p.devto) socials.push({ icon: Globe, link: p.devto });
-            
-            setSocialLinks(socials);
-          }
+        const payload = await fetchAiContext();
+        if (payload.success && payload.data?.profile) {
+          const p = payload.data.profile;
+          const socials = [];
+          if (p.github) socials.push({ icon: Github, link: p.github });
+          if (p.linkedin) socials.push({ icon: Linkedin, link: p.linkedin });
+          if (p.instagram) socials.push({ icon: Instagram, link: p.instagram });
+          if (p.facebook) socials.push({ icon: Facebook, link: p.facebook });
+          if (p.twitter) socials.push({ icon: Twitter, link: p.twitter });
+          if (p.youtube) socials.push({ icon: Youtube, link: p.youtube });
+          if (p.stackoverflow) socials.push({ icon: Globe, link: p.stackoverflow });
+          if (p.medium) socials.push({ icon: Globe, link: p.medium });
+          if (p.devto) socials.push({ icon: Globe, link: p.devto });
+          
+          setSocialLinks(socials);
         }
       } catch (err) {
         console.error("Failed to fetch socials in footer:", err);

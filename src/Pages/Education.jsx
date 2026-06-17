@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import TimelineCard from "../components/TimelineCard";
+import { fetchAiContext } from "../lib/api";
 
 export default function EducationPage() {
   const [timelineData, setTimelineData] = useState({ academicQualification: [], trainingSummary: [] });
@@ -10,12 +11,9 @@ export default function EducationPage() {
   useEffect(() => {
     const fetchEducation = async () => {
       try {
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
-        const res = await fetch(`${apiUrl}/api/ai-context`);
-        if (res.ok) {
-          const payload = await res.json();
-          if (payload.success && payload.data) {
-            const data = payload.data;
+        const payload = await fetchAiContext();
+        if (payload.success && payload.data) {
+          const data = payload.data;
 
             // Map educations
             const educations = (data.educations || []).map((edu) => ({

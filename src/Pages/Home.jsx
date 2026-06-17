@@ -16,6 +16,7 @@ import { DataStore } from "../assets/DataStore";
 
 import Magnet from "../components/AnimationComponents/Magnet";
 import RotatingText from "../components/AnimationComponents/RotetingText";
+import { fetchAiContext } from "../lib/api";
 const { TECH_STACK } = DataStore;
 
 const Home = () => {
@@ -30,47 +31,43 @@ const Home = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
-        const res = await fetch(`${apiUrl}/api/ai-context`);
-        if (res.ok) {
-          const payload = await res.json();
-          if (payload.success && payload.data) {
-            if (payload.data.profile) {
-              const p = payload.data.profile;
-              if (p.words) {
-                const parsedWords = p.words.split(",").map(w => w.trim()).filter(Boolean);
-                if (parsedWords.length > 0) {
-                  setWords(parsedWords);
-                }
+        const payload = await fetchAiContext();
+        if (payload.success && payload.data) {
+          if (payload.data.profile) {
+            const p = payload.data.profile;
+            if (p.words) {
+              const parsedWords = p.words.split(",").map(w => w.trim()).filter(Boolean);
+              if (parsedWords.length > 0) {
+                setWords(parsedWords);
               }
-              if (p.title) {
-                setTitle(p.title);
-              }
-              if (p.bio) {
-                setBio(p.bio);
-              }
+            }
+            if (p.title) {
+              setTitle(p.title);
+            }
+            if (p.bio) {
+              setBio(p.bio);
+            }
 
-              // Build dynamic socials list
-              const socials = [];
-              if (p.github) socials.push({ icon: Github, link: p.github });
-              if (p.linkedin) socials.push({ icon: Linkedin, link: p.linkedin });
-              if (p.instagram) socials.push({ icon: Instagram, link: p.instagram });
-              if (p.facebook) socials.push({ icon: Facebook, link: p.facebook });
-              if (p.twitter) socials.push({ icon: Twitter, link: p.twitter });
-              if (p.youtube) socials.push({ icon: Youtube, link: p.youtube });
-              if (p.stackoverflow) socials.push({ icon: Globe, link: p.stackoverflow });
-              if (p.medium) socials.push({ icon: Globe, link: p.medium });
-              if (p.devto) socials.push({ icon: Globe, link: p.devto });
-              
-              setSocialLinks(socials);
-            }
-            if (payload.data.skills) {
-              const sortedSkills = [...payload.data.skills]
-                .sort((a, b) => a.order - b.order)
-                .map(s => s.name);
-              // Slice to top 8 skills to keep the hero section visually clean and prevent overlap
-              setTechStack(sortedSkills.slice(0, 8));
-            }
+            // Build dynamic socials list
+            const socials = [];
+            if (p.github) socials.push({ icon: Github, link: p.github });
+            if (p.linkedin) socials.push({ icon: Linkedin, link: p.linkedin });
+            if (p.instagram) socials.push({ icon: Instagram, link: p.instagram });
+            if (p.facebook) socials.push({ icon: Facebook, link: p.facebook });
+            if (p.twitter) socials.push({ icon: Twitter, link: p.twitter });
+            if (p.youtube) socials.push({ icon: Youtube, link: p.youtube });
+            if (p.stackoverflow) socials.push({ icon: Globe, link: p.stackoverflow });
+            if (p.medium) socials.push({ icon: Globe, link: p.medium });
+            if (p.devto) socials.push({ icon: Globe, link: p.devto });
+            
+            setSocialLinks(socials);
+          }
+          if (payload.data.skills) {
+            const sortedSkills = [...payload.data.skills]
+              .sort((a, b) => a.order - b.order)
+              .map(s => s.name);
+            // Slice to top 8 skills to keep the hero section visually clean and prevent overlap
+            setTechStack(sortedSkills.slice(0, 8));
           }
         }
       } catch (err) {

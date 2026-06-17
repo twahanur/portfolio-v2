@@ -3,6 +3,7 @@
 import { useEffect, useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { Terminal, Cpu, Database, Server, Settings, ShieldAlert, Award } from "lucide-react";
+import { fetchAiContext } from "../lib/api";
 
 // Helper to match icons to category slugs
 const getCategoryIcon = (slug) => {
@@ -31,16 +32,12 @@ export default function TechStackPage() {
   useEffect(() => {
     const fetchSkills = async () => {
       try {
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
-        const res = await fetch(`${apiUrl}/api/ai-context`);
-        if (res.ok) {
-          const payload = await res.json();
-          if (payload.success && payload.data) {
-            setSkillsData({
-              skills: payload.data.skills || [],
-              skillCategories: payload.data.skillCategories || [],
-            });
-          }
+        const payload = await fetchAiContext();
+        if (payload.success && payload.data) {
+          setSkillsData({
+            skills: payload.data.skills || [],
+            skillCategories: payload.data.skillCategories || [],
+          });
         }
       } catch (err) {
         console.error("Failed to fetch skills data:", err);

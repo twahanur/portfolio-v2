@@ -12,6 +12,8 @@ import {
   ExternalLink
 } from "lucide-react";
 
+import { fetchAiContext } from "../lib/api";
+
 const SOCIAL_CONFIGS = [
   {
     key: "linkedin",
@@ -103,13 +105,9 @@ export default function SocialLinks() {
   useEffect(() => {
     const fetchSocials = async () => {
       try {
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
-        const res = await fetch(`${apiUrl}/api/ai-context`);
-        if (res.ok) {
-          const payload = await res.json();
-          if (payload.success && payload.data?.profile) {
-            setProfile(payload.data.profile);
-          }
+        const payload = await fetchAiContext();
+        if (payload.success && payload.data?.profile) {
+          setProfile(payload.data.profile);
         }
       } catch (err) {
         console.error("Failed to fetch socials:", err);

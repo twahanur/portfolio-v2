@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import { FiSend, FiX } from "react-icons/fi";
 import { TbMessageChatbot, TbSparkles } from "react-icons/tb";
 
+import { fetchAiContext } from "../lib/api";
+
 const starterPrompts = [
   "Summarize Twaha's skills",
   "Which projects does he have?",
@@ -94,26 +96,22 @@ export default function AiPortfolioAssistant() {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
-        const res = await fetch(`${apiUrl}/api/ai-context`);
-        if (res.ok) {
-          const payload = await res.json();
-          if (payload.success && payload.data?.profile) {
-            const p = payload.data.profile;
-            const shortName = p.name ? p.name.trim().split(" ")[0] : "Twaha";
-            setProfile({
-              name: shortName,
-              fullName: p.name || "Twahanur Rahman",
-              email: p.email || "twahanur@gmail.com",
-            });
-            setMessages([
-              {
-                id: "welcome",
-                role: "assistant",
-                content: `Hi, I am ${shortName}'s AI assistant. I can answer questions about projects, skills, education, experience, and contact details. You can also start a project inquiry directly from here!`,
-              },
-            ]);
-          }
+        const payload = await fetchAiContext();
+        if (payload.success && payload.data?.profile) {
+          const p = payload.data.profile;
+          const shortName = p.name ? p.name.trim().split(" ")[0] : "Twaha";
+          setProfile({
+            name: shortName,
+            fullName: p.name || "Twahanur Rahman",
+            email: p.email || "twahanur@gmail.com",
+          });
+          setMessages([
+            {
+              id: "welcome",
+              role: "assistant",
+              content: `Hi, I am ${shortName}'s AI assistant. I can answer questions about projects, skills, education, experience, and contact details. You can also start a project inquiry directly from here!`,
+            },
+          ]);
         }
       } catch (err) {
         console.error("Failed to fetch profile for AI assistant:", err);

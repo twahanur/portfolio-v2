@@ -17,6 +17,7 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import DecryptedText from "../components/AnimationComponents/DecryotedText";
 import useFetchCV from "../components/common/useFetchData";
+import { fetchAiContext } from "../lib/api";
 
 // Memoized Components
 const Header = memo(() => (
@@ -153,18 +154,14 @@ const AboutPage = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
-        const res = await fetch(`${apiUrl}/api/ai-context`);
-        if (res.ok) {
-          const payload = await res.json();
-          if (payload.success && payload.data?.profile) {
-            const p = payload.data.profile;
-            setProfile({
-              name: p.name || "Twahanur Rahman",
-              bio: p.bio || "self-dependent, enthusiastic, responsible, and deeply interested in learning new things. I work for mobile and web applications. At the moment, I am looking for a suitable opportunity that gives me a scope to utilize my creativity, knowledge, and skill.",
-              profilePictureUrl: p.profilePictureUrl || "https://i.ibb.co.com/bjywV4Mn/twahanur-twahanur-rahman-twaha-thohanur-thohanur-rahman.png",
-            });
-          }
+        const payload = await fetchAiContext();
+        if (payload.success && payload.data?.profile) {
+          const p = payload.data.profile;
+          setProfile({
+            name: p.name || "Twahanur Rahman",
+            bio: p.bio || "self-dependent, enthusiastic, responsible, and deeply interested in learning new things. I work for mobile and web applications. At the moment, I am looking for a suitable opportunity that gives me a scope to utilize my creativity, knowledge, and skill.",
+            profilePictureUrl: p.profilePictureUrl || "https://i.ibb.co.com/bjywV4Mn/twahanur-twahanur-rahman-twaha-thohanur-thohanur-rahman.png",
+          });
         }
       } catch (err) {
         console.error("Failed to fetch profile in About page:", err);
