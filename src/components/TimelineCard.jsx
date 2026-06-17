@@ -5,16 +5,8 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { GraduationCap, Briefcase, Award, ArrowUpRight } from "lucide-react";
 
 const TimelineCard = ({ data }) => {
-  const [activeTab, setActiveTab] = useState("all");
   const containerRef = useRef(null);
   const [circlePoints, setCirclePoints] = useState([]);
-console.log(data)
-  const categories = [
-    { id: "all", label: "All Items" },
-    { id: "experience", label: "Experience" },
-    { id: "education", label: "Education" },
-    { id: "training", label: "Certificates & Training" },
-  ];
 
   // Map and normalize elements
   const timelineElements = useMemo(() => {
@@ -119,11 +111,7 @@ console.log(data)
     });
   }, [data]);
 
-  // Filter elements
-  const filteredElements = useMemo(() => {
-    if (activeTab === "all") return timelineElements;
-    return timelineElements.filter((el) => el.type === activeTab);
-  }, [timelineElements, activeTab]);
+  const filteredElements = timelineElements;
 
   // Scroll Progress for continuous fluid line fill in real-time
   const { scrollYProgress } = useScroll({
@@ -195,29 +183,6 @@ console.log(data)
 
   return (
     <div className="max-w-5xl mx-auto py-8">
-      {/* Category Tabs (Rendered only if there's multiple types, e.g., in combined view. We keep it as a premium option) */}
-      {timelineElements.length > 2 && (
-        <div className="flex flex-wrap justify-center gap-2 mb-16" data-aos="fade-up">
-          {categories.map((cat) => {
-            // Count items of this category
-            const count = cat.id === "all" ? timelineElements.length : timelineElements.filter((el) => el.type === cat.id).length;
-            if (count === 0) return null;
-            return (
-              <button
-                key={cat.id}
-                onClick={() => setActiveTab(cat.id)}
-                className={`px-5 py-2 rounded-full text-xs font-semibold transition-all duration-300 border backdrop-blur-md ${
-                  activeTab === cat.id
-                    ? "bg-gradient-to-r from-indigo-500 to-purple-600 border-transparent text-white shadow-[0_0_15px_rgba(99,102,241,0.3)] scale-105"
-                    : "bg-slate-900/40 border-slate-800 text-gray-400 hover:text-gray-200 hover:border-slate-700"
-                }`}
-              >
-                {cat.label}
-              </button>
-            );
-          })}
-        </div>
-      )}
 
       {filteredElements.length === 0 ? (
         <div className="text-center py-12" data-aos="fade-up">
@@ -271,7 +236,7 @@ console.log(data)
                     }`}
                   >
                     {/* Experience Card (takes 80% of width) */}
-                    <div className="w-[90%]" data-aos={isEven ? "fade-right" : "fade-left"}>
+                    <div className="w-[85%]" data-aos={isEven ? "fade-right" : "fade-left"}>
                       <div className="relative bg-[#060713]/85 backdrop-blur-2xl border border-slate-800/70 hover:border-indigo-500/30 rounded-2xl p-7 md:p-9 transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_0_35px_rgba(99,102,241,0.12)] overflow-hidden group">
                         
                         {/* Left edge accent glow */}

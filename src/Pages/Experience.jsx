@@ -44,7 +44,6 @@ export default function ExperiencePage() {
               employmentHistory: experiences,
             });
           }
-        }
       } catch (err) {
         console.error("Failed to fetch experience data:", err);
       } finally {

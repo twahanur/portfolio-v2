@@ -75,6 +75,9 @@ export interface Skill {
   name: string;
   category: string;
   order: number;
+  color?: string;
+  iconColor?: string;
+  iconName?: string;
 }
 
 export interface Certificate {

@@ -45,7 +45,6 @@ export default function EducationPage() {
               trainingSummary: training,
             });
           }
-        }
       } catch (err) {
         console.error("Failed to fetch education data:", err);
       } finally {

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Skill, SkillCategory } from "../types";
 import { adminRequest } from "@/lib/admin-api";
-import { FiLoader, FiPlus, FiTrash2, FiMove, FiFolder, FiFolderPlus, FiCpu } from "react-icons/fi";
+import { FiLoader, FiPlus, FiTrash2, FiMove, FiFolder, FiFolderPlus, FiCpu, FiEdit2 } from "react-icons/fi";
 import FormField from "./ui/FormField";
 import AdminMessage from "./ui/AdminMessage";
 
@@ -21,6 +21,10 @@ export default function SkillsPanel({
   const [name, setName] = useState("");
   const [category, setCategory] = useState("");
   const [order, setOrder] = useState(0);
+  const [color, setColor] = useState("");
+  const [iconColor, setIconColor] = useState("");
+  const [iconName, setIconName] = useState("");
+  const [editingSkill, setEditingSkill] = useState<Skill | null>(null);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({ text: "", type: "" });
   const [draggedSkill, setDraggedSkill] = useState<Skill | null>(null);
@@ -121,21 +125,54 @@ export default function SkillsPanel({
     setMessage({ text: "", type: "" });
 
     try {
-      await adminRequest("/api/skills", "POST", {
+      const payload = {
         name,
         category: activeCategory,
         order: Number(order),
-      });
+        color: color.trim() || null,
+        iconColor: iconColor.trim() || null,
+        iconName: iconName.trim() || null,
+      };
+
+      if (editingSkill) {
+        await adminRequest(`/api/skills/${editingSkill.id}`, "PUT", payload);
+        showMessage("Skill updated successfully!", "success");
+        setEditingSkill(null);
+      } else {
+        await adminRequest("/api/skills", "POST", payload);
+        showMessage("Skill added successfully!", "success");
+      }
       setName("");
       setOrder(0);
-      showMessage("Skill added successfully!", "success");
+      setColor("");
+      setIconColor("");
+      setIconName("");
       onRefresh();
     } catch (err: any) {
       console.error(err);
-      showMessage(err.message || "Failed to add skill", "error");
+      showMessage(err.message || `Failed to save skill`, "error");
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleEditSkill = (skill: Skill) => {
+    setEditingSkill(skill);
+    setName(skill.name);
+    setCategory(skill.category);
+    setOrder(skill.order);
+    setColor(skill.color || "");
+    setIconColor(skill.iconColor || "");
+    setIconName(skill.iconName || "");
+  };
+
+  const handleCancelEdit = () => {
+    setEditingSkill(null);
+    setName("");
+    setOrder(0);
+    setColor("");
+    setIconColor("");
+    setIconName("");
   };
 
   const handleDeleteSkill = async (id: string) => {
@@ -296,11 +333,13 @@ export default function SkillsPanel({
             </form>
           </div>
 
-          {/* Add Skill Form */}
+          {/* Add / Edit Skill Form */}
           <div className="space-y-6 rounded-2xl border border-zinc-800 bg-zinc-900/20 p-6 backdrop-blur-md h-fit">
             <div className="flex items-center gap-2">
               <FiCpu className="text-emerald-400" size={18} />
-              <h3 className="text-lg font-bold text-zinc-100">Add Skill</h3>
+              <h3 className="text-lg font-bold text-zinc-100">
+                {editingSkill ? "Edit Skill" : "Add Skill"}
+              </h3>
             </div>
 
             <form onSubmit={handleSubmitSkill} className="space-y-4">
@@ -329,20 +368,54 @@ export default function SkillsPanel({
                 onChange={(val) => setOrder(Number(val))}
               />
 
-              <button
-                type="submit"
-                disabled={loading || initialCategories.length === 0}
-                className="flex w-full items-center justify-center gap-2 rounded-xl bg-zinc-100 py-3 text-sm font-bold text-zinc-950 shadow hover:bg-zinc-50 disabled:opacity-50 transition active:scale-[0.97]"
-              >
-                {loading ? (
-                  <FiLoader className="animate-spin text-zinc-950" size={18} />
-                ) : (
-                  <>
-                    <FiPlus size={18} />
-                    Add Skill
-                  </>
+              <FormField
+                label="Badge Color (Hex Color Code)"
+                placeholder="e.g. #6366f1"
+                value={color}
+                onChange={setColor}
+              />
+
+              <FormField
+                label="Icon Color (Hex Color Code)"
+                placeholder="e.g. #a855f7"
+                value={iconColor}
+                onChange={setIconColor}
+              />
+
+              <FormField
+                label="React Icon Name (Optional)"
+                placeholder="e.g. FaNodeJs, DiPython"
+                value={iconName}
+                onChange={setIconName}
+              />
+
+              <div className="flex gap-3">
+                {editingSkill && (
+                  <button
+                    type="button"
+                    onClick={handleCancelEdit}
+                    className="flex-1 rounded-xl bg-zinc-800 border border-zinc-700 py-3 text-sm font-semibold text-zinc-300 shadow hover:bg-zinc-750 transition active:scale-[0.97]"
+                  >
+                    Cancel
+                  </button>
                 )}
-              </button>
+                <button
+                  type="submit"
+                  disabled={loading || initialCategories.length === 0}
+                  className={`flex-1 flex items-center justify-center gap-2 rounded-xl py-3 text-sm font-bold shadow transition active:scale-[0.97] disabled:opacity-50 ${
+                    editingSkill ? "bg-emerald-500 text-white hover:bg-emerald-400" : "bg-zinc-100 text-zinc-950 hover:bg-zinc-50"
+                  }`}
+                >
+                  {loading ? (
+                    <FiLoader className="animate-spin" size={18} />
+                  ) : (
+                    <>
+                      {editingSkill ? <FiEdit2 size={18} /> : <FiPlus size={18} />}
+                      {editingSkill ? "Update Skill" : "Add Skill"}
+                    </>
+                  )}
+                </button>
+              </div>
             </form>
           </div>
         </div>
@@ -407,18 +480,35 @@ export default function SkillsPanel({
                             className={`inline-flex items-center gap-2 rounded-lg border px-3 py-1.5 text-xs font-medium transition cursor-grab active:cursor-grabbing ${
                               draggedSkill?.id === skill.id
                                 ? "border-emerald-500 bg-emerald-500/10 text-emerald-400"
-                                : "border-zinc-800 bg-zinc-900/40 text-zinc-300 hover:border-zinc-700"
+                                : editingSkill?.id === skill.id
+                                  ? "border-amber-500 bg-amber-500/10 text-amber-400"
+                                  : "border-zinc-800 bg-zinc-900/40 text-zinc-300 hover:border-zinc-700"
                             }`}
+                            style={{
+                              borderColor: skill.color ? `${skill.color}50` : undefined,
+                              color: skill.color ? skill.color : undefined,
+                            }}
                           >
                             <FiMove size={11} className="text-zinc-500" />
                             {skill.name}
-                            <button
-                              type="button"
-                              onClick={() => handleDeleteSkill(skill.id)}
-                              className="text-zinc-550 transition hover:text-red-400 active:scale-90"
-                            >
-                              <FiTrash2 size={13} />
-                            </button>
+                            <div className="flex items-center gap-1.5 ml-1 border-l border-zinc-850 pl-1.5">
+                              <button
+                                type="button"
+                                onClick={() => handleEditSkill(skill)}
+                                className="text-zinc-500 transition hover:text-amber-400 active:scale-90"
+                                title="Edit Skill"
+                              >
+                                <FiEdit2 size={12} />
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => handleDeleteSkill(skill.id)}
+                                className="text-zinc-500 transition hover:text-red-400 active:scale-90"
+                                title="Delete Skill"
+                              >
+                                <FiTrash2 size={12} />
+                              </button>
+                            </div>
                           </span>
                         ))}
                     </div>

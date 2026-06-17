@@ -117,11 +117,6 @@ export default function ProjectDrawer({
 
   const handleCreateNewProject = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.images || formData.images.length === 0) {
-      onShowMessage("Please upload at least one image before saving.", "error");
-      return;
-    }
-
     setLoading(true);
 
     try {

@@ -131,15 +131,30 @@ export default function TechStackPage() {
 
                 {/* Skill Badges */}
                 <div className="flex flex-wrap gap-2.5">
-                  {category.skills.map((skill) => (
-                    <motion.span
-                      key={skill.id}
-                      whileHover={{ scale: 1.05 }}
-                      className="px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-900/60 text-slate-350 border border-slate-800/80 hover:text-white hover:border-indigo-500/40 hover:bg-slate-900 transition-colors duration-200 cursor-default"
-                    >
-                      {skill.name}
-                    </motion.span>
-                  ))}
+                  {category.skills.map((skill) => {
+                    const hasHexColor = skill.color && skill.color.startsWith('#');
+                    const badgeColor = skill.color || '#6366f1';
+                    const hoverBg = hasHexColor ? `${skill.color}15` : 'rgba(99, 102, 241, 0.15)';
+                    const defaultBorder = hasHexColor ? `${skill.color}35` : 'rgba(30, 41, 59, 0.8)';
+                    return (
+                      <motion.span
+                        key={skill.id}
+                        whileHover={{ 
+                          scale: 1.05,
+                          borderColor: badgeColor,
+                          color: '#ffffff',
+                          backgroundColor: hoverBg
+                        }}
+                        className="px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-900/60 transition-all duration-200 cursor-default border"
+                        style={{
+                          borderColor: defaultBorder,
+                          color: skill.color ? skill.color : 'rgb(203, 213, 225)',
+                        }}
+                      >
+                        {skill.name}
+                      </motion.span>
+                    );
+                  })}
                 </div>
               </div>
             </div>
