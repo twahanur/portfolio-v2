@@ -21,3 +21,8 @@ node_modules
 *.sln
 *.sw?
 .vercel
+.env
+.next
+dist
+.claude
+
