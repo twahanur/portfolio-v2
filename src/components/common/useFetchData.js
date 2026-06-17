@@ -1,7 +1,5 @@
 // hooks/useFetchCV.js
 import { useEffect, useState } from "react";
-import { doc, getDoc } from "firebase/firestore";
-import { db } from "../../firebase";
 
 const useFetchCV = () => {
   const [cv, setCv] = useState(null);
@@ -9,9 +7,13 @@ const useFetchCV = () => {
   useEffect(() => {
     const fetchCV = async () => {
       try {
-        const docSnap = await getDoc(doc(db, "documents", "cv"));
-        if (docSnap.exists()) {
-          setCv({ id: docSnap.id, ...docSnap.data() });
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
+        const res = await fetch(`${apiUrl}/api/resume/active`);
+        if (res.ok) {
+          const payload = await res.json();
+          if (payload.success && payload.data) {
+            setCv({ Link: payload.data.url });
+          }
         }
       } catch (error) {
         console.error("Failed to fetch CV:", error);

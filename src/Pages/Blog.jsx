@@ -1,7 +1,7 @@
+"use client";
+
 /* eslint-disable react/prop-types */
 import { useEffect, useState, useCallback } from "react";
-import { db, collection } from "../firebase";
-import { getDocs } from "firebase/firestore";
 import Box from "@mui/material/Box";
 import CardProject from "../components/CardProject";
 import AOS from "aos";
@@ -71,33 +71,39 @@ const ToggleButton = ({ onClick, isShowingMore }) => (
 export default function FullWidthTabs() {
   const [blogs, setBlogs] = useState([]);
   const [showAllBlogs, setShowAllBlogs] = useState(false);
-  const isMobile = window.innerWidth < 768;
-  const initialItems = isMobile ? 4 : 6;
+  const [initialItems, setInitialItems] = useState(6);
 
   useEffect(() => {
     // Initialize AOS once
     AOS.init({
       once: false, // This will make animations occur only once
     });
+    setInitialItems(window.innerWidth < 768 ? 4 : 6);
   }, []);
 
   const fetchData = useCallback(async () => {
     try {
-      const blogCollection = collection(db, "blogs");
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
+      const res = await fetch(`${apiUrl}/api/blogs`);
+      if (res.ok) {
+        const payload = await res.json();
+        if (payload.success) {
+          const blogtData = payload.data.map((b) => ({
+            id: b.id,
+            Title: b.title,
+            Description: b.description,
+            Img: b.image,
+            Image: b.image,
+            Author: b.author,
+            Keywords: b.keywords || [],
+            PublishedAt: b.publishedAt,
+          }));
 
-      const [blogSnapshot] =
-        await Promise.all([
-          getDocs(blogCollection),
-        ]);
-
-      const blogtData = blogSnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-
-      setBlogs(blogtData);
-      // Store in localStorage
-      localStorage.setItem("blogs", JSON.stringify(blogtData));
+          setBlogs(blogtData);
+          // Store in localStorage
+          localStorage.setItem("blogs", JSON.stringify(blogtData));
+        }
+      }
     } catch (error) {
       console.error("Error fetching data:", error);
     }

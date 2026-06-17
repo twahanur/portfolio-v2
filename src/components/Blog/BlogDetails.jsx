@@ -1,14 +1,19 @@
+"use client";
+
 /* eslint-disable react/no-unknown-property */
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useRouter } from "next/navigation";
 import { ArrowLeft, Code2, Star, ChevronRight } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import remarkMath from "remark-math";
+import rehypeKatex from "rehype-katex";
+import "katex/dist/katex.min.css";
 import { formatDate } from "../common/dateFormater";
 
 const BlogDetails = () => {
   const { id } = useParams();
-  const navigate = useNavigate();
+  const router = useRouter();
   const [blog, setBlog] = useState(null);
   const [isImageLoaded, setIsImageLoaded] = useState(false);
   const [suggestedBlogs, setSuggestedBlogs] = useState([]);
@@ -76,7 +81,7 @@ const BlogDetails = () => {
         <div className="max-w-7xl mx-auto px-4 md:px-6 py-8 md:py-16">
           <div className="flex items-center space-x-2 md:space-x-4 mb-8 md:mb-12 animate-fadeIn">
             <button
-              onClick={() => navigate(-1)}
+              onClick={() => router.back()}
               className="group inline-flex items-center space-x-1.5 md:space-x-2 px-3 md:px-5 py-2 md:py-2.5 bg-white/5 backdrop-blur-xl rounded-xl text-white/90 hover:bg-white/10 transition-all duration-300 border border-white/10 hover:border-white/20 text-sm md:text-base"
             >
               <ArrowLeft className="w-4 h-4 md:w-5 md:h-5 group-hover:-translate-x-1 transition-transform" />
@@ -127,7 +132,7 @@ const BlogDetails = () => {
               <div className="prose prose-invert max-w-full">
                 <span className="text-base md:text-lg text-gray-300/90 leading-relaxed">
                   <div className="dark:prose-invert prose-img:rounded-lg prose-code:text-sm prose-code:text-[#3CBFEE] prose-headings:text-green-500">
-                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                    <ReactMarkdown remarkPlugins={[remarkGfm, remarkMath]} rehypePlugins={[rehypeKatex]}>
                       {blog.Description}
                     </ReactMarkdown>
                   </div>
@@ -210,7 +215,7 @@ const BlogDetails = () => {
                               </div>
                             </div>
                             <button
-                              onClick={() => navigate(`/blog/${blog.id}`)}
+                              onClick={() => router.push(`/blog/${blog.id}`)}
                               className="text-sm text-blue-400 mt-3 hover:underline self-start"
                             >
                               Read More →

@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useCallback, useState, useEffect } from "react";
 import { DataStore } from "../assets/DataStore";
 

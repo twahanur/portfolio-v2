@@ -1,7 +1,7 @@
+"use client";
+
 /* eslint-disable react/prop-types */
 import { useEffect, useState, useCallback } from "react";
-import { db, collection } from "../firebase";
-import { getDocs } from "firebase/firestore";
 import PropTypes from "prop-types";
 // import SwipeableViews from "react-swipeable-views";
 import { useTheme } from "@mui/material/styles";
@@ -125,41 +125,61 @@ export default function FullWidthTabs() {
   const [certificates, setCertificates] = useState([]);
   const [showAllProjects, setShowAllProjects] = useState(false);
   const [showAllCertificates, setShowAllCertificates] = useState(false);
-  const isMobile = window.innerWidth < 768;
-  const initialItems = isMobile ? 4 : 6;
+  const [initialItems, setInitialItems] = useState(6);
 
   useEffect(() => {
     // Initialize AOS once
     AOS.init({
       once: false, // This will make animations occur only once
     });
+    setInitialItems(window.innerWidth < 768 ? 4 : 6);
   }, []);
 
   const fetchData = useCallback(async () => {
     try {
-      const projectCollection = collection(db, "projects");
-      const certificateCollection = collection(db, "certificates");
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
+      const [resProjects, resCertificates] = await Promise.all([
+        fetch(`${apiUrl}/api/projects`),
+        fetch(`${apiUrl}/api/certificates`),
+      ]);
 
-      const [projectSnapshot, certificateSnapshot] =
-        await Promise.all([
-          getDocs(projectCollection),
-          getDocs(certificateCollection),
-        ]);
+      if (resProjects.ok && resCertificates.ok) {
+        const payloadProjects = await resProjects.json();
+        const payloadCertificates = await resCertificates.json();
 
-      const projectData = projectSnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-        TechStack: doc.data().TechStack || [],
-      }));
+        if (payloadProjects.success && payloadCertificates.success) {
+          const projectData = payloadProjects.data.map((p) => {
+            const featuredImage = p.images?.find((img) => img.isFeatured) || p.images?.[0];
+            return {
+              id: p.id,
+              Title: p.title,
+              Description: p.description,
+              Link: p.live,
+              Github: p.code,
+              TechStack: p.tags ? p.tags.map((t) => typeof t === "object" && t.tag ? t.tag.name : t) : [],
+              Features: (p.metrics && p.metrics.length > 0) ? p.metrics : (p.features || []),
+              Img: featuredImage ? featuredImage.url : "",
+            };
+          });
 
-      const certificateData = certificateSnapshot.docs.map((doc) => doc.data());
+          const certificateData = payloadCertificates.data.map((c) => ({
+            id: c.id,
+            Img: c.imageUrl,
+            name: c.name,
+            issuer: c.issuer,
+            issueDate: c.issueDate,
+            credentialId: c.credentialId,
+            credentialUrl: c.credentialUrl,
+          }));
 
-      setProjects(projectData);
-      setCertificates(certificateData);
+          setProjects(projectData);
+          setCertificates(certificateData);
 
-      // Store in localStorage
-      localStorage.setItem("projects", JSON.stringify(projectData));
-      localStorage.setItem("certificates", JSON.stringify(certificateData));
+          // Store in localStorage
+          localStorage.setItem("projects", JSON.stringify(projectData));
+          localStorage.setItem("certificates", JSON.stringify(certificateData));
+        }
+      }
     } catch (error) {
       console.error("Error fetching data:", error);
     }

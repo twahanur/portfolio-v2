@@ -1,3 +1,5 @@
+"use client";
+
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable no-unused-vars */
 import { useState, useEffect } from "react";
@@ -140,7 +142,7 @@ const ContactPage = () => {
               {/* FormSubmit Configuration */}
               <input type="hidden" name="_template" value="table" />
               <input type="hidden" name="_captcha" value="false" />
-              <input type="hidden" name="_next" value="http://localhost:5173/"/>
+              <input type="hidden" name="_next" value="/"/>
               <input type="hidden" name="_subject" value="New Submission"/>
               <input type="hidden" name="_autoresponse" value="Assalamuoyaliacum, i got your message. i will get back to you as soon as possible. but if there any argency you can knock me on whatsapp: +8801708902648"/>
               <div

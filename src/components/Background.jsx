@@ -1,9 +1,11 @@
+"use client";
+
 import { useEffect, useRef, useCallback } from "react";
 
 const AnimatedBackground = () => {
   const blobRefs = useRef([]);
   const requestRef = useRef(null);
-  const scrollRef = useRef(window.pageYOffset);
+  const scrollRef = useRef(0);
 
   const initialPositions = [
     { x: -4, y: 0 },
@@ -37,6 +39,7 @@ const AnimatedBackground = () => {
   };
 
   useEffect(() => {
+    scrollRef.current = window.pageYOffset;
     window.addEventListener("scroll", handleScroll);
     requestRef.current = requestAnimationFrame(animate);
 

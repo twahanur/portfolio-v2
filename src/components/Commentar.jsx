@@ -1,11 +1,10 @@
+"use client";
+
 /* eslint-disable react/no-unknown-property */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 /* eslint-disable react/display-name */
 import React, { useState, useEffect, useRef, useCallback, memo } from 'react';
-import { getDocs, addDoc, collection, onSnapshot, query, orderBy, serverTimestamp } from 'firebase/firestore';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { db, storage } from '../firebase-comment';
 import { MessageCircle, UserCircle2, Loader2, AlertCircle, Send, ImagePlus, X } from 'lucide-react';
 import AOS from "aos";
 import "aos/dist/aos.css";
@@ -89,7 +88,7 @@ const CommentForm = memo(({ onSubmit, isSubmitting, error }) => {
                 <input
                     type="text"
                     value={userName}
-                    onChange={(e) => setUserName(e.target.value)}z
+                    onChange={(e) => setUserName(e.target.value)}
                     placeholder="Enter your name"
                     className="w-full p-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-400 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all"
                     required
@@ -198,24 +197,46 @@ const Komentar = () => {
         });
     }, []);
 
-    useEffect(() => {
-        const commentsRef = collection(db, 'portfolio-comments');
-        const q = query(commentsRef, orderBy('createdAt', 'desc'));
-        
-        return onSnapshot(q, (querySnapshot) => {
-            const commentsData = querySnapshot.docs.map((doc) => ({
-                id: doc.id,
-                ...doc.data(),
-            }));
-            setComments(commentsData);
-        });
+    const fetchComments = useCallback(async () => {
+        try {
+            const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
+            const res = await fetch(`${apiUrl}/api/comments`);
+            if (res.ok) {
+                const payload = await res.json();
+                if (payload.success) {
+                    setComments(payload.data);
+                }
+            }
+        } catch (err) {
+            console.error("Failed to fetch comments:", err);
+        }
     }, []);
+
+    useEffect(() => {
+        fetchComments();
+    }, [fetchComments]);
 
     const uploadImage = useCallback(async (imageFile) => {
         if (!imageFile) return null;
-        const storageRef = ref(storage, `profile-images/${Date.now()}_${imageFile.name}`);
-        await uploadBytes(storageRef, imageFile);
-        return getDownloadURL(storageRef);
+        try {
+            const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
+            const formData = new FormData();
+            formData.append("image", imageFile);
+            
+            const res = await fetch(`${apiUrl}/api/upload/public`, {
+                method: "POST",
+                body: formData,
+            });
+            if (res.ok) {
+                const payload = await res.json();
+                if (payload.success && payload.data) {
+                    return payload.data.url;
+                }
+            }
+        } catch (err) {
+            console.error("Failed to upload avatar:", err);
+        }
+        return null;
     }, []);
 
     const handleCommentSubmit = useCallback(async ({ newComment, userName, imageFile }) => {
@@ -224,23 +245,44 @@ const Komentar = () => {
         
         try {
             const profileImageUrl = await uploadImage(imageFile);
-            await addDoc(collection(db, 'portfolio-comments'), {
-                content: newComment,
-                userName,
-                profileImage: profileImageUrl,
-                createdAt: serverTimestamp(),
+            const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
+            const res = await fetch(`${apiUrl}/api/comments`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    content: newComment,
+                    userName,
+                    profileImage: profileImageUrl,
+                }),
             });
+            if (res.ok) {
+                const payload = await res.json();
+                if (payload.success) {
+                    await fetchComments();
+                } else {
+                    setError(payload.message || 'Failed to post comment.');
+                }
+            } else {
+                setError('Failed to post comment. Server error.');
+            }
         } catch (error) {
             setError('Failed to post comment. Please try again.');
             console.error('Error adding comment: ', error);
         } finally {
             setIsSubmitting(false);
         }
-    }, [uploadImage]);
+    }, [uploadImage, fetchComments]);
 
     const formatDate = useCallback((timestamp) => {
         if (!timestamp) return '';
-        const date = timestamp.toDate();
+        let date;
+        if (typeof timestamp.toDate === 'function') {
+            date = timestamp.toDate();
+        } else {
+            date = new Date(timestamp);
+        }
         const now = new Date();
         const diffMinutes = Math.floor((now - date) / (1000 * 60));
         const diffHours = Math.floor(diffMinutes / 60);

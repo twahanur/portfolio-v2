@@ -1,7 +1,9 @@
+"use client";
+
 /* eslint-disable react/prop-types */
 /* eslint-disable react/display-name */
 import { useState, useEffect, memo } from "react";
-import { Mail, ExternalLink } from "lucide-react";
+import { Mail, ExternalLink, Github, Linkedin, Instagram, Facebook, Twitter, Youtube, Globe } from "lucide-react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
@@ -14,11 +16,71 @@ import { DataStore } from "../assets/DataStore";
 
 import Magnet from "../components/AnimationComponents/Magnet";
 import RotatingText from "../components/AnimationComponents/RotetingText";
-const { SOCIAL_LINKS, TECH_STACK } = DataStore;
+const { TECH_STACK } = DataStore;
 
 const Home = () => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
+  const [words, setWords] = useState([]);
+  const [title, setTitle] = useState("Fullstack Developer");
+  const [bio, setBio] = useState("✨ A curious mind crafting scalable systems — I specialize in building backend services that power modern applications.");
+  const [techStack, setTechStack] = useState([]);
+  const [socialLinks, setSocialLinks] = useState([]);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
+        const res = await fetch(`${apiUrl}/api/ai-context`);
+        if (res.ok) {
+          const payload = await res.json();
+          if (payload.success && payload.data) {
+            if (payload.data.profile) {
+              const p = payload.data.profile;
+              if (p.words) {
+                const parsedWords = p.words.split(",").map(w => w.trim()).filter(Boolean);
+                if (parsedWords.length > 0) {
+                  setWords(parsedWords);
+                }
+              }
+              if (p.title) {
+                setTitle(p.title);
+              }
+              if (p.bio) {
+                setBio(p.bio);
+              }
+
+              // Build dynamic socials list
+              const socials = [];
+              if (p.github) socials.push({ icon: Github, link: p.github });
+              if (p.linkedin) socials.push({ icon: Linkedin, link: p.linkedin });
+              if (p.instagram) socials.push({ icon: Instagram, link: p.instagram });
+              if (p.facebook) socials.push({ icon: Facebook, link: p.facebook });
+              if (p.twitter) socials.push({ icon: Twitter, link: p.twitter });
+              if (p.youtube) socials.push({ icon: Youtube, link: p.youtube });
+              if (p.stackoverflow) socials.push({ icon: Globe, link: p.stackoverflow });
+              if (p.medium) socials.push({ icon: Globe, link: p.medium });
+              if (p.devto) socials.push({ icon: Globe, link: p.devto });
+              
+              setSocialLinks(socials);
+            }
+            if (payload.data.skills) {
+              const sortedSkills = [...payload.data.skills]
+                .sort((a, b) => a.order - b.order)
+                .map(s => s.name);
+              // Slice to top 8 skills to keep the hero section visually clean and prevent overlap
+              setTechStack(sortedSkills.slice(0, 8));
+            }
+          }
+        }
+      } catch (err) {
+        console.error("Failed to fetch profile info:", err);
+      }
+    };
+
+    fetchProfile();
+  }, []);
+
   // Optimize AOS initialization
   useEffect(() => {
     const initAOS = () => {
@@ -55,14 +117,14 @@ const Home = () => {
   };
 
   return (
-    <div className="min-h-screen  bg-[#030014] overflow-hidden" id="Home">
+    <div className="min-h-screen bg-[#030014] overflow-hidden" id="Home">
       <div
         className={`relative z-10 transition-all duration-1000 ${
           isLoaded ? "opacity-100" : "opacity-0"
         }`}
       >
         <div className="container mx-auto px-[5%] sm:px-6 lg:px-[5%] min-h-screen">
-          <div className="flex flex-col lg:flex-row items-center justify-center h-screen md:justify-between gap-0 sm:gap-12 lg:gap-20">
+          <div className="flex flex-col lg:flex-row items-center justify-center min-h-screen md:justify-between gap-12 sm:gap-16 lg:gap-20 py-24 md:py-32 lg:py-0">
             {/* Left Column */}
             <div
               className="w-full lg:w-1/2 space-y-6 sm:space-y-8 text-left lg:text-left order-1 lg:order-1 lg:mt-0"
@@ -71,24 +133,26 @@ const Home = () => {
             >
               <div className="space-y-4 sm:space-y-6">
                 <StatusBadge />
-                <MainTitle />
+                <MainTitle title={title} />
 
                 {/* Typing Effect */}
                 {/* <TypingEffect /> */}
-                <RotatingText
-                  texts={DataStore.WORDS}
-                  staticText="Role : "
-                  staticTextClassName="text-gray-400"
-                  mainClassName="overflow-hidden py-0.5 sm:py-1 md:py-2 text-3xl rounded-lg"
-                  staggerFrom={"last"}
-                  initial={{ y: "100%" }}
-                  animate={{ y: 0 }}
-                  exit={{ y: "-120%" }}
-                  staggerDuration={0.025}
-                  splitLevelClassName="overflow-hidden pb-0.5 sm:pb-1 md:pb-1"
-                  transition={{ type: "spring", damping: 30, stiffness: 400 }}
-                  rotationInterval={2000}
-                />
+                {words.length > 0 && (
+                  <RotatingText
+                    texts={words}
+                    staticText=""
+                    staticTextClassName="text-gray-400"
+                    mainClassName="overflow-hidden py-0.5 sm:py-1 md:py-2 text-3xl rounded-lg"
+                    staggerFrom={"last"}
+                    initial={{ y: "100%" }}
+                    animate={{ y: 0 }}
+                    exit={{ y: "-120%" }}
+                    staggerDuration={0.025}
+                    splitLevelClassName="overflow-hidden pb-0.5 sm:pb-1 md:pb-1"
+                    transition={{ type: "spring", damping: 30, stiffness: 400 }}
+                    rotationInterval={2000}
+                  />
+                )}
 
                 {/* Description */}
                 <p
@@ -96,26 +160,28 @@ const Home = () => {
                   data-aos="fade-up"
                   data-aos-delay="1000"
                 >
-                  ✨ A curious mind crafting scalable systems — I specialize in building backend services that power modern applications.
+                  {bio}
                 </p>
 
                 {/* Tech Stack */}
-                <div
-                  className="flex flex-wrap gap-3 justify-start"
-                  data-aos="fade-up"
-                  data-aos-delay="1200"
-                >
-                  {TECH_STACK.map((tech, index) => (
-                    <Magnet
-                      key={index}
-                      padding={20}
-                      disabled={false}
-                      magnetStrength={10}
-                    >
-                      <TechStack key={index} tech={tech} />
-                    </Magnet>
-                  ))}
-                </div>
+                {techStack.length > 0 && (
+                  <div
+                    className="flex flex-wrap gap-3 justify-start"
+                    data-aos="fade-up"
+                    data-aos-delay="1200"
+                  >
+                    {techStack.map((tech, index) => (
+                      <Magnet
+                        key={index}
+                        padding={20}
+                        disabled={false}
+                        magnetStrength={10}
+                      >
+                        <TechStack key={index} tech={tech} />
+                      </Magnet>
+                    ))}
+                  </div>
+                )}
 
                 {/* CTA Buttons */}
                 <div
@@ -133,22 +199,24 @@ const Home = () => {
                 </div>
 
                 {/* Social Links */}
-                <div
-                  className="hidden sm:flex gap-4 justify-start"
-                  data-aos="fade-up"
-                  data-aos-delay="1600"
-                >
-                  {SOCIAL_LINKS.map((social, index) => (
-                    <Magnet
-                      key={index}
-                      padding={10}
-                      disabled={false}
-                      magnetStrength={5}
-                    >
-                      <SocialLinkBtn key={index} {...social} />
-                    </Magnet>
-                  ))}
-                </div>
+                {socialLinks.length > 0 && (
+                  <div
+                    className="hidden sm:flex gap-4 justify-start"
+                    data-aos="fade-up"
+                    data-aos-delay="1600"
+                  >
+                    {socialLinks.map((social, index) => (
+                      <Magnet
+                        key={index}
+                        padding={10}
+                        disabled={false}
+                        magnetStrength={5}
+                      >
+                        <SocialLinkBtn key={index} {...social} />
+                      </Magnet>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
 

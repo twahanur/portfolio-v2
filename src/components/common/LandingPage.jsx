@@ -1,7 +1,8 @@
+"use client";
+
 import { AnimatePresence } from "framer-motion";
+import dynamic from "next/dynamic";
 import WelcomeScreen from "../../Pages/WelcomeScreen";
-import SplashCursor from "../AnimationComponents/SplashCursor";
-import ClickSpark from "../AnimationComponents/ClickSpark";
 import Navbar from "../Navbar";
 import AnimatedBackground from "../Background";
 import Home from "../../Pages/Home";
@@ -11,8 +12,22 @@ import Blog from "../../Pages/Blog";
 import ContactPage from "../../Pages/Contact";
 import PropTypes from "prop-types";
 import Education from "../../Pages/Education";
+import Experience from "../../Pages/Experience";
+import TechStackPage from "../../Pages/TechStack";
 import Footer from "../../Pages/Footer";
-import TargetCursor from "../AnimationComponents/TargetCursor";
+
+const SplashCursor = dynamic(
+  () => import("../AnimationComponents/SplashCursor"),
+  { ssr: false }
+);
+const TargetCursor = dynamic(
+  () => import("../AnimationComponents/TargetCursor"),
+  { ssr: false }
+);
+const ClickSpark = dynamic(
+  () => import("../AnimationComponents/ClickSpark"),
+  { ssr: false }
+);
 
 const LandingPage = ({ showWelcome, setShowWelcome }) => {
   return (
@@ -44,6 +59,8 @@ const LandingPage = ({ showWelcome, setShowWelcome }) => {
 
             <Home />
             <About />
+            <TechStackPage />
+            <Experience />
             <Education />
             <Portofolio />
             <Blog />

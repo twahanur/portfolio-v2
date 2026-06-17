@@ -1,8 +1,10 @@
+"use client";
+
 /* eslint-disable react/no-unknown-property */
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable react/prop-types */
 /* eslint-disable react/display-name */
-import { useEffect, memo, useMemo } from "react";
+import { useEffect, memo, useMemo, useState } from "react";
 import {
   FileText,
   Code,
@@ -51,7 +53,7 @@ const Header = memo(() => (
   </div>
 ));
 
-const ProfileImage = memo(() => (
+const ProfileImage = memo(({ src }) => (
   <div className="flex justify-end items-center sm:p-12 sm:py-0 sm:pb-0 p-0 py-2 pb-2">
     <div className="relative group" data-aos="fade-up" data-aos-duration="1000">
       {/* Optimized gradient backgrounds with reduced complexity for mobile */}
@@ -70,8 +72,7 @@ const ProfileImage = memo(() => (
           <div className="absolute inset-0 bg-gradient-to-t from-purple-500/20 via-transparent to-blue-500/20 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-700 hidden sm:block" />
 
           <img
-            // src="/Photo.png"
-            src="https://i.ibb.co.com/bjywV4Mn/twahanur-twahanur-rahman-twaha-thohanur-thohanur-rahman.png"
+            src={src}
             alt="Profile"
             className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:rotate-2"
             loading="lazy"
@@ -143,8 +144,37 @@ const StatCard = memo(
 
 const AboutPage = () => {
   const cv = useFetchCV()
+  const [profile, setProfile] = useState({
+    name: "Twahanur Rahman",
+    bio: "self-dependent, enthusiastic, responsible, and deeply interested in learning new things. I work for mobile and web applications. At the moment, I am looking for a suitable opportunity that gives me a scope to utilize my creativity, knowledge, and skill.",
+    profilePictureUrl: "https://i.ibb.co.com/bjywV4Mn/twahanur-twahanur-rahman-twaha-thohanur-thohanur-rahman.png",
+  });
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
+        const res = await fetch(`${apiUrl}/api/ai-context`);
+        if (res.ok) {
+          const payload = await res.json();
+          if (payload.success && payload.data?.profile) {
+            const p = payload.data.profile;
+            setProfile({
+              name: p.name || "Twahanur Rahman",
+              bio: p.bio || "self-dependent, enthusiastic, responsible, and deeply interested in learning new things. I work for mobile and web applications. At the moment, I am looking for a suitable opportunity that gives me a scope to utilize my creativity, knowledge, and skill.",
+              profilePictureUrl: p.profilePictureUrl || "https://i.ibb.co.com/bjywV4Mn/twahanur-twahanur-rahman-twaha-thohanur-thohanur-rahman.png",
+            });
+          }
+        }
+      } catch (err) {
+        console.error("Failed to fetch profile in About page:", err);
+      }
+    };
+    fetchProfile();
+  }, []);
+
   console.log("first", cv?.Link);
-  const cvLink =`https://drive.google.com/uc?export=download&id=${cv?.Link}`;
+  const cvLink = cv?.Link && (cv.Link.startsWith("http") ? cv.Link : `https://drive.google.com/uc?export=download&id=${cv.Link}`);
 
   console.log("cvLink", cvLink);
   // Memoized calculations
@@ -256,7 +286,7 @@ const AboutPage = () => {
                 data-aos-duration="1300"
               >
                 <DecryptedText
-                  text="Twahanur Rahman"
+                  text={profile.name}
                   speed={120}
                   sequential={true}
                   animateOn="view"
@@ -270,8 +300,7 @@ const AboutPage = () => {
               data-aos="fade-right"
               data-aos-duration="1500"
             >
-              self-dependent, enthusiastic, responsible, and deeply interested in learning new things. I work for mobile and web applications. At the moment, I am looking for a suitable opportunity that gives me a scope to utilize my creativity, knowledge, and skill.
-              
+              {profile.bio}
             </p>
 
             <div className="flex flex-col lg:flex-row items-center lg:items-start gap-4 lg:gap-4 lg:px-0 w-full">
@@ -299,7 +328,7 @@ const AboutPage = () => {
             </div>
           </div>
 
-          <ProfileImage />
+          <ProfileImage src={profile.profilePictureUrl} />
         </div>
 
         <a href="#Portofolio">

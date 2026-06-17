@@ -1,11 +1,43 @@
-import { useState } from "react";
+"use client";
+
+import { useState, useEffect } from "react";
+import { Github, Linkedin, Instagram, Facebook, Twitter, Youtube, Globe } from "lucide-react";
 import Magnet from "../components/AnimationComponents/Magnet";
 import SocialLinkBtn from "../components/SocialLink";
-import { DataStore } from "../assets/DataStore";
 
-const { SOCIAL_LINKS } = DataStore;
 const Footer = () => {
   const [year] = useState(new Date().getFullYear());
+  const [socialLinks, setSocialLinks] = useState([]);
+
+  useEffect(() => {
+    const fetchSocials = async () => {
+      try {
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
+        const res = await fetch(`${apiUrl}/api/ai-context`);
+        if (res.ok) {
+          const payload = await res.json();
+          if (payload.success && payload.data?.profile) {
+            const p = payload.data.profile;
+            const socials = [];
+            if (p.github) socials.push({ icon: Github, link: p.github });
+            if (p.linkedin) socials.push({ icon: Linkedin, link: p.linkedin });
+            if (p.instagram) socials.push({ icon: Instagram, link: p.instagram });
+            if (p.facebook) socials.push({ icon: Facebook, link: p.facebook });
+            if (p.twitter) socials.push({ icon: Twitter, link: p.twitter });
+            if (p.youtube) socials.push({ icon: Youtube, link: p.youtube });
+            if (p.stackoverflow) socials.push({ icon: Globe, link: p.stackoverflow });
+            if (p.medium) socials.push({ icon: Globe, link: p.medium });
+            if (p.devto) socials.push({ icon: Globe, link: p.devto });
+            
+            setSocialLinks(socials);
+          }
+        }
+      } catch (err) {
+        console.error("Failed to fetch socials in footer:", err);
+      }
+    };
+    fetchSocials();
+  }, []);
   const scrollToSection = (e, href) => {
     e.preventDefault();
     const section = document.querySelector(href);
@@ -23,10 +55,10 @@ const Footer = () => {
       <div className="py-16 px-6 lg:px-8">
         <div className="text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-white">
-            Let's Build Something New
+            Let&apos;s Build Something New
           </h2>
           <p className="mt-4 text-lg text-[#c0b2e3] max-w-2xl mx-auto">
-            Have a project in mind or just want to connect? I'm always open to
+            Have a project in mind or just want to connect? I&apos;m always open to
             discussing new ideas and opportunities.
           </p>
           <div className="mt-8">
@@ -38,22 +70,24 @@ const Footer = () => {
               Get in Touch
             </a>
           </div>
-          <div
-            className="hidden sm:flex gap-4 justify-center"
-            data-aos="fade-up"
-            data-aos-delay="1600"
-          >
-            {SOCIAL_LINKS.map((social, index) => (
-              <Magnet
-                key={index}
-                padding={10}
-                disabled={false}
-                magnetStrength={5}
-              >
-                <SocialLinkBtn key={index} {...social} />
-              </Magnet>
-            ))}
-          </div>
+          {socialLinks.length > 0 && (
+            <div
+              className="hidden sm:flex gap-4 justify-center"
+              data-aos="fade-up"
+              data-aos-delay="1600"
+            >
+              {socialLinks.map((social, index) => (
+                <Magnet
+                  key={index}
+                  padding={10}
+                  disabled={false}
+                  magnetStrength={5}
+                >
+                  <SocialLinkBtn key={index} {...social} />
+                </Magnet>
+              ))}
+            </div>
+          )}
         </div>
         <div className="mt-16 border-t border-[#5f5a78]/30 pt-8 flex flex-col sm:flex-row items-center justify-between">
           <p className="text-sm text-[#a79cc7] order-2 sm:order-1 mt-4 sm:mt-0">
