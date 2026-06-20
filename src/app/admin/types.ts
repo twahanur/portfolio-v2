@@ -4,7 +4,9 @@ export interface Profile {
   title: string | null;
   words?: string | null;
   bio: string | null;
+  shortBio?: string | null;
   profilePictureUrl: string | null;
+  heroAnimationUrl?: string | null;
   phone?: string | null;
   github?: string | null;
   linkedin?: string | null;

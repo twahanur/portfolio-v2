@@ -27,6 +27,7 @@ const Home = () => {
   const [bio, setBio] = useState("✨ A curious mind crafting scalable systems — I specialize in building backend services that power modern applications.");
   const [techStack, setTechStack] = useState([]);
   const [socialLinks, setSocialLinks] = useState([]);
+  const [heroAnimationUrl, setHeroAnimationUrl] = useState("");
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -44,8 +45,11 @@ const Home = () => {
             if (p.title) {
               setTitle(p.title);
             }
-            if (p.bio) {
-              setBio(p.bio);
+            if (p.shortBio || p.bio) {
+              setBio(p.shortBio || p.bio);
+            }
+            if (p.heroAnimationUrl) {
+              setHeroAnimationUrl(p.heroAnimationUrl);
             }
 
             // Build dynamic socials list
@@ -237,7 +241,30 @@ const Home = () => {
                     isHovering ? "scale-105" : "scale-100"
                   }`}
                 >
-                  <DotLottieReact {...lottieOptions} />
+                  {heroAnimationUrl ? (
+                    heroAnimationUrl.includes(".json") || heroAnimationUrl.includes(".lottie") || heroAnimationUrl.includes("lottie.host") ? (
+                      <DotLottieReact
+                        src={heroAnimationUrl}
+                        loop
+                        autoplay
+                        className={`w-full h-full transition-all duration-500 ${
+                          isHovering
+                            ? "scale-[180%] sm:scale-[160%] md:scale-[150%] lg:scale-[145%] rotate-2"
+                            : "scale-[175%] sm:scale-[155%] md:scale-[145%] lg:scale-[140%]"
+                        }`}
+                      />
+                    ) : (
+                      <img
+                        src={heroAnimationUrl}
+                        alt="Hero Animation"
+                        className={`w-full h-auto max-h-[450px] object-contain transition-all duration-500 ${
+                          isHovering ? "scale-105 rotate-2" : "scale-100"
+                        }`}
+                      />
+                    )
+                  ) : (
+                    <DotLottieReact {...lottieOptions} />
+                  )}
                 </div>
 
                 <div

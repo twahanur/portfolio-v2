@@ -27,22 +27,9 @@ export default function EducationPage() {
               order: edu.order,
             }));
 
-            // Map certificates / trainings
-            const training = (data.certificates || []).map((c) => ({
-              id: c.id,
-              trainingTitle: c.name,
-              institute: c.issuer,
-              topics: c.credentialId ? `Credential ID: ${c.credentialId}` : "Certified Course",
-              location: "Remote",
-              year: c.issueDate ? (c.issueDate.split(" ").slice(-1)[0] || c.issueDate) : "",
-              duration: "",
-              credentialUrl: c.credentialUrl,
-              order: c.order,
-            }));
-
             setTimelineData({
               academicQualification: educations,
-              trainingSummary: training,
+              trainingSummary: [],
             });
           }
       } catch (err) {
@@ -66,10 +53,10 @@ export default function EducationPage() {
 
       <div className="text-center pb-12" data-aos="fade-up" data-aos-duration="1000">
         <h2 className="inline-block text-3xl md:text-5xl font-extrabold text-center mx-auto text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-amber-400">
-          Education & Training
+          Education
         </h2>
         <p className="text-slate-400 max-w-2xl mx-auto text-xs md:text-sm mt-3 tracking-wide uppercase font-semibold">
-          My qualifications and professional certifications
+          My academic qualifications
         </p>
       </div>
 

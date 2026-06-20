@@ -51,6 +51,7 @@ Identity:
 - Location: ${finalLocation}.
 - Role: ${profile.title || "Full-stack Web Developer"}.
 - Bio: ${profile.bio || ""}.
+- Homepage Short Bio: ${profile.shortBio || ""}.
 - Email: ${finalEmail}.
 - Phone / WhatsApp: ${finalPhone} (${finalPhoneHref}).
 ${socialsText}

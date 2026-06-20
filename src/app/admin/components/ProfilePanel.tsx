@@ -20,7 +20,9 @@ export default function ProfilePanel({ initialProfile, onRefresh }: ProfilePanel
   const [title, setTitle] = useState("");
   const [words, setWords] = useState("");
   const [bio, setBio] = useState("");
+  const [shortBio, setShortBio] = useState("");
   const [profilePictureUrl, setProfilePictureUrl] = useState("");
+  const [heroAnimationUrl, setHeroAnimationUrl] = useState("");
 
   // Contact details
   const [phone, setPhone] = useState("");
@@ -53,7 +55,9 @@ export default function ProfilePanel({ initialProfile, onRefresh }: ProfilePanel
       setTitle(initialProfile.title || "");
       setWords(initialProfile.words || "");
       setBio(initialProfile.bio || "");
+      setShortBio(initialProfile.shortBio || "");
       setProfilePictureUrl(initialProfile.profilePictureUrl || "");
+      setHeroAnimationUrl(initialProfile.heroAnimationUrl || "");
       setPhone(initialProfile.phone || "");
       setLocation(initialProfile.location || "");
       setMapEmbedUrl(initialProfile.mapEmbedUrl || "");
@@ -79,7 +83,7 @@ export default function ProfilePanel({ initialProfile, onRefresh }: ProfilePanel
     try {
       const url = await uploadImage(file);
       setProfilePictureUrl(url);
-      showMessage("Profile picture uploaded successfully!", "success");
+      showMessage("Profile picture uploaded successfully! Click 'Save Changes' at the bottom to persist it.", "success");
     } catch (err: any) {
       console.error(err);
       showMessage(err.message || "Failed to upload image", "error");
@@ -100,7 +104,9 @@ export default function ProfilePanel({ initialProfile, onRefresh }: ProfilePanel
         title,
         words,
         bio,
+        shortBio,
         profilePictureUrl,
+        heroAnimationUrl,
         phone,
         location,
         mapEmbedUrl,
@@ -224,6 +230,14 @@ export default function ProfilePanel({ initialProfile, onRefresh }: ProfilePanel
             />
 
             <FormField
+              label="Homepage Hero Animation URL (Lottie JSON / GIF / Image)"
+              fullWidth
+              placeholder="e.g. https://lottie.host/...json or URL to a GIF/image"
+              value={heroAnimationUrl}
+              onChange={setHeroAnimationUrl}
+            />
+
+            <FormField
               label="Profile Biography (Bio)"
               type="textarea"
               rows={4}
@@ -231,6 +245,17 @@ export default function ProfilePanel({ initialProfile, onRefresh }: ProfilePanel
               fullWidth
               value={bio}
               onChange={setBio}
+            />
+
+            <FormField
+              label="Homepage Hero Biography (Short Bio)"
+              type="textarea"
+              rows={3}
+              required
+              fullWidth
+              placeholder="A brief 1-2 sentence biography for the homepage hero section..."
+              value={shortBio}
+              onChange={setShortBio}
             />
           </div>
         </div>
