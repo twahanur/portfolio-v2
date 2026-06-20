@@ -24,6 +24,7 @@ const Home = () => {
   const [isHovering, setIsHovering] = useState(false);
   const [words, setWords] = useState([]);
   const [title, setTitle] = useState("Fullstack Developer");
+  const [shortBio, setShortBio] = useState("");
   const [bio, setBio] = useState("✨ A curious mind crafting scalable systems — I specialize in building backend services that power modern applications.");
   const [techStack, setTechStack] = useState([]);
   const [socialLinks, setSocialLinks] = useState([]);
@@ -45,8 +46,11 @@ const Home = () => {
             if (p.title) {
               setTitle(p.title);
             }
-            if (p.shortBio || p.bio) {
-              setBio(p.shortBio || p.bio);
+            if (p.shortBio) {
+              setShortBio(p.shortBio);
+            }
+            if (p.bio) {
+              setBio(p.bio);
             }
             if (p.heroAnimationUrl) {
               setHeroAnimationUrl(p.heroAnimationUrl);
@@ -161,7 +165,7 @@ const Home = () => {
                   data-aos="fade-up"
                   data-aos-delay="1000"
                 >
-                  {bio}
+                  {shortBio}
                 </p>
 
                 {/* Tech Stack */}
