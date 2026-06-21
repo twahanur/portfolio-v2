@@ -6,7 +6,7 @@
 /* eslint-disable react/display-name */
 import React, { useState, useEffect, useRef, useCallback, memo } from 'react';
 import { MessageCircle, UserCircle2, Loader2, AlertCircle, Send, ImagePlus, X } from 'lucide-react';
-import AOS from "aos";
+
 
 const Comment = memo(({ comment, formatDate, index }) => (
     <div 
@@ -188,9 +188,7 @@ const Komentar = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState('');
 
-    useEffect(() => {
-        AOS.refresh();
-    }, [comments]);
+
 
     const fetchComments = useCallback(async () => {
         try {

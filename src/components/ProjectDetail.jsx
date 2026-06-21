@@ -17,6 +17,9 @@ import {
   Code,
   Database,
   Cloud,
+  AlertCircle,
+  Compass,
+  TrendingUp,
 } from "lucide-react";
 import Swal from "sweetalert2";
 
@@ -167,7 +170,13 @@ const ProjectDetails = () => {
               Link: p.live,
               Github: p.code || "https://github.com/Twahanur",
               TechStack: p.tags ? p.tags.map((t) => typeof t === "object" && t.tag ? t.tag.name : t) : [],
-              Features: (p.metrics && p.metrics.length > 0) ? p.metrics : (p.features || []),
+              Features: p.features || [],
+              Metrics: p.metrics || [],
+              DevOps: p.devOps || [],
+              Problem: p.problem || "",
+              Architecture: p.architecture || "",
+              FutureEnhancements: p.futureEnhancements || "",
+              ChallengeSolutions: p.challengeSolutions || [],
               Img: featuredImage ? featuredImage.url : "",
             };
             setProject(formattedProject);
@@ -184,7 +193,13 @@ const ProjectDetails = () => {
       if (selectedProject) {
         setProject({
           ...selectedProject,
-          Features: (selectedProject.metrics && selectedProject.metrics.length > 0) ? selectedProject.metrics : (selectedProject.Features || []),
+          Features: selectedProject.features || selectedProject.Features || [],
+          Metrics: selectedProject.metrics || selectedProject.Metrics || [],
+          DevOps: selectedProject.devOps || selectedProject.DevOps || [],
+          Problem: selectedProject.problem || selectedProject.Problem || "",
+          Architecture: selectedProject.architecture || selectedProject.Architecture || "",
+          FutureEnhancements: selectedProject.futureEnhancements || selectedProject.FutureEnhancements || "",
+          ChallengeSolutions: selectedProject.challengeSolutions || selectedProject.ChallengeSolutions || [],
           TechStack: selectedProject.TechStack ? selectedProject.TechStack.map((t) => typeof t === "object" && t.tag ? t.tag.name : t) : [],
           Github: selectedProject.Github || "https://github.com/Twahanur",
         });
@@ -301,6 +316,21 @@ const ProjectDetails = () => {
                   </p>
                 )}
               </div>
+
+              {/* DevOps Stack */}
+              {project.DevOps && project.DevOps.length > 0 && (
+                <div className="space-y-4 md:space-y-6 mt-6">
+                  <h3 className="text-lg md:text-xl font-semibold text-white/90 flex items-center gap-2 md:gap-3">
+                    <Cloud className="w-4 h-4 md:w-5 md:h-5 text-purple-400" />
+                    DevOps & Infrastructure
+                  </h3>
+                  <div className="flex flex-wrap gap-2 md:gap-3">
+                    {project.DevOps.map((tech, index) => (
+                      <TechBadge key={index} tech={tech} />
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
 
             <div className="space-y-6 md:space-y-10 animate-slideInRight">
@@ -331,8 +361,118 @@ const ProjectDetails = () => {
                   <p className="text-gray-400 opacity-50">No features added.</p>
                 )}
               </div>
+
+              {/* Key Metrics & Impact */}
+              {project.Metrics && project.Metrics.length > 0 && (
+                <div className="bg-white/[0.02] backdrop-blur-xl rounded-2xl p-8 border border-white/10 space-y-6 hover:border-white/20 transition-colors duration-300 group">
+                  <h3 className="text-xl font-semibold text-white/90 flex items-center gap-3">
+                    <TrendingUp className="w-5 h-5 text-emerald-400 group-hover:scale-110 transition-transform duration-300" />
+                    Key Metrics & Impact
+                  </h3>
+                  <ul className="list-none space-y-2">
+                    {project.Metrics.map((metric, index) => (
+                      <FeatureItem key={index} feature={metric} />
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
           </div>
+
+          {/* Case Study Details */}
+          {(project.Problem || project.Architecture || project.FutureEnhancements) && (
+            <div className="mt-16 space-y-8 animate-fadeIn border-t border-white/5 pt-12">
+              <h2 className="text-2xl md:text-4xl font-bold bg-gradient-to-r from-blue-200 via-purple-200 to-pink-200 bg-clip-text text-transparent">
+                Case Study & Architecture
+              </h2>
+              <div className="grid md:grid-cols-3 gap-6">
+                {project.Problem && (
+                  <div className="bg-white/[0.02] backdrop-blur-xl rounded-2xl p-6 border border-white/10 hover:border-red-500/20 transition-all duration-300 group">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="p-2.5 bg-red-500/10 rounded-xl text-red-400">
+                        <AlertCircle className="w-5 h-5" />
+                      </div>
+                      <h3 className="text-lg font-semibold text-white/90">The Problem</h3>
+                    </div>
+                    <p className="text-sm md:text-base text-gray-300/85 leading-relaxed whitespace-pre-line">
+                      {project.Problem}
+                    </p>
+                  </div>
+                )}
+                {project.Architecture && (
+                  <div className="bg-white/[0.02] backdrop-blur-xl rounded-2xl p-6 border border-white/10 hover:border-purple-500/20 transition-all duration-300 group">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="p-2.5 bg-purple-500/10 rounded-xl text-purple-400">
+                        <Layers className="w-5 h-5" />
+                      </div>
+                      <h3 className="text-lg font-semibold text-white/90">Architecture Decisions</h3>
+                    </div>
+                    <p className="text-sm md:text-base text-gray-300/85 leading-relaxed whitespace-pre-line">
+                      {project.Architecture}
+                    </p>
+                  </div>
+                )}
+                {project.FutureEnhancements && (
+                  <div className="bg-white/[0.02] backdrop-blur-xl rounded-2xl p-6 border border-white/10 hover:border-blue-500/20 transition-all duration-300 group">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="p-2.5 bg-blue-500/10 rounded-xl text-blue-400">
+                        <Compass className="w-5 h-5" />
+                      </div>
+                      <h3 className="text-lg font-semibold text-white/90">Future Scope</h3>
+                    </div>
+                    <p className="text-sm md:text-base text-gray-300/85 leading-relaxed whitespace-pre-line">
+                      {project.FutureEnhancements}
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Challenges & Solutions */}
+          {project.ChallengeSolutions && project.ChallengeSolutions.length > 0 && (
+            <div className="mt-16 space-y-8 animate-fadeIn border-t border-white/5 pt-12">
+              <h2 className="text-2xl md:text-4xl font-bold bg-gradient-to-r from-blue-200 via-purple-200 to-pink-200 bg-clip-text text-transparent">
+                Challenges & Engineering Solutions
+              </h2>
+              <div className="space-y-6">
+                {project.ChallengeSolutions.map((item, index) => (
+                  <div
+                    key={index}
+                    className="bg-white/[0.02] backdrop-blur-xl rounded-2xl p-6 md:p-8 border border-white/10 hover:border-white/20 transition-all duration-300 flex flex-col md:flex-row gap-6 relative overflow-hidden group"
+                  >
+                    <div className="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-red-500 via-purple-500 to-emerald-500" />
+                    
+                    <div className="flex-1 space-y-3">
+                      <div className="flex items-center gap-2">
+                        <span className="px-2 py-0.5 text-[10px] font-semibold bg-red-500/10 text-red-400 rounded border border-red-500/20">
+                          CHALLENGE #{index + 1}
+                        </span>
+                      </div>
+                      <h3 className="text-base md:text-lg font-semibold text-white/90 leading-snug">
+                        {item.challenge}
+                      </h3>
+                    </div>
+                    
+                    <div className="hidden md:flex items-center justify-center text-gray-500">
+                      <ChevronRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
+                    </div>
+                    
+                    <div className="flex-1 space-y-3 md:pl-6 md:border-l border-white/10">
+                      <div className="flex items-center gap-2">
+                        <span className="px-2 py-0.5 text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 rounded border border-emerald-500/20">
+                          SOLUTION
+                        </span>
+                      </div>
+                      <p className="text-sm md:text-base text-gray-300/80 leading-relaxed whitespace-pre-line">
+                        {item.solution}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
 

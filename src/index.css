@@ -119,6 +119,12 @@ body {
 
   [data-aos] {
 	will-change: transform, opacity !important;
+	transition-duration: 400ms !important;
+  }
+
+  /* Ensure AOS elements are visible immediately once triggered */
+  [data-aos].aos-animate {
+	transition-delay: 0ms !important;
   }
 
 

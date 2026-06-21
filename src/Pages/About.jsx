@@ -107,9 +107,6 @@ const StatCard = memo(
           </div>
           <span
             className="text-4xl font-bold text-slate-900 dark:text-white"
-            data-aos="fade-up-left"
-            data-aos-duration="1500"
-            data-aos-anchor-placement="top-bottom"
           >
             {value}
           </span>
@@ -118,18 +115,12 @@ const StatCard = memo(
         <div>
           <p
             className="text-sm uppercase tracking-wider text-slate-600 dark:text-gray-300 mb-2"
-            data-aos="fade-up"
-            data-aos-duration="800"
-            data-aos-anchor-placement="top-bottom"
           >
             {label}
           </p>
           <div className="flex items-center justify-between">
             <p
               className="text-xs text-slate-500 dark:text-gray-400"
-              data-aos="fade-up"
-              data-aos-duration="1000"
-              data-aos-anchor-placement="top-bottom"
             >
               {description}
             </p>
@@ -186,14 +177,14 @@ const AboutPage = ({ profile: propProfile, cv: propCv, projects: propProjects, c
     let pCount = 0;
     let cCount = 0;
 
-    if (propProjects) {
+    if (propProjects && propProjects.length > 0) {
       pCount = propProjects.length;
     } else {
       const storedProjects = JSON.parse(localStorage.getItem("projects") || "[]");
       pCount = storedProjects.length;
     }
 
-    if (propCertificates) {
+    if (propCertificates && propCertificates.length > 0) {
       cCount = propCertificates.length;
     } else {
       const storedCertificates = JSON.parse(localStorage.getItem("certificates") || "[]");

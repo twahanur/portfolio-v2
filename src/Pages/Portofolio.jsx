@@ -8,7 +8,6 @@ import { useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import CardProject from "../components/CardProject";
 import TechStackIcon from "../components/TechStackIcon";
-import AOS from "aos";
 import Certificate from "../components/Certificate";
 import PortfolioHeader from "../components/Portfolio/PortfolioHeader";
 import PortfolioAppbar from "../components/Portfolio/PortfolioAppbar";
@@ -129,10 +128,6 @@ export default function FullWidthTabs({ projects: propProjects, certificates: pr
     setInitialItems(window.innerWidth < 768 ? 4 : 6);
   }, []);
 
-  useEffect(() => {
-    AOS.refresh();
-  }, [value, showAllProjects, showAllCertificates]);
-
   const formatProjects = useCallback((data) => {
     return data.map((p) => {
       const featuredImage = p.images?.find((img) => img.isFeatured) || p.images?.[0];
@@ -238,20 +233,13 @@ export default function FullWidthTabs({ projects: propProjects, certificates: pr
 
         <TabPanel value={value} index={0} dir={theme.direction}>
           <div className="container mx-auto flex justify-center items-center overflow-hidden">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-3 gap-5">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
               {displayedProjects.map((project, index) => (
                 <div
                   key={project.id || index}
-                  data-aos={
-                    index % 3 === 0
-                      ? "fade-up-right"
-                      : index % 3 === 1
-                      ? "fade-up"
-                      : "fade-up-left"
-                  }
-                  data-aos-duration={
-                    index % 3 === 0 ? "1000" : index % 3 === 1 ? "1200" : "1000"
-                  }
+                  data-aos="fade-up"
+                  data-aos-duration="500"
+                  data-aos-delay={`${(index % 3) * 80}`}
                 >
                   <CardProject
                     Img={project.Img}

@@ -123,6 +123,8 @@ const TimelineCard = ({ data }) => {
   const pathLength = useTransform(scrollYProgress, [0.02, 0.98], [0, 1]);
 
   // Measure coordinates of circles relative to container
+  // Only needs to run on mount, resize, or layout change — NOT on scroll
+  // (circle positions relative to container are fixed during scroll)
   const updatePoints = () => {
     if (!containerRef.current) return;
     const container = containerRef.current;
@@ -142,20 +144,17 @@ const TimelineCard = ({ data }) => {
   useEffect(() => {
     updatePoints();
     window.addEventListener("resize", updatePoints);
-    window.addEventListener("scroll", updatePoints);
     
+    // Allow layout to settle after data loads / AOS animations
     const t1 = setTimeout(updatePoints, 100);
     const t2 = setTimeout(updatePoints, 500);
-    const t3 = setTimeout(updatePoints, 1000);
-    const t4 = setTimeout(updatePoints, 2000);
+    const t3 = setTimeout(updatePoints, 1500);
 
     return () => {
       window.removeEventListener("resize", updatePoints);
-      window.removeEventListener("scroll", updatePoints);
       clearTimeout(t1);
       clearTimeout(t2);
       clearTimeout(t3);
-      clearTimeout(t4);
     };
   }, [filteredElements]);
 

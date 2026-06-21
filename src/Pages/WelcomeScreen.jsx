@@ -2,161 +2,128 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Code2, Server, Globe, Shield } from "lucide-react";
 
 const getStatusText = (progress) => {
-  if (progress < 25) return "Establishing Secure DB Handshake...";
-  if (progress < 50) return "Decrypting Profile Attributes...";
-  if (progress < 75) return "Compiling Project & Education Matrix...";
-  if (progress < 100) return "Optimizing Layout Parameters...";
-  return "Systems Online. Welcome.";
+  if (progress < 20) return "Connecting to server...";
+  if (progress < 40) return "Loading profile data...";
+  if (progress < 60) return "Fetching projects...";
+  if (progress < 80) return "Loading assets...";
+  if (progress < 100) return "Almost ready...";
+  return "Welcome";
 };
 
 const WelcomeScreen = ({ progress, isLoaded, onLoadingComplete }) => {
   const [isLoading, setIsLoading] = useState(true);
-  const [minTimeElapsed, setMinTimeElapsed] = useState(false);
 
+  // No artificial minimum time — dismiss as soon as data is loaded
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setMinTimeElapsed(true);
-    }, 1500);
-    return () => clearTimeout(timer);
-  }, []);
-
-  const shouldDismiss = isLoaded && minTimeElapsed;
-
-  useEffect(() => {
-    if (shouldDismiss) {
-      setIsLoading(false);
+    if (isLoaded && progress >= 100) {
       const timer = setTimeout(() => {
-        onLoadingComplete?.();
-      }, 800);
+        setIsLoading(false);
+        setTimeout(() => {
+          onLoadingComplete?.();
+        }, 400);
+      }, 300); // tiny grace period for visual completion
       return () => clearTimeout(timer);
     }
-  }, [shouldDismiss, onLoadingComplete]);
-
-  const containerVariants = {
-    exit: {
-      opacity: 0,
-      scale: 1.05,
-      filter: "blur(12px)",
-      transition: {
-        duration: 0.8,
-        ease: "easeInOut",
-        when: "beforeChildren",
-        staggerChildren: 0.1
-      }
-    }
-  };
-
-  const childVariants = {
-    exit: {
-      y: -20,
-      opacity: 0,
-      transition: {
-        duration: 0.4,
-        ease: "easeInOut"
-      }
-    }
-  };
+  }, [isLoaded, progress, onLoadingComplete]);
 
   return (
     <AnimatePresence>
       {isLoading && (
         <motion.div
           className="fixed inset-0 bg-[#030014] z-[99999] flex items-center justify-center overflow-hidden"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit="exit"
-          variants={containerVariants}
+          initial={{ opacity: 1 }}
+          exit={{
+            opacity: 0,
+            scale: 1.02,
+            filter: "blur(8px)",
+            transition: { duration: 0.4, ease: "easeOut" },
+          }}
         >
-          {/* Futuristic CSS animations */}
+          {/* Inline styles for animations */}
           <style dangerouslySetInnerHTML={{ __html: `
-            @keyframes spin-reverse {
-              0% { transform: rotate(360deg); }
-              100% { transform: rotate(0deg); }
+            @keyframes scanGlow {
+              0% { left: -20%; }
+              100% { left: 120%; }
             }
-            .animate-spin-reverse {
-              animation: spin-reverse 3s linear infinite;
+            @keyframes pulseRing {
+              0%, 100% { transform: scale(1); opacity: 0.3; }
+              50% { transform: scale(1.15); opacity: 0.6; }
             }
-            @keyframes pulse-glow {
-              0%, 100% { opacity: 0.2; transform: scale(1); }
-              50% { opacity: 0.4; transform: scale(1.05); }
+            @keyframes fadeSlideUp {
+              from { opacity: 0; transform: translateY(12px); }
+              to { opacity: 1; transform: translateY(0); }
             }
-            .ambient-glow {
-              animation: pulse-glow 6s ease-in-out infinite;
+            .scan-glow {
+              animation: scanGlow 1.2s ease-in-out infinite;
+            }
+            .pulse-ring {
+              animation: pulseRing 2s ease-in-out infinite;
+            }
+            .fade-slide-up {
+              animation: fadeSlideUp 0.5s ease-out forwards;
             }
           ` }} />
 
-          {/* Ambient space background */}
-          <div className="absolute inset-0">
-            <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-indigo-500/10 rounded-full blur-[150px] ambient-glow" />
-            <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-purple-500/10 rounded-full blur-[150px] ambient-glow" style={{ animationDelay: "3s" }} />
+          {/* Subtle ambient background */}
+          <div className="absolute inset-0 pointer-events-none">
+            <div className="absolute top-1/3 left-1/3 w-[400px] h-[400px] bg-indigo-600/8 rounded-full blur-[120px] pulse-ring" />
+            <div className="absolute bottom-1/3 right-1/3 w-[300px] h-[300px] bg-purple-600/8 rounded-full blur-[100px] pulse-ring" style={{ animationDelay: "1s" }} />
           </div>
 
-          <div className="relative w-full max-w-lg mx-auto px-6 text-center">
-            {/* Spinning futuristic ring */}
-            <motion.div 
-              className="relative w-28 h-28 mx-auto mb-10 flex items-center justify-center"
-              variants={childVariants}
-            >
-              {/* Outer ring */}
-              <div className="absolute inset-0 rounded-full border-2 border-t-indigo-500 border-r-transparent border-b-purple-500 border-l-transparent animate-spin" style={{ animationDuration: "2s" }} />
-              {/* Middle ring */}
-              <div className="absolute inset-2 rounded-full border border-t-transparent border-r-pink-500 border-b-transparent border-l-cyan-500 animate-spin-reverse" />
-              {/* Inner glow dot */}
-              <div className="absolute w-3 h-3 bg-indigo-400 rounded-full blur-[2px] animate-pulse" />
-              <Code2 className="w-8 h-8 text-white relative z-10 opacity-80" />
-            </motion.div>
+          <div className="relative w-full max-w-md mx-auto px-6 text-center fade-slide-up">
+            {/* Minimal spinner */}
+            <div className="relative w-16 h-16 mx-auto mb-8">
+              <div
+                className="absolute inset-0 rounded-full border-2 border-white/5"
+              />
+              <div
+                className="absolute inset-0 rounded-full border-2 border-transparent border-t-indigo-500 border-r-purple-500 animate-spin"
+                style={{ animationDuration: "1s" }}
+              />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <span className="text-xs font-mono text-white/70 font-bold">
+                  {progress}
+                </span>
+              </div>
+            </div>
 
-            {/* Title / Brand */}
-            <motion.div 
-              className="mb-8"
-              variants={childVariants}
-            >
-              <h1 className="text-2xl md:text-3xl font-extrabold tracking-[0.25em] text-transparent bg-clip-text bg-gradient-to-r from-white via-indigo-100 to-purple-200">
-                TWAHANUR RAHMAN
-              </h1>
-              <p className="text-[10px] uppercase tracking-[0.4em] text-slate-500 font-semibold mt-2">
-                System Interface Initialization
-              </p>
-            </motion.div>
+            {/* Brand */}
+            <h1 className="text-lg md:text-xl font-bold tracking-[0.3em] text-white/90 uppercase mb-1">
+              Twahanur Rahman
+            </h1>
+            <p className="text-[10px] uppercase tracking-[0.5em] text-slate-500 font-medium mb-8">
+              Portfolio
+            </p>
 
-            {/* Loading Box */}
-            <motion.div 
-              className="bg-white/[0.02] backdrop-blur-xl border border-white/5 p-6 rounded-2xl shadow-[0_0_50px_-12px_rgba(99,102,241,0.15)] relative overflow-hidden"
-              variants={childVariants}
-            >
-              {/* Progress Bar Container */}
-              <div className="w-full h-[6px] bg-white/5 rounded-full overflow-hidden relative">
-                <div 
-                  className="absolute top-0 left-0 h-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 transition-all duration-500 ease-out shadow-[0_0_12px_rgba(99,102,241,0.8)]"
-                  style={{ width: `${progress}%` }}
+            {/* Progress bar with scanning glow */}
+            <div className="w-full h-[3px] bg-white/5 rounded-full overflow-hidden relative mb-3">
+              {/* Filled portion */}
+              <div
+                className="absolute top-0 left-0 h-full rounded-full transition-[width] duration-300 ease-out"
+                style={{
+                  width: `${progress}%`,
+                  background: "linear-gradient(90deg, #6366f1, #a855f7, #ec4899)",
+                }}
+              />
+              {/* Scanning glow line on top of filled area */}
+              {progress < 100 && (
+                <div
+                  className="absolute top-0 h-full w-[30%] scan-glow pointer-events-none"
+                  style={{
+                    background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent)",
+                    clipPath: `inset(0 ${100 - progress}% 0 0)`,
+                  }}
                 />
-              </div>
+              )}
+            </div>
 
-              {/* Status details */}
-              <div className="flex justify-between items-center text-xs mt-4">
-                <div className="flex items-center gap-2 text-slate-400 font-medium">
-                  {progress < 25 && <Globe className="w-3.5 h-3.5 text-indigo-400 animate-spin" />}
-                  {progress >= 25 && progress < 50 && <Shield className="w-3.5 h-3.5 text-purple-400 animate-pulse" />}
-                  {progress >= 50 && progress < 75 && <Server className="w-3.5 h-3.5 text-pink-400 animate-pulse" />}
-                  {progress >= 75 && <Code2 className="w-3.5 h-3.5 text-emerald-400" />}
-                  <span className="font-mono tracking-wide">{getStatusText(progress)}</span>
-                </div>
-                <span className="text-indigo-400 font-mono font-bold tracking-widest">[ {progress}% ]</span>
-              </div>
-            </motion.div>
-
-            {/* Bottom status links */}
-            <motion.div 
-              className="mt-12 text-[10px] font-mono text-slate-600 flex justify-center gap-6"
-              variants={childVariants}
-            >
-              <span>SECURE PROTOCOL // SSL</span>
-              <span>HOST: VERCEL</span>
-              <span>DB: ONLINE</span>
-            </motion.div>
+            {/* Status text */}
+            <div className="flex justify-between items-center text-[11px]">
+              <span className="text-slate-500 font-mono">{getStatusText(progress)}</span>
+              <span className="text-indigo-400/80 font-mono font-semibold">{progress}%</span>
+            </div>
           </div>
         </motion.div>
       )}

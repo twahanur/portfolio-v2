@@ -17,7 +17,6 @@ import Experience from "../../Pages/Experience";
 import TechStackPage from "../../Pages/TechStack";
 import Footer from "../../Pages/Footer";
 import { fetchAiContext } from "../../lib/api";
-import AOS from "aos";
 import "aos/dist/aos.css";
 
 const SplashCursor = dynamic(
@@ -64,71 +63,74 @@ const LandingPage = ({ showWelcome, setShowWelcome }) => {
   useEffect(() => {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
     let completed = 0;
-    const totalRequests = 5;
+    const totalSteps = 10; // More granular for smoother progress
 
-    const incrementProgress = () => {
-      completed += 1;
-      setLoadingProgress(Math.floor((completed / totalRequests) * 100));
+    const incrementProgress = (steps = 1) => {
+      completed += steps;
+      setLoadingProgress(Math.min(Math.floor((completed / totalSteps) * 100), 100));
     };
 
     const loadAllData = async () => {
       try {
+        // Start progress immediately
+        incrementProgress(1);
+
         const aiContextPromise = fetchAiContext()
           .then((res) => {
-            incrementProgress();
+            incrementProgress(2);
             return res;
           })
           .catch((err) => {
             console.error("AI Context fetch failed:", err);
-            incrementProgress();
+            incrementProgress(2);
             return null;
           });
 
         const projectsPromise = fetch(`${apiUrl}/api/projects`)
           .then((r) => (r.ok ? r.json() : null))
           .then((res) => {
-            incrementProgress();
+            incrementProgress(2);
             return res;
           })
           .catch((err) => {
             console.error("Projects fetch failed:", err);
-            incrementProgress();
+            incrementProgress(2);
             return null;
           });
 
         const certificatesPromise = fetch(`${apiUrl}/api/certificates`)
           .then((r) => (r.ok ? r.json() : null))
           .then((res) => {
-            incrementProgress();
+            incrementProgress(2);
             return res;
           })
           .catch((err) => {
             console.error("Certificates fetch failed:", err);
-            incrementProgress();
+            incrementProgress(2);
             return null;
           });
 
         const blogsPromise = fetch(`${apiUrl}/api/blogs`)
           .then((r) => (r.ok ? r.json() : null))
           .then((res) => {
-            incrementProgress();
+            incrementProgress(1);
             return res;
           })
           .catch((err) => {
             console.error("Blogs fetch failed:", err);
-            incrementProgress();
+            incrementProgress(1);
             return null;
           });
 
         const cvPromise = fetch(`${apiUrl}/api/resume/active`)
           .then((r) => (r.ok ? r.json() : null))
           .then((res) => {
-            incrementProgress();
+            incrementProgress(1);
             return res;
           })
           .catch((err) => {
             console.error("CV fetch failed:", err);
-            incrementProgress();
+            incrementProgress(1);
             return null;
           });
 
@@ -198,6 +200,7 @@ const LandingPage = ({ showWelcome, setShowWelcome }) => {
         }
 
         setPortfolioData(mergedData);
+        setLoadingProgress(100);
         setIsDataLoaded(true);
       } catch (err) {
         console.error("Unified load failed:", err);
@@ -211,26 +214,47 @@ const LandingPage = ({ showWelcome, setShowWelcome }) => {
 
   useEffect(() => {
     if (!showWelcome) {
-      AOS.init({
-        once: true,
-        duration: 800,
-        easing: "ease-out-cubic",
-        offset: 80,
-        throttleDelay: 15,
-        debounceDelay: 15,
-      });
+      // DO NOT call AOS.init() — it registers a debounced scroll handler
+      // that delays animations until scroll stops. The AOS CSS (aos/dist/aos.css)
+      // already defines all animation states via [data-aos] selectors.
+      // We just need to add 'aos-animate' class when elements enter viewport.
 
-      // Refresh AOS at different stages as layout shifts might happen during load
-      const refreshTimers = [
-        setTimeout(() => AOS.refresh(), 100),
-        setTimeout(() => AOS.refresh(), 500),
-        setTimeout(() => AOS.refresh(), 1200),
-        setTimeout(() => AOS.refresh(), 2500),
-        setTimeout(() => AOS.refresh(), 4000),
-      ];
+      // Set global defaults on body (AOS CSS uses body[data-aos-*] for defaults)
+      document.body.setAttribute("data-aos-easing", "ease-out-cubic");
+      document.body.setAttribute("data-aos-duration", "500");
+
+      // IntersectionObserver fires INSTANTLY during scroll — zero debounce
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("aos-animate");
+              observer.unobserve(entry.target); // once: true
+            }
+          });
+        },
+        { rootMargin: "-50px 0px 0px 0px", threshold: 0.05 }
+      );
+
+      // Observe all [data-aos] elements that aren't already animated
+      const observeElements = () => {
+        document.querySelectorAll("[data-aos]:not(.aos-animate)").forEach((el) => {
+          observer.observe(el);
+        });
+      };
+
+      observeElements();
+
+      // MutationObserver to handle dynamically rendered sections
+      // (Education, Experience, TechStack return null until data loads)
+      const mutationObs = new MutationObserver(() => observeElements());
+      mutationObs.observe(document.body, { childList: true, subtree: true });
 
       return () => {
-        refreshTimers.forEach(clearTimeout);
+        observer.disconnect();
+        mutationObs.disconnect();
+        document.body.removeAttribute("data-aos-easing");
+        document.body.removeAttribute("data-aos-duration");
       };
     }
   }, [showWelcome]);
