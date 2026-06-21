@@ -4,8 +4,6 @@
 /* eslint-disable react/display-name */
 import { useState, useEffect, memo } from "react";
 import { Mail, ExternalLink, Github, Linkedin, Instagram, Facebook, Twitter, Youtube, Globe } from "lucide-react";
-import AOS from "aos";
-import "aos/dist/aos.css";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import StatusBadge from "../components/StatusBatch";
 import MainTitle from "../components/MainTitle";
@@ -128,20 +126,6 @@ const Home = ({ profile, skills }) => {
 
     fetchProfile();
   }, [profile, skills]);
-
-  // Optimize AOS initialization
-  useEffect(() => {
-    const initAOS = () => {
-      AOS.init({
-        once: true,
-        offset: 10,
-      });
-    };
-
-    initAOS();
-    window.addEventListener("resize", initAOS);
-    return () => window.removeEventListener("resize", initAOS);
-  }, []);
 
   useEffect(() => {
     setIsLoaded(true);

@@ -5,7 +5,6 @@ import { useEffect, useState, useCallback } from "react";
 import Box from "@mui/material/Box";
 import CardProject from "../components/CardProject";
 import AOS from "aos";
-import "aos/dist/aos.css";
 import BlogHeader from "../components/Blog/BlogHeader";
 import BlogCard from "../components/Blog/BlogCard";
 
@@ -74,12 +73,12 @@ export default function FullWidthTabs({ blogs: propBlogs }) {
   const [initialItems, setInitialItems] = useState(6);
 
   useEffect(() => {
-    // Initialize AOS once
-    AOS.init({
-      once: false, // This will make animations occur only once
-    });
     setInitialItems(window.innerWidth < 768 ? 4 : 6);
   }, []);
+
+  useEffect(() => {
+    AOS.refresh();
+  }, [showAllBlogs]);
 
   const formatBlogs = useCallback((data) => {
     return data.map((b) => ({

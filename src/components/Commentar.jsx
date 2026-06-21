@@ -7,7 +7,6 @@
 import React, { useState, useEffect, useRef, useCallback, memo } from 'react';
 import { MessageCircle, UserCircle2, Loader2, AlertCircle, Send, ImagePlus, X } from 'lucide-react';
 import AOS from "aos";
-import "aos/dist/aos.css";
 
 const Comment = memo(({ comment, formatDate, index }) => (
     <div 
@@ -190,12 +189,8 @@ const Komentar = () => {
     const [error, setError] = useState('');
 
     useEffect(() => {
-        // Initialize AOS
-        AOS.init({
-            once: false,
-            duration: 1000,
-        });
-    }, []);
+        AOS.refresh();
+    }, [comments]);
 
     const fetchComments = useCallback(async () => {
         try {

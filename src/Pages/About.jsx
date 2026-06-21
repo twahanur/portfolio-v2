@@ -13,8 +13,6 @@ import {
   ArrowUpRight,
   Sparkles,
 } from "lucide-react";
-import AOS from "aos";
-import "aos/dist/aos.css";
 import DecryptedText from "../components/AnimationComponents/DecryotedText";
 import useFetchCV from "../components/common/useFetchData";
 import { fetchAiContext } from "../lib/api";
@@ -219,29 +217,6 @@ const AboutPage = ({ profile: propProfile, cv: propCv, projects: propProjects, c
     };
   }, [propProjects, propCertificates]);
 
-  // Optimized AOS initialization
-  useEffect(() => {
-    const initAOS = () => {
-      AOS.init({
-        once: false,
-      });
-    };
-
-    initAOS();
-
-    // Debounced resize handler
-    let resizeTimer;
-    const handleResize = () => {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(initAOS, 250);
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-      clearTimeout(resizeTimer);
-    };
-  }, []);
 
   // Memoized stats data
   const statsData = useMemo(

@@ -9,7 +9,6 @@ import Box from "@mui/material/Box";
 import CardProject from "../components/CardProject";
 import TechStackIcon from "../components/TechStackIcon";
 import AOS from "aos";
-import "aos/dist/aos.css";
 import Certificate from "../components/Certificate";
 import PortfolioHeader from "../components/Portfolio/PortfolioHeader";
 import PortfolioAppbar from "../components/Portfolio/PortfolioAppbar";
@@ -126,14 +125,13 @@ export default function FullWidthTabs({ projects: propProjects, certificates: pr
   const [showAllProjects, setShowAllProjects] = useState(false);
   const [showAllCertificates, setShowAllCertificates] = useState(false);
   const [initialItems, setInitialItems] = useState(6);
-
   useEffect(() => {
-    // Initialize AOS once
-    AOS.init({
-      once: false, // This will make animations occur only once
-    });
     setInitialItems(window.innerWidth < 768 ? 4 : 6);
   }, []);
+
+  useEffect(() => {
+    AOS.refresh();
+  }, [value, showAllProjects, showAllCertificates]);
 
   const formatProjects = useCallback((data) => {
     return data.map((p) => {

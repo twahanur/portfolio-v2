@@ -17,6 +17,8 @@ import Experience from "../../Pages/Experience";
 import TechStackPage from "../../Pages/TechStack";
 import Footer from "../../Pages/Footer";
 import { fetchAiContext } from "../../lib/api";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 const SplashCursor = dynamic(
   () => import("../AnimationComponents/SplashCursor"),
@@ -206,6 +208,32 @@ const LandingPage = ({ showWelcome, setShowWelcome }) => {
 
     loadAllData();
   }, []);
+
+  useEffect(() => {
+    if (!showWelcome) {
+      AOS.init({
+        once: true,
+        duration: 800,
+        easing: "ease-out-cubic",
+        offset: 80,
+        throttleDelay: 15,
+        debounceDelay: 15,
+      });
+
+      // Refresh AOS at different stages as layout shifts might happen during load
+      const refreshTimers = [
+        setTimeout(() => AOS.refresh(), 100),
+        setTimeout(() => AOS.refresh(), 500),
+        setTimeout(() => AOS.refresh(), 1200),
+        setTimeout(() => AOS.refresh(), 2500),
+        setTimeout(() => AOS.refresh(), 4000),
+      ];
+
+      return () => {
+        refreshTimers.forEach(clearTimeout);
+      };
+    }
+  }, [showWelcome]);
 
   return (
     <>
