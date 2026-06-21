@@ -3,6 +3,32 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  /* Default: Dark theme values */
+  --bg-primary: #030014;
+  --bg-secondary: #060713;
+  --text-primary: #ffffff;
+  --text-muted: #e2d3fd;
+  --text-secondary: #94a3b8;
+  --border-primary: rgba(99, 102, 241, 0.1);
+  --card-bg: rgba(6, 7, 19, 0.85);
+  --scroll-track: rgba(3, 0, 20, 0.4);
+  --scroll-thumb: rgba(99, 102, 241, 0.3);
+}
+
+html:not(.dark) {
+  /* Light theme values */
+  --bg-primary: #f8fafc;
+  --bg-secondary: #ffffff;
+  --text-primary: #0f172a;
+  --text-muted: #334155;
+  --text-secondary: #64748b;
+  --border-primary: rgba(15, 23, 42, 0.08);
+  --card-bg: rgba(255, 255, 255, 0.8);
+  --scroll-track: rgba(15, 23, 42, 0.05);
+  --scroll-thumb: rgba(99, 102, 241, 0.35);
+}
+
 * {
 	margin: 0;
 	padding: 0;
@@ -10,14 +36,16 @@
 	font-family: "Poppins", serif;
 	scroll-behavior: smooth;
 	scrollbar-width: thin;
-	scrollbar-color: rgba(99, 102, 241, 0.3) rgba(12, 5, 53, 0.356);
+	scrollbar-color: var(--scroll-thumb) var(--scroll-track);
 }
 
 html,
 body {
 	overflow-x: hidden;
-	background: #030014;
+	background: var(--bg-primary);
+	color: var(--text-primary);
 	scroll-behavior: smooth !important;
+	transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 @keyframes blob {
@@ -50,21 +78,21 @@ body {
   }
   
   ::-webkit-scrollbar-track {
-	background: rgba(3, 0, 20, 0.4);
+	background: var(--scroll-track);
 	backdrop-filter: blur(8px);
 	-webkit-backdrop-filter: blur(8px);
-	border: 1px solid rgba(99, 102, 241, 0.1);
+	border: 1px solid var(--border-primary);
   }
   
   ::-webkit-scrollbar-thumb {
-	background: rgba(99, 102, 241, 0.3);
+	background: var(--scroll-thumb);
 	backdrop-filter: blur(4px);
 	-webkit-backdrop-filter: blur(4px);
 	border-radius: 20px;
-	border: 1px solid rgba(255, 255, 255, 0.1);
+	border: 1px solid var(--border-primary);
 	box-shadow: 
-	  inset 0 0 20px rgba(168, 85, 247, 0.2),
-	  0 0 10px rgba(99, 102, 241, 0.2);
+	  inset 0 0 20px rgba(168, 85, 247, 0.1),
+	  0 0 10px rgba(99, 102, 241, 0.1);
 	transition: all 0.3s ease;
   }
   

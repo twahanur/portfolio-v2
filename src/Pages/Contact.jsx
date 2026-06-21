@@ -118,14 +118,14 @@ const ContactPage = () => {
           <div
             data-aos="fade-right"
             data-aos-duration="1200"
-            className="bg-white/5 backdrop-blur-xl rounded-3xl shadow-2xl p-5 py-10 sm:p-10 transform transition-all duration-300 hover:shadow-[#6366f1]/10"
+            className="bg-white/80 dark:bg-white/5 border border-slate-200 dark:border-white/10 backdrop-blur-xl rounded-3xl shadow-xl dark:shadow-2xl p-5 py-10 sm:p-10 transform transition-all duration-300 hover:shadow-[#6366f1]/10"
           >
             <div className="flex justify-between items-start mb-8">
               <div>
                 <h2 className="text-4xl font-bold mb-3 text-transparent bg-clip-text bg-gradient-to-r from-[#6366f1] to-[#a855f7]">
                   Get in Touch
                 </h2>
-                <p className="text-gray-400">
+                <p className="text-slate-500 dark:text-gray-400">
                   Have something to discuss? Send me a message and let's talk.
                 </p>
               </div>
@@ -150,7 +150,7 @@ const ContactPage = () => {
                 data-aos-delay="100"
                 className="relative group"
               >
-                <User className="absolute left-4 top-4 w-5 h-5 text-gray-400 group-focus-within:text-[#6366f1] transition-colors" />
+                <User className="absolute left-4 top-4 w-5 h-5 text-slate-400 dark:text-gray-400 group-focus-within:text-[#6366f1] transition-colors" />
                 <input
                   type="text"
                   name="name"
@@ -158,7 +158,7 @@ const ContactPage = () => {
                   value={formData.name}
                   onChange={handleChange}
                   disabled={isSubmitting}
-                  className="w-full p-4 pl-12 bg-white/10 rounded-xl border border-white/20 placeholder-gray-500 text-white focus:outline-none focus:ring-2 focus:ring-[#6366f1]/30 transition-all duration-300 hover:border-[#6366f1]/30 disabled:opacity-50"
+                  className="w-full p-4 pl-12 bg-slate-100 dark:bg-white/10 rounded-xl border border-slate-200 dark:border-white/20 placeholder-slate-400 dark:placeholder-gray-500 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#6366f1]/30 transition-all duration-300 hover:border-[#6366f1]/30 disabled:opacity-50"
                   required
                 />
               </div>
@@ -167,7 +167,7 @@ const ContactPage = () => {
                 data-aos-delay="200"
                 className="relative group"
               >
-                <Mail className="absolute left-4 top-4 w-5 h-5 text-gray-400 group-focus-within:text-[#6366f1] transition-colors" />
+                <Mail className="absolute left-4 top-4 w-5 h-5 text-slate-400 dark:text-gray-400 group-focus-within:text-[#6366f1] transition-colors" />
                 <input
                   type="email"
                   name="email"
@@ -175,7 +175,7 @@ const ContactPage = () => {
                   value={formData.email}
                   onChange={handleChange}
                   disabled={isSubmitting}
-                  className="w-full p-4 pl-12 bg-white/10 rounded-xl border border-white/20 placeholder-gray-500 text-white focus:outline-none focus:ring-2 focus:ring-[#6366f1]/30 transition-all duration-300 hover:border-[#6366f1]/30 disabled:opacity-50"
+                  className="w-full p-4 pl-12 bg-slate-100 dark:bg-white/10 rounded-xl border border-slate-200 dark:border-white/20 placeholder-slate-400 dark:placeholder-gray-500 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#6366f1]/30 transition-all duration-300 hover:border-[#6366f1]/30 disabled:opacity-50"
                   required
                 />
               </div>
@@ -184,14 +184,14 @@ const ContactPage = () => {
                 data-aos-delay="300"
                 className="relative group"
               >
-                <MessageSquare className="absolute left-4 top-4 w-5 h-5 text-gray-400 group-focus-within:text-[#6366f1] transition-colors" />
+                <MessageSquare className="absolute left-4 top-4 w-5 h-5 text-slate-400 dark:text-gray-400 group-focus-within:text-[#6366f1] transition-colors" />
                 <textarea
                   name="message"
                   placeholder="Your Message"
                   value={formData.message}
                   onChange={handleChange}
                   disabled={isSubmitting}
-                  className="w-full resize-none p-4 pl-12 bg-white/10 rounded-xl border border-white/20 placeholder-gray-500 text-white focus:outline-none focus:ring-2 focus:ring-[#6366f1]/30 transition-all duration-300 hover:border-[#6366f1]/30 h-[9.9rem] disabled:opacity-50"
+                  className="w-full resize-none p-4 pl-12 bg-slate-100 dark:bg-white/10 rounded-xl border border-slate-200 dark:border-white/20 placeholder-slate-400 dark:placeholder-gray-500 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#6366f1]/30 transition-all duration-300 hover:border-[#6366f1]/30 h-[9.9rem] disabled:opacity-50"
                   required
                 />
               </div>
@@ -200,7 +200,7 @@ const ContactPage = () => {
                 data-aos-delay="200"
                 className="relative group"
               >
-                <Files className="absolute left-4 top-4 w-5 h-5 text-gray-400 group-focus-within:text-[#6366f1] transition-colors" />
+                <Files className="absolute left-4 top-4 w-5 h-5 text-slate-400 dark:text-gray-400 group-focus-within:text-[#6366f1] transition-colors" />
                 <input
                   type="file"
                   name="attachment"
@@ -208,7 +208,7 @@ const ContactPage = () => {
                   value={formData.attachment}
                   onChange={handleChange}
                   disabled={isSubmitting}
-                  className="w-full p-4 pl-12 bg-white/10 rounded-xl border border-white/20 placeholder-gray-500 text-white focus:outline-none focus:ring-2 focus:ring-[#6366f1]/30 transition-all duration-300 hover:border-[#6366f1]/30 disabled:opacity-50"
+                  className="w-full p-4 pl-12 bg-slate-100 dark:bg-white/10 rounded-xl border border-slate-200 dark:border-white/20 placeholder-slate-400 dark:placeholder-gray-500 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#6366f1]/30 transition-all duration-300 hover:border-[#6366f1]/30 disabled:opacity-50"
                 />
               </div>
               <button
@@ -223,12 +223,12 @@ const ContactPage = () => {
               </button>
             </form>
 
-            <div className="mt-10 pt-6 border-t border-white/10 flex justify-center space-x-6">
+            <div className="mt-10 pt-6 border-t border-slate-200 dark:border-white/10 flex justify-center space-x-6">
               <SocialLinks />
             </div>
           </div>
 
-          <div className="bg-white/5 backdrop-blur-xl rounded-3xl p-3 py-3 md:p-10 md:py-8 shadow-2xl transform transition-all duration-300 hover:shadow-[#6366f1]/10">
+          <div className="bg-white/80 dark:bg-white/5 border border-slate-200 dark:border-white/10 backdrop-blur-xl rounded-3xl p-3 py-3 md:p-10 md:py-8 shadow-xl dark:shadow-2xl transform transition-all duration-300 hover:shadow-[#6366f1]/10">
             <Komentar />
           </div>
         </div>

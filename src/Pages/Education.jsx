@@ -47,15 +47,15 @@ export default function EducationPage() {
   }
 
   return (
-    <div className="px-4 py-16 bg-[#030014]/30 relative overflow-hidden" id="education">
+    <div className="px-4 py-16 bg-slate-50/15 dark:bg-[#030014]/30 relative overflow-hidden" id="education">
       {/* Background radial glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-purple-500/5 rounded-full blur-[120px] pointer-events-none" />
 
       <div className="text-center pb-12" data-aos="fade-up" data-aos-duration="1000">
-        <h2 className="inline-block text-3xl md:text-5xl font-extrabold text-center mx-auto text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-amber-400">
+        <h2 className="inline-block text-3xl md:text-5xl font-extrabold text-center mx-auto text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-pink-600 to-amber-600 dark:from-purple-400 dark:via-pink-400 dark:to-amber-400">
           Education
         </h2>
-        <p className="text-slate-400 max-w-2xl mx-auto text-xs md:text-sm mt-3 tracking-wide uppercase font-semibold">
+        <p className="text-slate-500 dark:text-slate-400 max-w-2xl mx-auto text-xs md:text-sm mt-3 tracking-wide uppercase font-semibold">
           My academic qualifications
         </p>
       </div>

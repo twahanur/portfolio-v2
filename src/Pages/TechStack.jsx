@@ -94,17 +94,17 @@ export default function TechStackPage() {
   }
 
   return (
-    <div className="px-4 py-20 bg-[#030014]/40 relative overflow-hidden" id="tech-stack">
+    <div className="px-4 py-20 bg-slate-50/20 dark:bg-[#030014]/40 relative overflow-hidden" id="tech-stack">
       {/* Background ambient light */}
       <div className="absolute top-0 left-1/4 w-[400px] h-[400px] bg-indigo-500/5 rounded-full blur-[140px] pointer-events-none" />
       <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-purple-500/5 rounded-full blur-[140px] pointer-events-none" />
 
       <div className="max-w-6xl mx-auto">
         <div className="text-center pb-16" data-aos="fade-up" data-aos-duration="1000">
-          <h2 className="inline-block text-3xl md:text-5xl font-extrabold text-center mx-auto text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400">
+          <h2 className="inline-block text-3xl md:text-5xl font-extrabold text-center mx-auto text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 dark:from-blue-400 dark:via-indigo-400 dark:to-purple-400">
             Skills & Tech Stack
           </h2>
-          <p className="text-slate-400 max-w-2xl mx-auto text-xs md:text-sm mt-3 tracking-wide uppercase font-semibold">
+          <p className="text-slate-500 dark:text-slate-400 max-w-2xl mx-auto text-xs md:text-sm mt-3 tracking-wide uppercase font-semibold">
             My technology landscape and engineering capabilities classified by domain
           </p>
         </div>
@@ -116,15 +116,15 @@ export default function TechStackPage() {
               key={category.id || category.slug}
               data-aos="fade-up"
               data-aos-delay={idx * 50}
-              className="relative bg-[#060713]/80 backdrop-blur-xl border border-slate-800/80 hover:border-indigo-500/30 rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_30px_rgba(99,102,241,0.08)] flex flex-col justify-between"
+              className="relative bg-white/80 dark:bg-[#060713]/80 backdrop-blur-xl border border-slate-200 dark:border-slate-800/80 hover:border-indigo-500/30 rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_30px_rgba(99,102,241,0.08)] flex flex-col justify-between"
             >
               <div>
                 {/* Category Header */}
-                <div className="flex items-center gap-3 border-b border-slate-800/60 pb-4 mb-5">
+                <div className="flex items-center gap-3 border-b border-slate-100 dark:border-slate-800/60 pb-4 mb-5">
                   <div className="p-2 bg-indigo-500/10 rounded-lg border border-indigo-500/20">
                     {getCategoryIcon(category.slug)}
                   </div>
-                  <h3 className="text-lg font-bold text-white tracking-wide">
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white tracking-wide">
                     {category.name}
                   </h3>
                 </div>
@@ -135,7 +135,7 @@ export default function TechStackPage() {
                     const hasHexColor = skill.color && skill.color.startsWith('#');
                     const badgeColor = skill.color || '#6366f1';
                     const hoverBg = hasHexColor ? `${skill.color}15` : 'rgba(99, 102, 241, 0.15)';
-                    const defaultBorder = hasHexColor ? `${skill.color}35` : 'rgba(30, 41, 59, 0.8)';
+                    const defaultBorder = hasHexColor ? `${skill.color}35` : 'rgba(148, 163, 184, 0.3)';
                     return (
                       <motion.span
                         key={skill.id}
@@ -145,10 +145,10 @@ export default function TechStackPage() {
                           color: '#ffffff',
                           backgroundColor: hoverBg
                         }}
-                        className="px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-900/60 transition-all duration-200 cursor-default border"
+                        className="px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-100/80 dark:bg-slate-900/60 transition-all duration-200 cursor-default border"
                         style={{
                           borderColor: defaultBorder,
-                          color: skill.color ? skill.color : 'rgb(203, 213, 225)',
+                          color: skill.color ? skill.color : 'var(--text-muted)',
                         }}
                       >
                         {skill.name}

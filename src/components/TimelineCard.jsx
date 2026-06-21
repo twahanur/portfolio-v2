@@ -237,7 +237,7 @@ const TimelineCard = ({ data }) => {
                   >
                     {/* Experience Card (takes 80% of width) */}
                     <div className="w-[85%]" data-aos={isEven ? "fade-right" : "fade-left"}>
-                      <div className="relative bg-[#060713]/85 backdrop-blur-2xl border border-slate-800/70 hover:border-indigo-500/30 rounded-2xl p-7 md:p-9 transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_0_35px_rgba(99,102,241,0.12)] overflow-hidden group">
+                      <div className="relative bg-white/80 dark:bg-[#060713]/85 backdrop-blur-2xl border border-slate-250 dark:border-slate-800/70 hover:border-indigo-500/30 rounded-2xl p-7 md:p-9 transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_0_35px_rgba(99,102,241,0.12)] overflow-hidden group">
                         
                         {/* Left edge accent glow */}
                         <div className={`absolute top-0 bottom-0 left-0 w-[3px] bg-gradient-to-b ${element.color} opacity-80`} />
@@ -247,22 +247,22 @@ const TimelineCard = ({ data }) => {
 
                         {/* Large year watermark in the bottom right corner (e.g. 2025, 2023) */}
                         {element.year && (
-                          <div className="absolute right-8 bottom-0 text-[6rem] md:text-[8.5rem] font-black text-slate-800/10 pointer-events-none select-none z-0 transition-transform duration-700 group-hover:scale-105 group-hover:text-indigo-500/5 leading-none">
+                          <div className="absolute right-8 bottom-0 text-[6rem] md:text-[8.5rem] font-black text-slate-300/20 dark:text-slate-800/10 pointer-events-none select-none z-0 transition-transform duration-700 group-hover:scale-105 group-hover:text-indigo-500/5 leading-none">
                             {element.year}
                           </div>
                         )}
 
                         <div className="relative z-10 space-y-4">
                           {/* Row 1: Large Bold Title, Company & Date */}
-                          <h3 className="text-xl md:text-2xl font-extrabold text-white tracking-tight leading-snug">
-                            {element.title} — <span className="text-indigo-400 font-semibold">{element.subtitle}</span>{" "}
-                            <span className="text-sm font-bold text-gray-400 bg-slate-900/60 border border-slate-800 px-3 py-1 rounded-full whitespace-nowrap ml-2">
+                          <h3 className="text-xl md:text-2xl font-extrabold text-slate-950 dark:text-white tracking-tight leading-snug">
+                            {element.title} — <span className="text-indigo-600 dark:text-indigo-400 font-semibold">{element.subtitle}</span>{" "}
+                            <span className="text-sm font-bold text-slate-600 dark:text-gray-400 bg-slate-100 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 px-3 py-1 rounded-full whitespace-nowrap ml-2">
                               {element.date}
                             </span>
                           </h3>
 
                           {/* Row 2: Subtext description */}
-                          <p className="text-sm text-gray-300/95 leading-relaxed max-w-[85%] font-medium">
+                          <p className="text-sm text-slate-600 dark:text-gray-300/95 leading-relaxed max-w-[85%] font-medium">
                             {element.description}
                           </p>
 
@@ -270,7 +270,7 @@ const TimelineCard = ({ data }) => {
                           {element.highlights && element.highlights.length > 0 && (
                             <ul className="space-y-2 max-w-[85%]">
                               {element.highlights.map((hl, hidx) => (
-                                <li key={hidx} className="text-xs text-gray-400 flex items-start gap-2.5">
+                                <li key={hidx} className="text-xs text-slate-500 dark:text-gray-400 flex items-start gap-2.5">
                                   <span className="h-1.5 w-1.5 rounded-full bg-indigo-500 shrink-0 mt-1.5 shadow-[0_0_8px_rgba(99,102,241,0.6)]" />
                                   <span>{hl}</span>
                                 </li>
@@ -284,7 +284,7 @@ const TimelineCard = ({ data }) => {
                               {element.techStack.map((tech, tidx) => (
                                 <span 
                                   key={tidx} 
-                                  className="text-[10px] px-3 py-1 rounded-full font-bold bg-indigo-500/10 text-indigo-300 border border-indigo-500/20 shadow-sm"
+                                  className="text-[10px] px-3 py-1 rounded-full font-bold bg-indigo-500/10 text-indigo-600 dark:text-indigo-300 border border-indigo-500/20 shadow-sm"
                                 >
                                   {tech}
                                 </span>
@@ -299,13 +299,13 @@ const TimelineCard = ({ data }) => {
                                 href={element.credentialUrl}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-400 hover:text-indigo-300 transition-colors uppercase tracking-wider group/link"
+                                className="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300 transition-colors uppercase tracking-wider group/link"
                               >
                                 Verify Credential 
                                 <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5" />
                               </a>
                             ) : (
-                              <span className="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-400/90 hover:text-indigo-300 transition-colors uppercase tracking-wider cursor-pointer group/link">
+                              <span className="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-600 dark:text-indigo-400/90 hover:text-indigo-500 dark:hover:text-indigo-300 transition-colors uppercase tracking-wider cursor-pointer group/link">
                                 Learn More 
                                 <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5" />
                               </span>
@@ -344,7 +344,7 @@ const TimelineCard = ({ data }) => {
 
           {/* MOBILE TIMELINE (Left straight track, right cards stacked) */}
           <div className="relative pl-8 md:hidden space-y-8">
-            <div className="absolute left-3.5 top-2 bottom-2 w-0.5 bg-slate-800/80" />
+            <div className="absolute left-3.5 top-2 bottom-2 w-0.5 bg-slate-350 dark:bg-slate-800/80" />
 
             {filteredElements.map((element, idx) => (
               <div 
@@ -354,35 +354,35 @@ const TimelineCard = ({ data }) => {
                 data-aos-delay={idx * 50}
               >
                 {/* Node marker */}
-                <div className="absolute -left-[27px] top-1.5 w-4.5 h-4.5 rounded-full bg-slate-950 border-2 border-indigo-500 flex items-center justify-center z-10">
-                  <div className="w-1.5 h-1.5 rounded-full bg-indigo-450" />
+                <div className="absolute -left-[27px] top-1.5 w-4.5 h-4.5 rounded-full bg-white dark:bg-slate-950 border-2 border-indigo-500 flex items-center justify-center z-10">
+                  <div className="w-1.5 h-1.5 rounded-full bg-indigo-500" />
                 </div>
 
                 {/* Mobile Card */}
-                <div className="bg-[#060713]/85 backdrop-blur-xl border border-slate-800/70 rounded-2xl p-5 space-y-3 relative overflow-hidden">
+                <div className="bg-white/80 dark:bg-[#060713]/85 backdrop-blur-xl border border-slate-200 dark:border-slate-800/70 rounded-2xl p-5 space-y-3 relative overflow-hidden">
                   <div className={`absolute top-0 bottom-0 left-0 w-[3px] bg-gradient-to-b ${element.color} opacity-80`} />
                   
                   <div className="flex justify-between items-start">
-                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider bg-slate-900 border border-slate-800 px-2 py-0.5 rounded">
+                    <span className="text-[10px] font-bold text-slate-600 dark:text-gray-400 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-850 px-2 py-0.5 rounded">
                       {element.date}
                     </span>
                     {element.year && (
-                      <span className="text-[10px] font-bold text-slate-850">
+                      <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500">
                         {element.year}
                       </span>
                     )}
                   </div>
 
                   <div>
-                    <h3 className="text-sm font-extrabold text-white leading-tight">
+                    <h3 className="text-sm font-extrabold text-slate-950 dark:text-white leading-tight">
                       {element.title}
                     </h3>
-                    <p className="text-xs text-indigo-400 font-semibold mt-0.5">
+                    <p className="text-xs text-indigo-600 dark:text-indigo-400 font-semibold mt-0.5">
                       {element.subtitle}
                     </p>
                   </div>
 
-                  <p className="text-xs text-gray-350 leading-relaxed pt-1 border-t border-slate-800/40">
+                  <p className="text-xs text-slate-600 dark:text-gray-300/95 leading-relaxed pt-1 border-t border-slate-200 dark:border-slate-800/40">
                     {element.description}
                   </p>
 
@@ -391,7 +391,7 @@ const TimelineCard = ({ data }) => {
                       {element.techStack.slice(0, 4).map((tech, tidx) => (
                         <span 
                           key={tidx} 
-                          className="text-[8px] px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-300 border border-indigo-500/20"
+                          className="text-[8px] px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-600 dark:text-indigo-300 border border-indigo-500/20"
                         >
                           {tech}
                         </span>

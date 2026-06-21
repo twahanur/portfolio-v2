@@ -15,8 +15,8 @@ const ToggleButton = ({ onClick, isShowingMore }) => (
     onClick={onClick}
     className="
       px-3 py-1.5
-      text-slate-300 
-      hover:text-white 
+      text-slate-700 dark:text-slate-300 
+      hover:text-slate-950 dark:hover:text-white 
       text-sm 
       font-medium 
       transition-all 
@@ -25,12 +25,12 @@ const ToggleButton = ({ onClick, isShowingMore }) => (
       flex 
       items-center 
       gap-2
-      bg-white/5 
-      hover:bg-white/10
+      bg-slate-100 dark:bg-white/5 
+      hover:bg-slate-200 dark:hover:bg-white/10
       rounded-md
       border 
-      border-white/10
-      hover:border-white/20
+      border-slate-300 dark:border-white/10
+      hover:border-slate-400 dark:hover:border-white/20
       backdrop-blur-sm
       group
       relative
@@ -125,7 +125,7 @@ export default function FullWidthTabs() {
 
   return (
     <div
-      className="md:px-[10%] px-[5%] w-full sm:mt-0 mt-[3rem] bg-[#030014] overflow-hidden"
+      className="md:px-[10%] px-[5%] w-full sm:mt-0 mt-[3rem] bg-transparent overflow-hidden"
       id="Blog"
     >
       {/* Header section - unchanged */}

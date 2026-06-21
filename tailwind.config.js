@@ -2,9 +2,17 @@ import typography from "@tailwindcss/typography";
 
 /** @type {import('tailwindcss').Config} */
 export default {
+  darkMode: "class",
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
+      colors: {
+        themeBg: "var(--bg-primary)",
+        themeCard: "var(--bg-secondary)",
+        themeText: "var(--text-primary)",
+        themeTextMuted: "var(--text-muted)",
+        themeBorder: "var(--border-primary)",
+      },
       backdropBlur: {
         sm: "4px",
       },

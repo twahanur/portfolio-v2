@@ -52,7 +52,7 @@ const LandingPage = ({ showWelcome, setShowWelcome }) => {
             sparkCount={15}
             duration={400}
           >
-            <div className="sticky top-0 z-50 bg-[#030014] backdrop-blur-sm shadow-lg">
+            <div className="sticky top-0 z-50 bg-white dark:bg-[#030014] backdrop-blur-sm shadow-lg">
               <Navbar />
             </div>
             <AnimatedBackground />

@@ -38,7 +38,7 @@ const Header = memo(() => (
       </h2>
     </div>
     <p
-      className="mt-2 text-gray-400 max-w-2xl mx-auto text-base sm:text-lg flex items-center justify-center gap-2"
+      className="mt-2 text-slate-500 dark:text-gray-400 max-w-2xl mx-auto text-base sm:text-lg flex items-center justify-center gap-2"
       data-aos="zoom-in-up"
       data-aos-duration="800"
     >
@@ -98,17 +98,17 @@ const StatCard = memo(
       data-aos-duration={1300}
       className="relative group"
     >
-      <div className="relative z-10 bg-gray-900/50 backdrop-blur-lg rounded-2xl p-6 border border-white/10 overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-2xl h-full flex flex-col justify-between">
+      <div className="relative z-10 bg-white/80 dark:bg-gray-900/50 backdrop-blur-lg rounded-2xl p-6 border border-slate-200 dark:border-white/10 overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-xl dark:hover:shadow-2xl h-full flex flex-col justify-between">
         <div
           className={`absolute -z-10 inset-0 bg-gradient-to-br ${color} opacity-10 group-hover:opacity-20 transition-opacity duration-300`}
         ></div>
 
         <div className="flex items-center justify-between mb-4">
-          <div className="w-16 h-16 rounded-full flex items-center justify-center bg-white/10 transition-transform group-hover:rotate-6">
-            <Icon className="w-8 h-8 text-white" />
+          <div className="w-16 h-16 rounded-full flex items-center justify-center bg-slate-100 dark:bg-white/10 transition-transform group-hover:rotate-6 border border-slate-200 dark:border-transparent">
+            <Icon className="w-8 h-8 text-slate-800 dark:text-white" />
           </div>
           <span
-            className="text-4xl font-bold text-white"
+            className="text-4xl font-bold text-slate-900 dark:text-white"
             data-aos="fade-up-left"
             data-aos-duration="1500"
             data-aos-anchor-placement="top-bottom"
@@ -119,7 +119,7 @@ const StatCard = memo(
 
         <div>
           <p
-            className="text-sm uppercase tracking-wider text-gray-300 mb-2"
+            className="text-sm uppercase tracking-wider text-slate-600 dark:text-gray-300 mb-2"
             data-aos="fade-up"
             data-aos-duration="800"
             data-aos-anchor-placement="top-bottom"
@@ -128,14 +128,14 @@ const StatCard = memo(
           </p>
           <div className="flex items-center justify-between">
             <p
-              className="text-xs text-gray-400"
+              className="text-xs text-slate-500 dark:text-gray-400"
               data-aos="fade-up"
               data-aos-duration="1000"
               data-aos-anchor-placement="top-bottom"
             >
               {description}
             </p>
-            <ArrowUpRight className="w-4 h-4 text-white/50 group-hover:text-white transition-colors" />
+            <ArrowUpRight className="w-4 h-4 text-slate-400 dark:text-white/50 group-hover:text-slate-850 dark:group-hover:text-white transition-colors" />
           </div>
         </div>
       </div>
@@ -255,7 +255,7 @@ const AboutPage = () => {
 
   return (
     <div
-      className="h-auto pb-[10%] text-white overflow-hidden px-[5%] sm:px-[5%] lg:px-[10%] mt-10 sm-mt-0"
+      className="h-auto pb-[10%] text-slate-800 dark:text-white overflow-hidden px-[5%] sm:px-[5%] lg:px-[10%] mt-10 sm-mt-0"
       id="About"
     >
       <Header />
@@ -278,7 +278,7 @@ const AboutPage = () => {
                 />
               </span>
               <span
-                className="block mt-2 text-gray-200"
+                className="block mt-2 text-slate-800 dark:text-gray-200"
                 data-aos="fade-right"
                 data-aos-duration="1300"
               >
@@ -293,7 +293,7 @@ const AboutPage = () => {
             </h2>
 
             <p
-              className="text-base sm:text-lg lg:text-xl text-gray-400 leading-relaxed text-justify pb-4 sm:pb-0"
+              className="text-base sm:text-lg lg:text-xl text-slate-650 dark:text-gray-400 leading-relaxed text-justify pb-4 sm:pb-0"
               data-aos="fade-right"
               data-aos-duration="1500"
             >

@@ -48,13 +48,13 @@ const Footer = () => {
   };
 
   return (
-    <footer className="bg-[#030014] text-[#e2d3fd]">
+    <footer className="bg-slate-50 dark:bg-[#030014] border-t border-slate-200 dark:border-transparent text-slate-650 dark:text-[#e2d3fd] transition-colors duration-300">
       <div className="py-16 px-6 lg:px-8">
         <div className="text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white">
+          <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white">
             Let&apos;s Build Something New
           </h2>
-          <p className="mt-4 text-lg text-[#c0b2e3] max-w-2xl mx-auto">
+          <p className="mt-4 text-lg text-slate-600 dark:text-[#c0b2e3] max-w-2xl mx-auto">
             Have a project in mind or just want to connect? I&apos;m always open to
             discussing new ideas and opportunities.
           </p>
@@ -86,8 +86,8 @@ const Footer = () => {
             </div>
           )}
         </div>
-        <div className="mt-16 border-t border-[#5f5a78]/30 pt-8 flex flex-col sm:flex-row items-center justify-between">
-          <p className="text-sm text-[#a79cc7] order-2 sm:order-1 mt-4 sm:mt-0">
+        <div className="mt-16 border-t border-slate-250 dark:border-[#5f5a78]/30 pt-8 flex flex-col sm:flex-row items-center justify-between">
+          <p className="text-sm text-slate-500 dark:text-[#a79cc7] order-2 sm:order-1 mt-4 sm:mt-0">
             © {year} Twahanur. All Rights Reserved.
           </p>
           

@@ -122,7 +122,7 @@ const Home = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#030014] overflow-hidden" id="Home">
+    <div className="min-h-screen bg-transparent overflow-hidden" id="Home">
       <div
         className={`relative z-10 transition-all duration-1000 ${
           isLoaded ? "opacity-100" : "opacity-0"
@@ -146,7 +146,7 @@ const Home = () => {
                   <RotatingText
                     texts={words}
                     staticText=""
-                    staticTextClassName="text-gray-400"
+                    staticTextClassName="text-slate-500 dark:text-gray-400"
                     mainClassName="overflow-hidden py-0.5 sm:py-1 md:py-2 text-3xl rounded-lg"
                     staggerFrom={"last"}
                     initial={{ y: "100%" }}
@@ -161,7 +161,7 @@ const Home = () => {
 
                 {/* Description */}
                 <p
-                  className="text-base md:text-lg text-gray-400 max-w-xl leading-relaxed font-light"
+                  className="text-base md:text-lg text-slate-650 dark:text-gray-400 max-w-xl leading-relaxed font-light"
                   data-aos="fade-up"
                   data-aos-delay="1000"
                 >
