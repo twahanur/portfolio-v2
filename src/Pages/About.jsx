@@ -143,8 +143,10 @@ const StatCard = memo(
   )
 );
 
-const AboutPage = () => {
-  const cv = useFetchCV()
+const AboutPage = ({ profile: propProfile, cv: propCv, projects: propProjects, certificates: propCertificates }) => {
+  const cvFetch = useFetchCV();
+  const cv = propCv || cvFetch;
+
   const [profile, setProfile] = useState({
     name: "Twahanur Rahman",
     bio: "self-dependent, enthusiastic, responsible, and deeply interested in learning new things. I work for mobile and web applications. At the moment, I am looking for a suitable opportunity that gives me a scope to utilize my creativity, knowledge, and skill.",
@@ -152,6 +154,15 @@ const AboutPage = () => {
   });
 
   useEffect(() => {
+    if (propProfile) {
+      setProfile({
+        name: propProfile.name || "Twahanur Rahman",
+        bio: propProfile.bio || "self-dependent, enthusiastic, responsible, and deeply interested in learning new things. I work for mobile and web applications. At the moment, I am looking for a suitable opportunity that gives me a scope to utilize my creativity, knowledge, and skill.",
+        profilePictureUrl: propProfile.profilePictureUrl || "https://i.ibb.co.com/bjywV4Mn/twahanur-twahanur-rahman-twaha-thohanur-thohanur-rahman.png",
+      });
+      return;
+    }
+
     const fetchProfile = async () => {
       try {
         const payload = await fetchAiContext();
@@ -168,18 +179,28 @@ const AboutPage = () => {
       }
     };
     fetchProfile();
-  }, []);
+  }, [propProfile]);
 
-  console.log("first", cv?.Link);
   const cvLink = cv?.Link && (cv.Link.startsWith("http") ? cv.Link : `https://drive.google.com/uc?export=download&id=${cv.Link}`);
 
-  console.log("cvLink", cvLink);
   // Memoized calculations
   const { totalProjects, totalCertificates, YearExperience } = useMemo(() => {
-    const storedProjects = JSON.parse(localStorage.getItem("projects") || "[]");
-    const storedCertificates = JSON.parse(
-      localStorage.getItem("certificates") || "[]"
-    );
+    let pCount = 0;
+    let cCount = 0;
+
+    if (propProjects) {
+      pCount = propProjects.length;
+    } else {
+      const storedProjects = JSON.parse(localStorage.getItem("projects") || "[]");
+      pCount = storedProjects.length;
+    }
+
+    if (propCertificates) {
+      cCount = propCertificates.length;
+    } else {
+      const storedCertificates = JSON.parse(localStorage.getItem("certificates") || "[]");
+      cCount = storedCertificates.length;
+    }
 
     const startDate = new Date("2021-11-06");
     const today = new Date();
@@ -192,11 +213,11 @@ const AboutPage = () => {
         : 0);
 
     return {
-      totalProjects: storedProjects.length,
-      totalCertificates: storedCertificates.length,
+      totalProjects: pCount,
+      totalCertificates: cCount,
       YearExperience: experience,
     };
-  }, []);
+  }, [propProjects, propCertificates]);
 
   // Optimized AOS initialization
   useEffect(() => {

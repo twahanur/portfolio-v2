@@ -4,34 +4,43 @@ import { useEffect, useState } from "react";
 import TimelineCard from "../components/TimelineCard";
 import { fetchAiContext } from "../lib/api";
 
-export default function EducationPage() {
+export default function EducationPage({ educations: propEducations }) {
   const [timelineData, setTimelineData] = useState({ academicQualification: [], trainingSummary: [] });
   const [hasLoaded, setHasLoaded] = useState(false);
 
+  const formatEducations = (edus) => {
+    return (edus || []).map((edu) => ({
+      id: edu.id,
+      examTitle: edu.examTitle,
+      major: edu.major,
+      institute: edu.institute,
+      result: edu.result,
+      passingYear: edu.passingYear,
+      duration: edu.duration,
+      order: edu.order,
+    }));
+  };
+
   useEffect(() => {
+    if (propEducations) {
+      setTimelineData({
+        academicQualification: formatEducations(propEducations),
+        trainingSummary: [],
+      });
+      setHasLoaded(true);
+      return;
+    }
+
     const fetchEducation = async () => {
       try {
         const payload = await fetchAiContext();
         if (payload.success && payload.data) {
           const data = payload.data;
-
-            // Map educations
-            const educations = (data.educations || []).map((edu) => ({
-              id: edu.id,
-              examTitle: edu.examTitle,
-              major: edu.major,
-              institute: edu.institute,
-              result: edu.result,
-              passingYear: edu.passingYear,
-              duration: edu.duration,
-              order: edu.order,
-            }));
-
-            setTimelineData({
-              academicQualification: educations,
-              trainingSummary: [],
-            });
-          }
+          setTimelineData({
+            academicQualification: formatEducations(data.educations),
+            trainingSummary: [],
+          });
+        }
       } catch (err) {
         console.error("Failed to fetch education data:", err);
       } finally {
@@ -39,7 +48,7 @@ export default function EducationPage() {
       }
     };
     fetchEducation();
-  }, []);
+  }, [propEducations]);
 
   // If data hasn't loaded yet or there are no education/training entries in the database, do not render this section
   if (!hasLoaded || (timelineData.academicQualification.length === 0 && timelineData.trainingSummary.length === 0)) {

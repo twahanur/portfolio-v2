@@ -4,46 +4,54 @@ import { useEffect, useState } from "react";
 import TimelineCard from "../components/TimelineCard";
 import { fetchAiContext } from "../lib/api";
 
-export default function ExperiencePage() {
+export default function ExperiencePage({ experiences: propExperiences }) {
   const [timelineData, setTimelineData] = useState({ employmentHistory: [] });
   const [hasLoaded, setHasLoaded] = useState(false);
 
+  const formatExperiences = (exps) => {
+    return (exps || []).map((exp) => {
+      const parts = exp.period ? exp.period.split(/\s*[-–—]\s*/) : [];
+      const startDate = parts[0] || exp.period || "";
+      const endDate = exp.isCurrent ? "Present" : (parts[1] || "");
+      return {
+        id: exp.id,
+        position: exp.role,
+        company: exp.company,
+        duration: exp.duration,
+        startDate: startDate,
+        endDate: endDate,
+        period: exp.period,
+        areaOfExpertise: (exp.techStack || []).slice(0, 3).join(", "),
+        expertiseDuration: exp.duration,
+        duties: exp.summary,
+        highlights: exp.highlights || [],
+        techStack: exp.techStack || [],
+        location: exp.location,
+        workMode: exp.workMode,
+        isCurrent: exp.isCurrent,
+        order: exp.order,
+      };
+    });
+  };
+
   useEffect(() => {
+    if (propExperiences) {
+      setTimelineData({
+        employmentHistory: formatExperiences(propExperiences),
+      });
+      setHasLoaded(true);
+      return;
+    }
+
     const fetchExperience = async () => {
       try {
         const payload = await fetchAiContext();
         if (payload.success && payload.data) {
           const data = payload.data;
-
-            // Map experiences
-            const experiences = (data.experiences || []).map((exp) => {
-              const parts = exp.period ? exp.period.split(/\s*[-–—]\s*/) : [];
-              const startDate = parts[0] || exp.period || "";
-              const endDate = exp.isCurrent ? "Present" : (parts[1] || "");
-              return {
-                id: exp.id,
-                position: exp.role,
-                company: exp.company,
-                duration: exp.duration,
-                startDate: startDate,
-                endDate: endDate,
-                period: exp.period,
-                areaOfExpertise: (exp.techStack || []).slice(0, 3).join(", "),
-                expertiseDuration: exp.duration,
-                duties: exp.summary,
-                highlights: exp.highlights || [],
-                techStack: exp.techStack || [],
-                location: exp.location,
-                workMode: exp.workMode,
-                isCurrent: exp.isCurrent,
-                order: exp.order,
-              };
-            });
-
-            setTimelineData({
-              employmentHistory: experiences,
-            });
-          }
+          setTimelineData({
+            employmentHistory: formatExperiences(data.experiences),
+          });
+        }
       } catch (err) {
         console.error("Failed to fetch experience data:", err);
       } finally {
@@ -51,7 +59,7 @@ export default function ExperiencePage() {
       }
     };
     fetchExperience();
-  }, []);
+  }, [propExperiences]);
 
   // If data hasn't loaded yet or there are no experience entries in the database, do not render this section
   if (!hasLoaded || timelineData.employmentHistory.length === 0) {

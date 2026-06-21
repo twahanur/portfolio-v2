@@ -68,7 +68,7 @@ const ToggleButton = ({ onClick, isShowingMore }) => (
   </button>
 );
 
-export default function FullWidthTabs() {
+export default function FullWidthTabs({ blogs: propBlogs }) {
   const [blogs, setBlogs] = useState([]);
   const [showAllBlogs, setShowAllBlogs] = useState(false);
   const [initialItems, setInitialItems] = useState(6);
@@ -81,37 +81,45 @@ export default function FullWidthTabs() {
     setInitialItems(window.innerWidth < 768 ? 4 : 6);
   }, []);
 
-  const fetchData = useCallback(async () => {
-    try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
-      const res = await fetch(`${apiUrl}/api/blogs`);
-      if (res.ok) {
-        const payload = await res.json();
-        if (payload.success) {
-          const blogtData = payload.data.map((b) => ({
-            id: b.id,
-            Title: b.title,
-            Description: b.description,
-            Img: b.image,
-            Image: b.image,
-            Author: b.author,
-            Keywords: b.keywords || [],
-            PublishedAt: b.publishedAt,
-          }));
-
-          setBlogs(blogtData);
-          // Store in localStorage
-          localStorage.setItem("blogs", JSON.stringify(blogtData));
-        }
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
+  const formatBlogs = useCallback((data) => {
+    return data.map((b) => ({
+      id: b.id,
+      Title: b.title,
+      Description: b.description,
+      Img: b.image,
+      Image: b.image,
+      Author: b.author,
+      Keywords: b.keywords || [],
+      PublishedAt: b.publishedAt,
+    }));
   }, []);
 
   useEffect(() => {
+    if (propBlogs) {
+      setBlogs(formatBlogs(propBlogs));
+      return;
+    }
+
+    const fetchData = async () => {
+      try {
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
+        const res = await fetch(`${apiUrl}/api/blogs`);
+        if (res.ok) {
+          const payload = await res.json();
+          if (payload.success) {
+            const blogtData = formatBlogs(payload.data);
+            setBlogs(blogtData);
+            // Store in localStorage
+            localStorage.setItem("blogs", JSON.stringify(blogtData));
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
     fetchData();
-  }, [fetchData]);
+  }, [propBlogs, formatBlogs]);
 
   const toggleShowMore = useCallback((type) => {
     if (type === "blogs") {

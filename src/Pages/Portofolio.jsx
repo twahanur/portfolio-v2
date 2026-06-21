@@ -118,7 +118,7 @@ const techStacks = [
   { icon: "docker.svg", language: "Docker" },
 ];
 
-export default function FullWidthTabs() {
+export default function FullWidthTabs({ projects: propProjects, certificates: propCertificates }) {
   const theme = useTheme();
   const [value, setValue] = useState(0);
   const [projects, setProjects] = useState([]);
@@ -135,59 +135,76 @@ export default function FullWidthTabs() {
     setInitialItems(window.innerWidth < 768 ? 4 : 6);
   }, []);
 
-  const fetchData = useCallback(async () => {
-    try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
-      const [resProjects, resCertificates] = await Promise.all([
-        fetch(`${apiUrl}/api/projects`),
-        fetch(`${apiUrl}/api/certificates`),
-      ]);
+  const formatProjects = useCallback((data) => {
+    return data.map((p) => {
+      const featuredImage = p.images?.find((img) => img.isFeatured) || p.images?.[0];
+      return {
+        id: p.id,
+        Title: p.title,
+        Description: p.description,
+        Link: p.live,
+        Github: p.code,
+        TechStack: p.tags ? p.tags.map((t) => typeof t === "object" && t.tag ? t.tag.name : t) : [],
+        Features: (p.metrics && p.metrics.length > 0) ? p.metrics : (p.features || []),
+        Img: featuredImage ? featuredImage.url : "",
+      };
+    });
+  }, []);
 
-      if (resProjects.ok && resCertificates.ok) {
-        const payloadProjects = await resProjects.json();
-        const payloadCertificates = await resCertificates.json();
-
-        if (payloadProjects.success && payloadCertificates.success) {
-          const projectData = payloadProjects.data.map((p) => {
-            const featuredImage = p.images?.find((img) => img.isFeatured) || p.images?.[0];
-            return {
-              id: p.id,
-              Title: p.title,
-              Description: p.description,
-              Link: p.live,
-              Github: p.code,
-              TechStack: p.tags ? p.tags.map((t) => typeof t === "object" && t.tag ? t.tag.name : t) : [],
-              Features: (p.metrics && p.metrics.length > 0) ? p.metrics : (p.features || []),
-              Img: featuredImage ? featuredImage.url : "",
-            };
-          });
-
-          const certificateData = payloadCertificates.data.map((c) => ({
-            id: c.id,
-            Img: c.imageUrl,
-            name: c.name,
-            issuer: c.issuer,
-            issueDate: c.issueDate,
-            credentialId: c.credentialId,
-            credentialUrl: c.credentialUrl,
-          }));
-
-          setProjects(projectData);
-          setCertificates(certificateData);
-
-          // Store in localStorage
-          localStorage.setItem("projects", JSON.stringify(projectData));
-          localStorage.setItem("certificates", JSON.stringify(certificateData));
-        }
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
+  const formatCertificates = useCallback((data) => {
+    return data.map((c) => ({
+      id: c.id,
+      Img: c.imageUrl,
+      name: c.name,
+      issuer: c.issuer,
+      issueDate: c.issueDate,
+      credentialId: c.credentialId,
+      credentialUrl: c.credentialUrl,
+    }));
   }, []);
 
   useEffect(() => {
+    if (propProjects || propCertificates) {
+      if (propProjects) {
+        setProjects(formatProjects(propProjects));
+      }
+      if (propCertificates) {
+        setCertificates(formatCertificates(propCertificates));
+      }
+      return;
+    }
+
+    const fetchData = async () => {
+      try {
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
+        const [resProjects, resCertificates] = await Promise.all([
+          fetch(`${apiUrl}/api/projects`),
+          fetch(`${apiUrl}/api/certificates`),
+        ]);
+
+        if (resProjects.ok && resCertificates.ok) {
+          const payloadProjects = await resProjects.json();
+          const payloadCertificates = await resCertificates.json();
+
+          if (payloadProjects.success && payloadCertificates.success) {
+            const projectData = formatProjects(payloadProjects.data);
+            const certificateData = formatCertificates(payloadCertificates.data);
+
+            setProjects(projectData);
+            setCertificates(certificateData);
+
+            // Store in localStorage
+            localStorage.setItem("projects", JSON.stringify(projectData));
+            localStorage.setItem("certificates", JSON.stringify(certificateData));
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
     fetchData();
-  }, [fetchData]);
+  }, [propProjects, propCertificates, formatProjects, formatCertificates]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);

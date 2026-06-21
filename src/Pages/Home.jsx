@@ -19,7 +19,7 @@ import RotatingText from "../components/AnimationComponents/RotetingText";
 import { fetchAiContext } from "../lib/api";
 const { TECH_STACK } = DataStore;
 
-const Home = () => {
+const Home = ({ profile, skills }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
   const [words, setWords] = useState([]);
@@ -31,6 +31,50 @@ const Home = () => {
   const [heroAnimationUrl, setHeroAnimationUrl] = useState("");
 
   useEffect(() => {
+    if (profile || skills) {
+      if (profile) {
+        if (profile.words) {
+          const parsedWords = profile.words.split(",").map(w => w.trim()).filter(Boolean);
+          if (parsedWords.length > 0) {
+            setWords(parsedWords);
+          }
+        }
+        if (profile.title) {
+          setTitle(profile.title);
+        }
+        if (profile.shortBio) {
+          setShortBio(profile.shortBio);
+        }
+        if (profile.bio) {
+          setBio(profile.bio);
+        }
+        if (profile.heroAnimationUrl) {
+          setHeroAnimationUrl(profile.heroAnimationUrl);
+        }
+
+        // Build dynamic socials list
+        const socials = [];
+        if (profile.github) socials.push({ icon: Github, link: profile.github });
+        if (profile.linkedin) socials.push({ icon: Linkedin, link: profile.linkedin });
+        if (profile.instagram) socials.push({ icon: Instagram, link: profile.instagram });
+        if (profile.facebook) socials.push({ icon: Facebook, link: profile.facebook });
+        if (profile.twitter) socials.push({ icon: Twitter, link: profile.twitter });
+        if (profile.youtube) socials.push({ icon: Youtube, link: profile.youtube });
+        if (profile.stackoverflow) socials.push({ icon: Globe, link: profile.stackoverflow });
+        if (profile.medium) socials.push({ icon: Globe, link: profile.medium });
+        if (profile.devto) socials.push({ icon: Globe, link: profile.devto });
+        
+        setSocialLinks(socials);
+      }
+      if (skills) {
+        const sortedSkills = [...skills]
+          .sort((a, b) => a.order - b.order)
+          .map(s => s.name);
+        setTechStack(sortedSkills.slice(0, 8));
+      }
+      return;
+    }
+
     const fetchProfile = async () => {
       try {
         const payload = await fetchAiContext();
@@ -74,7 +118,6 @@ const Home = () => {
             const sortedSkills = [...payload.data.skills]
               .sort((a, b) => a.order - b.order)
               .map(s => s.name);
-            // Slice to top 8 skills to keep the hero section visually clean and prevent overlap
             setTechStack(sortedSkills.slice(0, 8));
           }
         }
@@ -84,7 +127,7 @@ const Home = () => {
     };
 
     fetchProfile();
-  }, []);
+  }, [profile, skills]);
 
   // Optimize AOS initialization
   useEffect(() => {

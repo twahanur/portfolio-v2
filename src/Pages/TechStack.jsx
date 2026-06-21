@@ -25,11 +25,20 @@ const getCategoryIcon = (slug) => {
   }
 };
 
-export default function TechStackPage() {
+export default function TechStackPage({ skills: propSkills, skillCategories: propSkillCategories }) {
   const [skillsData, setSkillsData] = useState({ skills: [], skillCategories: [] });
   const [hasLoaded, setHasLoaded] = useState(false);
 
   useEffect(() => {
+    if (propSkills || propSkillCategories) {
+      setSkillsData({
+        skills: propSkills || [],
+        skillCategories: propSkillCategories || [],
+      });
+      setHasLoaded(true);
+      return;
+    }
+
     const fetchSkills = async () => {
       try {
         const payload = await fetchAiContext();
@@ -46,7 +55,7 @@ export default function TechStackPage() {
       }
     };
     fetchSkills();
-  }, []);
+  }, [propSkills, propSkillCategories]);
 
   // Group skills by category slugs
   const groupedSkills = useMemo(() => {

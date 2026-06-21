@@ -1,78 +1,45 @@
 "use client";
 
-/* eslint-disable react/prop-types */
-import  { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Code2, Github, Globe, User } from 'lucide-react';
-import AOS from 'aos';
-import 'aos/dist/aos.css';
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Code2, Server, Globe, Shield } from "lucide-react";
 
-const TypewriterEffect = ({ text }) => {
-  const [displayText, setDisplayText] = useState('');
-  
-  useEffect(() => {
-    let index = 0;
-    const timer = setInterval(() => {
-      if (index <= text.length) {
-        setDisplayText(text.slice(0, index));
-        index++;
-      } else {
-        clearInterval(timer);
-      }
-    }, 260);
-    
-    return () => clearInterval(timer);
-  }, [text]);
-
-  return (
-    <span className="inline-block">
-      {displayText}
-      <span className="animate-pulse">|</span>
-    </span>
-  );
+const getStatusText = (progress) => {
+  if (progress < 25) return "Establishing Secure DB Handshake...";
+  if (progress < 50) return "Decrypting Profile Attributes...";
+  if (progress < 75) return "Compiling Project & Education Matrix...";
+  if (progress < 100) return "Optimizing Layout Parameters...";
+  return "Systems Online. Welcome.";
 };
 
-const BackgroundEffect = () => (
-  <div className="absolute inset-0 overflow-hidden">
-    <div className="absolute inset-0 bg-gradient-to-r from-indigo-600/20 to-purple-600/20 blur-3xl animate-pulse" />
-    <div className="absolute inset-0 bg-gradient-to-tr from-indigo-600/10 via-transparent to-purple-600/10 blur-2xl animate-float" />
-  </div>
-);
-
-const IconButton = ({ Icon }) => (
-  <div className="relative group hover:scale-110 transition-transform duration-300">
-    <div className="absolute -inset-2 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full blur opacity-30 group-hover:opacity-75 transition duration-300" />
-    <div className="relative p-2 sm:p-3 bg-black/50 backdrop-blur-sm rounded-full border border-white/10">
-      <Icon className="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 text-white" />
-    </div>
-  </div>
-);
-
-const WelcomeScreen = ({ onLoadingComplete }) => {
+const WelcomeScreen = ({ progress, isLoaded, onLoadingComplete }) => {
   const [isLoading, setIsLoading] = useState(true);
+  const [minTimeElapsed, setMinTimeElapsed] = useState(false);
 
   useEffect(() => {
-    AOS.init({
-      duration: 1000,
-      once: false,
-      mirror: false,
-    });
-
     const timer = setTimeout(() => {
-      setIsLoading(false);
-      setTimeout(() => {
-        onLoadingComplete?.();
-      }, 1000);
-    }, 4000);
-    
+      setMinTimeElapsed(true);
+    }, 1500);
     return () => clearTimeout(timer);
-  }, [onLoadingComplete]);
+  }, []);
+
+  const shouldDismiss = isLoaded && minTimeElapsed;
+
+  useEffect(() => {
+    if (shouldDismiss) {
+      setIsLoading(false);
+      const timer = setTimeout(() => {
+        onLoadingComplete?.();
+      }, 800);
+      return () => clearTimeout(timer);
+    }
+  }, [shouldDismiss, onLoadingComplete]);
 
   const containerVariants = {
     exit: {
       opacity: 0,
-      scale: 1.1,
-      filter: "blur(10px)",
+      scale: 1.05,
+      filter: "blur(12px)",
       transition: {
         duration: 0.8,
         ease: "easeInOut",
@@ -97,79 +64,99 @@ const WelcomeScreen = ({ onLoadingComplete }) => {
     <AnimatePresence>
       {isLoading && (
         <motion.div
-          className="fixed inset-0 bg-[#030014]"
+          className="fixed inset-0 bg-[#030014] z-[99999] flex items-center justify-center overflow-hidden"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit="exit"
           variants={containerVariants}
         >
-          <BackgroundEffect />
-          
-          <div className="relative min-h-screen flex items-center justify-center px-4">
-            <div className="w-full max-w-4xl mx-auto">
-              {/* Icons */}
-              <motion.div 
-                className="flex justify-center gap-3 sm:gap-4 md:gap-8 mb-6 sm:mb-8 md:mb-12"
-                variants={childVariants}
-              >
-                {[Code2, User, Github].map((Icon, index) => (
-                  <div key={index} data-aos="fade-down" data-aos-delay={index * 200}>
-                    <IconButton Icon={Icon} />
-                  </div>
-                ))}
-              </motion.div>
+          {/* Futuristic CSS animations */}
+          <style dangerouslySetInnerHTML={{ __html: `
+            @keyframes spin-reverse {
+              0% { transform: rotate(360deg); }
+              100% { transform: rotate(0deg); }
+            }
+            .animate-spin-reverse {
+              animation: spin-reverse 3s linear infinite;
+            }
+            @keyframes pulse-glow {
+              0%, 100% { opacity: 0.2; transform: scale(1); }
+              50% { opacity: 0.4; transform: scale(1.05); }
+            }
+            .ambient-glow {
+              animation: pulse-glow 6s ease-in-out infinite;
+            }
+          ` }} />
 
-              {/* Welcome Text */}
-              <motion.div 
-                className="text-center mb-6 sm:mb-8 md:mb-12"
-                variants={childVariants}
-              >
-                <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold space-y-2 sm:space-y-4">
-                  <div className="mb-2 sm:mb-4">
-                    <span data-aos="fade-right" data-aos-delay="200" className="inline-block px-2 bg-gradient-to-r from-white via-blue-100 to-purple-200 bg-clip-text text-transparent">
-                      Welcome
-                    </span>{' '}
-                    <span data-aos="fade-right" data-aos-delay="400" className="inline-block px-2 bg-gradient-to-r from-white via-blue-100 to-purple-200 bg-clip-text text-transparent">
-                      To
-                    </span>{' '}
-                    <span data-aos="fade-right" data-aos-delay="600" className="inline-block px-2 bg-gradient-to-r from-white via-blue-100 to-purple-200 bg-clip-text text-transparent">
-                      My
-                    </span>
-                  </div>
-                  <div>
-                    <span data-aos="fade-up" data-aos-delay="800" className="inline-block px-2 bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-                      Portfolio
-                    </span>{' '}
-                    <span data-aos="fade-up" data-aos-delay="1000" className="inline-block px-2 bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-                      Website
-                    </span>
-                  </div>
-                </h1>
-              </motion.div>
+          {/* Ambient space background */}
+          <div className="absolute inset-0">
+            <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-indigo-500/10 rounded-full blur-[150px] ambient-glow" />
+            <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-purple-500/10 rounded-full blur-[150px] ambient-glow" style={{ animationDelay: "3s" }} />
+          </div>
 
-              {/* Website Link */}
-              <motion.div 
-                className="text-center"
-                variants={childVariants}
-                data-aos="fade-up"
-                data-aos-delay="1200"
-              >
-                <a
-                  href="#"
-                  className="inline-flex items-center gap-2 px-4 py-2 sm:px-6 sm:py-3 rounded-full relative group hover:scale-105 transition-transform duration-300"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <div className="absolute inset-0 bg-gradient-to-r from-indigo-600/20 to-purple-600/20 rounded-full blur-md group-hover:blur-lg transition-all duration-300" />
-                  <div className="relative flex items-center gap-2 text-lg sm:text-xl md:text-2xl">
-                    <Globe className="w-4 h-4 sm:w-5 sm:h-5 text-indigo-600" />
-                    <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-                      <TypewriterEffect text="www.twahanur.com" />
-                    </span>
-                  </div>
-                </a>
-              </motion.div>
-            </div>
+          <div className="relative w-full max-w-lg mx-auto px-6 text-center">
+            {/* Spinning futuristic ring */}
+            <motion.div 
+              className="relative w-28 h-28 mx-auto mb-10 flex items-center justify-center"
+              variants={childVariants}
+            >
+              {/* Outer ring */}
+              <div className="absolute inset-0 rounded-full border-2 border-t-indigo-500 border-r-transparent border-b-purple-500 border-l-transparent animate-spin" style={{ animationDuration: "2s" }} />
+              {/* Middle ring */}
+              <div className="absolute inset-2 rounded-full border border-t-transparent border-r-pink-500 border-b-transparent border-l-cyan-500 animate-spin-reverse" />
+              {/* Inner glow dot */}
+              <div className="absolute w-3 h-3 bg-indigo-400 rounded-full blur-[2px] animate-pulse" />
+              <Code2 className="w-8 h-8 text-white relative z-10 opacity-80" />
+            </motion.div>
+
+            {/* Title / Brand */}
+            <motion.div 
+              className="mb-8"
+              variants={childVariants}
+            >
+              <h1 className="text-2xl md:text-3xl font-extrabold tracking-[0.25em] text-transparent bg-clip-text bg-gradient-to-r from-white via-indigo-100 to-purple-200">
+                TWAHANUR RAHMAN
+              </h1>
+              <p className="text-[10px] uppercase tracking-[0.4em] text-slate-500 font-semibold mt-2">
+                System Interface Initialization
+              </p>
+            </motion.div>
+
+            {/* Loading Box */}
+            <motion.div 
+              className="bg-white/[0.02] backdrop-blur-xl border border-white/5 p-6 rounded-2xl shadow-[0_0_50px_-12px_rgba(99,102,241,0.15)] relative overflow-hidden"
+              variants={childVariants}
+            >
+              {/* Progress Bar Container */}
+              <div className="w-full h-[6px] bg-white/5 rounded-full overflow-hidden relative">
+                <div 
+                  className="absolute top-0 left-0 h-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 transition-all duration-500 ease-out shadow-[0_0_12px_rgba(99,102,241,0.8)]"
+                  style={{ width: `${progress}%` }}
+                />
+              </div>
+
+              {/* Status details */}
+              <div className="flex justify-between items-center text-xs mt-4">
+                <div className="flex items-center gap-2 text-slate-400 font-medium">
+                  {progress < 25 && <Globe className="w-3.5 h-3.5 text-indigo-400 animate-spin" />}
+                  {progress >= 25 && progress < 50 && <Shield className="w-3.5 h-3.5 text-purple-400 animate-pulse" />}
+                  {progress >= 50 && progress < 75 && <Server className="w-3.5 h-3.5 text-pink-400 animate-pulse" />}
+                  {progress >= 75 && <Code2 className="w-3.5 h-3.5 text-emerald-400" />}
+                  <span className="font-mono tracking-wide">{getStatusText(progress)}</span>
+                </div>
+                <span className="text-indigo-400 font-mono font-bold tracking-widest">[ {progress}% ]</span>
+              </div>
+            </motion.div>
+
+            {/* Bottom status links */}
+            <motion.div 
+              className="mt-12 text-[10px] font-mono text-slate-600 flex justify-center gap-6"
+              variants={childVariants}
+            >
+              <span>SECURE PROTOCOL // SSL</span>
+              <span>HOST: VERCEL</span>
+              <span>DB: ONLINE</span>
+            </motion.div>
           </div>
         </motion.div>
       )}
