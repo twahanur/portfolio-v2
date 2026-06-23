@@ -103,12 +103,12 @@ export default function TechStackPage({ skills: propSkills, skillCategories: pro
   }
 
   return (
-    <div className="px-4 py-20 bg-slate-50/20 dark:bg-[#030014]/40 relative overflow-hidden" id="tech-stack">
+    <div className="md:px-[10%] px-[5%] py-20 bg-slate-50/20 dark:bg-[#030014]/40 relative overflow-hidden" id="tech-stack">
       {/* Background ambient light */}
       <div className="absolute top-0 left-1/4 w-[400px] h-[400px] bg-indigo-500/5 rounded-full blur-[140px] pointer-events-none" />
       <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-purple-500/5 rounded-full blur-[140px] pointer-events-none" />
 
-      <div className="max-w-6xl mx-auto">
+      <div className="w-full mx-auto">
         <div className="text-center pb-16" data-aos="fade-up" data-aos-duration="1000">
           <h2 className="inline-block text-3xl md:text-5xl font-extrabold text-center mx-auto text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 dark:from-blue-400 dark:via-indigo-400 dark:to-purple-400">
             Skills & Tech Stack

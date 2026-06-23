@@ -158,7 +158,7 @@ const TimelineCard = ({ data }) => {
     };
   }, [filteredElements]);
 
-  // Generate highly curved winding path (large S-curves bulge)
+  // Generate smooth S-curves passing vertically through circle points
   const pathData = useMemo(() => {
     if (circlePoints.length < 2) return "";
     let d = `M ${circlePoints[0].x} ${circlePoints[0].y}`;
@@ -167,13 +167,12 @@ const TimelineCard = ({ data }) => {
       const p1 = circlePoints[i];
       const dy = p1.y - p0.y;
 
-      // Push control points horizontally outward to create deep organic curves
-      const bulge = 110; 
-      const cp1x = p0.x + (p0.x > p1.x ? bulge : -bulge);
-      const cp2x = p1.x + (p1.x > p0.x ? bulge : -bulge);
+      // Vertical entry/exit control points for perfectly smooth transitions
+      const cp1x = p0.x;
+      const cp2x = p1.x;
 
-      const cp1y = p0.y + dy * 0.35;
-      const cp2y = p1.y - dy * 0.35;
+      const cp1y = p0.y + dy * 0.45;
+      const cp2y = p1.y - dy * 0.45;
 
       d += ` C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${p1.x} ${p1.y}`;
     }
@@ -181,7 +180,7 @@ const TimelineCard = ({ data }) => {
   }, [circlePoints]);
 
   return (
-    <div className="max-w-5xl mx-auto py-8">
+    <div className="w-full mx-auto py-8">
 
       {filteredElements.length === 0 ? (
         <div className="text-center py-12" data-aos="fade-up">
@@ -191,7 +190,7 @@ const TimelineCard = ({ data }) => {
         <>
           {/* DESKTOP TIMELINE (Alternating deep curvy layout connecting 80% screen width cards) */}
           <div className="relative w-full hidden md:block" ref={containerRef}>
-            {/* Scroll-Progressive Highly Curved SVG Line */}
+            {/* Scroll-Progressive Smooth SVG Line with Premium Dual Glow */}
             <svg className="absolute inset-0 w-full h-full pointer-events-none z-0">
               <defs>
                 <linearGradient id="glow-line-gradient" x1="0" y1="0" x2="0" y2="1">
@@ -199,6 +198,13 @@ const TimelineCard = ({ data }) => {
                   <stop offset="50%" stopColor="#c084fc" />
                   <stop offset="100%" stopColor="#ec4899" />
                 </linearGradient>
+                <filter id="glow-filter" x="-50%" y="-50%" width="200%" height="200%">
+                  <feGaussianBlur stdDeviation="8" result="coloredBlur"/>
+                  <feMerge>
+                    <feMergeNode in="coloredBlur"/>
+                    <feMergeNode in="SourceGraphic"/>
+                  </feMerge>
+                </filter>
               </defs>
               {circlePoints.length >= 2 && (
                 <>
@@ -206,16 +212,27 @@ const TimelineCard = ({ data }) => {
                   <path
                     d={pathData}
                     fill="none"
-                    stroke="rgba(30, 41, 59, 0.45)"
+                    stroke="rgba(30, 41, 59, 0.35)"
                     strokeWidth="5"
                     strokeLinecap="round"
                   />
-                  {/* Liquid Glowing spring line */}
+                  {/* Outer glow aura */}
                   <motion.path
                     d={pathData}
                     fill="none"
                     stroke="url(#glow-line-gradient)"
-                    strokeWidth="5"
+                    strokeWidth="12"
+                    strokeLinecap="round"
+                    opacity="0.4"
+                    filter="url(#glow-filter)"
+                    style={{ pathLength }}
+                  />
+                  {/* Inner neon core */}
+                  <motion.path
+                    d={pathData}
+                    fill="none"
+                    stroke="url(#glow-line-gradient)"
+                    strokeWidth="4"
                     strokeLinecap="round"
                     style={{ pathLength }}
                   />
@@ -234,8 +251,8 @@ const TimelineCard = ({ data }) => {
                       isEven ? "justify-start" : "justify-end"
                     }`}
                   >
-                    {/* Experience Card (takes 80% of width) */}
-                    <div className="w-[85%]" data-aos={isEven ? "fade-right" : "fade-left"}>
+                    {/* Experience Card (takes 90% of width) */}
+                    <div className="w-[90%] relative z-10" data-aos={isEven ? "fade-right" : "fade-left"}>
                       <div className="relative bg-white/80 dark:bg-[#060713]/85 backdrop-blur-2xl border border-slate-250 dark:border-slate-800/70 hover:border-indigo-500/30 rounded-2xl p-7 md:p-9 transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_0_35px_rgba(99,102,241,0.12)] overflow-hidden group">
                         
                         {/* Left edge accent glow */}
@@ -318,8 +335,8 @@ const TimelineCard = ({ data }) => {
                     {/* Alternating Winding Circle Marker on opposite side of the card */}
                     <div 
                       className={`timeline-circle-marker absolute top-1/2 -translate-y-1/2 ${
-                        isEven ? "right-[10%]" : "left-[10%]"
-                      } -translate-x-1/2 z-20`}
+                        isEven ? "right-[7%]" : "left-[10%]"
+                      } -translate-x-1/2 z-30`}
                     >
                       <motion.div
                         initial={{ scale: 0.8, opacity: 0.3 }}

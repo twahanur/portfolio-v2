@@ -11,6 +11,7 @@ import rehypeKatex from "rehype-katex";
 import "katex/dist/katex.min.css";
 import { formatDate } from "../common/dateFormater";
 import PremiumLoader from "../PremiumLoader";
+import { usePortfolio } from "../../context/PortfolioContext";
 
 const BlogDetails = () => {
   const { id } = useParams();
@@ -18,6 +19,7 @@ const BlogDetails = () => {
   const [blog, setBlog] = useState(null);
   const [isImageLoaded, setIsImageLoaded] = useState(false);
   const [suggestedBlogs, setSuggestedBlogs] = useState([]);
+  const { setPageTransitionLoading } = usePortfolio();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -207,7 +209,10 @@ const BlogDetails = () => {
                               </div>
                             </div>
                             <button
-                              onClick={() => router.push(`/blog/${blog.id}`)}
+                              onClick={() => {
+                                setPageTransitionLoading("blog");
+                                router.push(`/blog/${blog.id}`);
+                              }}
                               className="text-sm text-blue-400 mt-3 hover:underline self-start"
                             >
                               Read More →

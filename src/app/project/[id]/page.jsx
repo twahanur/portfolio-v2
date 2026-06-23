@@ -4,7 +4,7 @@ export async function generateMetadata({ params }) {
   const { id } = await params;
   try {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
-    const res = await fetch(`${apiUrl}/api/projects/${id}`);
+    const res = await fetch(`${apiUrl}/api/projects/${id}`, { next: { revalidate: 3600 } });
     if (res.ok) {
       const payload = await res.json();
       if (payload.success && payload.data) {

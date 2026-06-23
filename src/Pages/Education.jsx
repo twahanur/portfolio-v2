@@ -56,7 +56,7 @@ export default function EducationPage({ educations: propEducations }) {
   }
 
   return (
-    <div className="px-4 py-16 bg-slate-50/15 dark:bg-[#030014]/30 relative overflow-hidden" id="education">
+    <div className="md:px-[10%] px-[5%] py-16 bg-slate-50/15 dark:bg-[#030014]/30 relative overflow-hidden" id="education">
       {/* Background radial glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-purple-500/5 rounded-full blur-[120px] pointer-events-none" />
 

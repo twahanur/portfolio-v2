@@ -176,6 +176,28 @@ const ProjectDetails = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
+
+    // Immediately read from localStorage cache to show data instantly
+    const storedProjects = JSON.parse(localStorage.getItem("projects")) || [];
+    const selectedProject = storedProjects.find((p) => String(p.id) === id);
+    if (selectedProject) {
+      setProject({
+        ...selectedProject,
+        Features: selectedProject.features || selectedProject.Features || [],
+        Metrics: selectedProject.metrics || selectedProject.Metrics || [],
+        DevOps: selectedProject.devOps || selectedProject.DevOps || [],
+        Problem: selectedProject.problem || selectedProject.Problem || "",
+        Architecture: selectedProject.architecture || selectedProject.Architecture || "",
+        FutureEnhancements: selectedProject.futureEnhancements || selectedProject.FutureEnhancements || "",
+        ChallengeSolutions: selectedProject.challengeSolutions || selectedProject.ChallengeSolutions || [],
+        TechStack: selectedProject.TechStack ? selectedProject.TechStack.map((t) => typeof t === "object" && t.tag ? t.tag.name : t) : [],
+        Github: selectedProject.Github || "https://github.com/Twahanur",
+        SourceNote: selectedProject.sourceNote || selectedProject.SourceNote || "",
+        Tagline: selectedProject.tagline || selectedProject.Tagline || "",
+        Images: selectedProject.images || selectedProject.Images || [],
+      });
+    }
+
     const fetchProject = async () => {
       try {
         const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
@@ -205,32 +227,10 @@ const ProjectDetails = () => {
               Images: p.images || [],
             };
             setProject(formattedProject);
-            return;
           }
         }
       } catch (err) {
         console.error("Failed to fetch project detail from API:", err);
-      }
-
-      // Fallback to localStorage
-      const storedProjects = JSON.parse(localStorage.getItem("projects")) || [];
-      const selectedProject = storedProjects.find((p) => String(p.id) === id);
-      if (selectedProject) {
-        setProject({
-          ...selectedProject,
-          Features: selectedProject.features || selectedProject.Features || [],
-          Metrics: selectedProject.metrics || selectedProject.Metrics || [],
-          DevOps: selectedProject.devOps || selectedProject.DevOps || [],
-          Problem: selectedProject.problem || selectedProject.Problem || "",
-          Architecture: selectedProject.architecture || selectedProject.Architecture || "",
-          FutureEnhancements: selectedProject.futureEnhancements || selectedProject.FutureEnhancements || "",
-          ChallengeSolutions: selectedProject.challengeSolutions || selectedProject.ChallengeSolutions || [],
-          TechStack: selectedProject.TechStack ? selectedProject.TechStack.map((t) => typeof t === "object" && t.tag ? t.tag.name : t) : [],
-          Github: selectedProject.Github || "https://github.com/Twahanur",
-          SourceNote: selectedProject.sourceNote || selectedProject.SourceNote || "",
-          Tagline: selectedProject.tagline || selectedProject.Tagline || "",
-          Images: selectedProject.images || selectedProject.Images || [],
-        });
       }
     };
 

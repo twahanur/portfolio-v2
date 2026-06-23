@@ -144,6 +144,7 @@ export default function FullWidthTabs({ blogs: propBlogs }) {
             {displayedBlogs.map((project, index) => (
               <div
                 key={project.id || index}
+                className="h-full"
                 data-aos={
                   index % 3 === 0
                     ? "fade-up-right"

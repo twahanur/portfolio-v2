@@ -1,14 +1,23 @@
 'use client';
 
 import { createContext, useContext, useState, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import { fetchAiContext } from '../lib/api';
+import PremiumLoader from '../components/PremiumLoader';
 
 const PortfolioContext = createContext();
 
 export const PortfolioProvider = ({ children }) => {
+  const pathname = usePathname();
   const [showWelcome, setShowWelcome] = useState(true);
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
+  const [pageTransitionLoading, setPageTransitionLoading] = useState(null);
+
+  // Clear page transition loading when route completes/pathname changes
+  useEffect(() => {
+    setPageTransitionLoading(null);
+  }, [pathname]);
   const [portfolioData, setPortfolioData] = useState({
     profile: null,
     skills: [],
@@ -186,8 +195,15 @@ export const PortfolioProvider = ({ children }) => {
         loadingProgress,
         isDataLoaded,
         portfolioData,
+        pageTransitionLoading,
+        setPageTransitionLoading,
       }}
     >
+      {pageTransitionLoading && (
+        <div className="fixed inset-0 z-[9999] bg-[#030014] pointer-events-auto">
+          <PremiumLoader mode={pageTransitionLoading} />
+        </div>
+      )}
       {children}
     </PortfolioContext.Provider>
   );

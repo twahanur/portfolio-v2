@@ -4,9 +4,11 @@
 import Link from "next/link";
 import { ExternalLink, ArrowRight } from "lucide-react";
 import { useState } from "react";
+import { usePortfolio } from "../context/PortfolioContext";
 
 const CardProject = ({ Img, Title, Description, Link: ProjectLink, id }) => {
   const [imgLoaded, setImgLoaded] = useState(false);
+  const { setPageTransitionLoading } = usePortfolio();
 
   return (
     <div className="group relative rounded-2xl overflow-hidden bg-white/[0.03] border border-white/[0.06] hover:border-white/[0.12] transition-all duration-300 hover:shadow-[0_8px_40px_-12px_rgba(99,102,241,0.15)]">
@@ -74,6 +76,7 @@ const CardProject = ({ Img, Title, Description, Link: ProjectLink, id }) => {
           {id ? (
             <Link
               href={`/project/${id}`}
+              onClick={() => setPageTransitionLoading("project")}
               className="text-xs text-slate-400 hover:text-white font-medium flex items-center gap-1.5 px-3 py-1.5 rounded-md hover:bg-white/[0.06] transition-all duration-200"
             >
               View Details
