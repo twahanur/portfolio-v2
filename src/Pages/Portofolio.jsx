@@ -7,7 +7,6 @@ import PropTypes from "prop-types";
 import { useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import CardProject from "../components/CardProject";
-import TechStackIcon from "../components/TechStackIcon";
 import Certificate from "../components/Certificate";
 import PortfolioHeader from "../components/Portfolio/PortfolioHeader";
 import PortfolioAppbar from "../components/Portfolio/PortfolioAppbar";
@@ -81,7 +80,7 @@ function TabPanel({ children, value, index, ...other }) {
       {...other}
     >
       {value === index && (
-        <Box sx={{ p: { xs: 1, sm: 3 } }}>
+        <Box sx={{ p: 0 }}>
           {children}
         </Box>
       )}
@@ -94,27 +93,6 @@ TabPanel.propTypes = {
   index: PropTypes.number.isRequired,
   value: PropTypes.number.isRequired,
 };
-
-const techStacks = [
-  { icon: "html.svg", language: "HTML" },
-  { icon: "css.svg", language: "CSS" },
-  { icon: "javascript.svg", language: "JavaScript" },
-  { icon: "tailwind.svg", language: "Tailwind CSS" },
-  { icon: "reactjs.svg", language: "ReactJS" },
-  { icon: "nodejs.svg", language: "Node JS" },
-  { icon: "bootstrap.svg", language: "Bootstrap" },
-  { icon: "firebase.svg", language: "Firebase" },
-  { icon: "MUI.svg", language: "Material UI" },
-  { icon: "vercel.svg", language: "Vercel" },
-  { icon: "mongodb.svg", language: "MongoDB" },
-  { icon: "postgresql.svg", language: "PostgreSQL" },
-  { icon: "mysql.svg", language: "MySQL" },
-  { icon: "cplusplus.svg", language: "C++" },
-  { icon: "nestjs.svg", language: "NestJS" },
-  { icon: "express.svg", language: "Express.js" },
-  { icon: "graphql.svg", language: "GraphQL" },
-  { icon: "docker.svg", language: "Docker" },
-];
 
 export default function FullWidthTabs({ projects: propProjects, certificates: propCertificates }) {
   const theme = useTheme();
@@ -294,32 +272,6 @@ export default function FullWidthTabs({ projects: propProjects, certificates: pr
           )}
         </TabPanel>
 
-        <TabPanel value={value} index={2} dir={theme.direction}>
-          <div className="container mx-auto flex justify-center items-center overflow-hidden pb-[5%]">
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 lg:gap-8 gap-5">
-              {techStacks.map((stack, index) => (
-                <div
-                  key={index}
-                  data-aos={
-                    index % 3 === 0
-                      ? "fade-up-right"
-                      : index % 3 === 1
-                      ? "fade-up"
-                      : "fade-up-left"
-                  }
-                  data-aos-duration={
-                    index % 3 === 0 ? "1000" : index % 3 === 1 ? "1200" : "1000"
-                  }
-                >
-                  <TechStackIcon
-                    TechStackIcon={stack.icon}
-                    Language={stack.language}
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
-        </TabPanel>
       </Box>
     </div>
   );

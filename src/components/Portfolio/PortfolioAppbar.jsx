@@ -1,5 +1,5 @@
 import { AppBar, Tab, Tabs } from '@mui/material'
-import { Award, Boxes, Code } from 'lucide-react'
+import { Award, Code } from 'lucide-react'
 
 function a11yProps(index) {
   return {
@@ -96,14 +96,6 @@ const PortfolioAppbar = ({value, handleChange}) => {
               }
               label="Certificates"
               {...a11yProps(1)}
-            />
-            <Tab
-            className='cursor-target'
-              icon={
-                <Boxes className="mb-2 w-5 h-5 transition-all duration-300" />
-              }
-              label="Tech Stack"
-              {...a11yProps(2)}
             />
           </Tabs>
         </AppBar>
