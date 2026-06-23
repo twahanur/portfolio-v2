@@ -1,10 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { usePortfolio } from '../context/PortfolioContext';
 import LandingPage from '../components/common/LandingPage';
 
 export default function Page() {
-  const [showWelcome, setShowWelcome] = useState(true);
+  const { showWelcome, setShowWelcome } = usePortfolio();
 
   return (
     <LandingPage

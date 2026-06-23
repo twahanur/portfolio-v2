@@ -10,6 +10,7 @@ import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import "katex/dist/katex.min.css";
 import { formatDate } from "../common/dateFormater";
+import PremiumLoader from "../PremiumLoader";
 
 const BlogDetails = () => {
   const { id } = useParams();
@@ -53,16 +54,7 @@ const BlogDetails = () => {
   }, [id]);
 
   if (!blog) {
-    return (
-      <div className="min-h-screen bg-[#030014] flex items-center justify-center">
-        <div className="text-center space-y-6 animate-fadeIn">
-          <div className="w-16 h-16 md:w-24 md:h-24 mx-auto border-4 border-blue-500/30 border-t-blue-500 rounded-full animate-spin" />
-          <h2 className="text-xl md:text-3xl font-bold text-white">
-            Loading blog...
-          </h2>
-        </div>
-      </div>
-    );
+    return <PremiumLoader mode="blog" />;
   }
 
   return (

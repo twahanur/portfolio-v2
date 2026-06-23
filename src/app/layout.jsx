@@ -39,6 +39,8 @@ export const viewport = {
   themeColor: "rgb(3,0,20)",
 };
 
+import { PortfolioProvider } from '../context/PortfolioContext';
+
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
@@ -60,8 +62,10 @@ export default function RootLayout({ children }) {
       </head>
       <body suppressHydrationWarning>
         <StyledComponentsRegistry>
-          {children}
-          <AiPortfolioAssistant />
+          <PortfolioProvider>
+            {children}
+            <AiPortfolioAssistant />
+          </PortfolioProvider>
         </StyledComponentsRegistry>
       </body>
     </html>
