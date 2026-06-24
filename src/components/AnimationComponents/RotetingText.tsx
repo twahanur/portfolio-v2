@@ -16,7 +16,7 @@ function cn(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-const RotatingText = forwardRef((props, ref) => {
+const RotatingText = forwardRef<any, any>((props, ref) => {
   const {
     texts,
     staticText,

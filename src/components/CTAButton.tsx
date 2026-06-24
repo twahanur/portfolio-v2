@@ -1,6 +1,6 @@
 import { memo } from "react";
 import PropTypes from "prop-types";
-const CTAButton = memo(({ href, text, icon: Icon, ...rest }) => (
+const CTAButton = memo(({ href, text, icon: Icon, ...rest }: any) => (
   <a href={href}>
     <button className="group relative w-[160px] cursor-target" {...rest}>
       <div className="absolute -inset-0.5 bg-gradient-to-r from-[#4f52c9] to-[#8644c5] rounded-xl opacity-50 blur-md group-hover:opacity-90 transition-all duration-700"></div>
@@ -23,11 +23,6 @@ const CTAButton = memo(({ href, text, icon: Icon, ...rest }) => (
   </a>
 ));
 
-CTAButton.propTypes = {
-  href: PropTypes.string.isRequired,
-  text: PropTypes.string.isRequired,
-  icon: PropTypes.elementType.isRequired,
-};
 
 CTAButton.displayName = "CTAButton";
 export default CTAButton;

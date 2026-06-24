@@ -18,7 +18,7 @@ const TestAOS = () => {
             
             aosElements.forEach((element, index) => {
                 // Tambahkan border pada elemen
-                element.style.border = '2px dashed red';
+                (element as any).style.border = '2px dashed red';
                 
                 // Mengambil computed style
                 const computedStyle = window.getComputedStyle(element);

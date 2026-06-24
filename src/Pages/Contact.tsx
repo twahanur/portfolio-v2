@@ -59,7 +59,7 @@ const ContactPage = () => {
       html: "Please wait while we send your message",
       allowOutsideClick: false,
       didOpen: () => {
-        Swal.showLoading();
+        (Swal as any).showLoading();
       },
     });
 

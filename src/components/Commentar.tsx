@@ -8,7 +8,7 @@ import React, { useState, useEffect, useRef, useCallback, memo } from 'react';
 import { MessageCircle, UserCircle2, Loader2, AlertCircle, Send, ImagePlus, X, User, MessageSquare } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const Comment = memo(({ comment, formatDate, index }) => (
+const Comment = memo(({ comment, formatDate, index }: any) => (
     <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -48,7 +48,7 @@ const Comment = memo(({ comment, formatDate, index }) => (
     </motion.div>
 ));
 
-const CommentForm = memo(({ onSubmit, isSubmitting, error }) => {
+const CommentForm = memo(({ onSubmit, isSubmitting, error }: any) => {
     const [newComment, setNewComment] = useState('');
     const [userName, setUserName] = useState('');
     const [imagePreview, setImagePreview] = useState(null);
@@ -292,7 +292,7 @@ const Komentar = ({ isTabbed = false }) => {
             date = new Date(timestamp);
         }
         const now = new Date();
-        const diffMinutes = Math.floor((now - date) / (1000 * 60));
+        const diffMinutes = Math.floor((now.getTime() - date.getTime()) / (1000 * 60));
         const diffHours = Math.floor(diffMinutes / 60);
         const diffDays = Math.floor(diffHours / 24);
 

@@ -168,7 +168,12 @@ function SplashCursor({
     }
 
     class Material {
-      constructor(vertexShader, fragmentShaderSource) {
+      vertexShader: any;
+      fragmentShaderSource: any;
+      programs: any;
+      activeProgram: any;
+      uniforms: any;
+      constructor(vertexShader: any, fragmentShaderSource: any) {
         this.vertexShader = vertexShader;
         this.fragmentShaderSource = fragmentShaderSource;
         this.programs = [];
@@ -198,7 +203,9 @@ function SplashCursor({
     }
 
     class Program {
-      constructor(vertexShader, fragmentShader) {
+      uniforms: any;
+      program: any;
+      constructor(vertexShader: any, fragmentShader: any) {
         this.uniforms = {};
         this.program = createProgram(vertexShader, fragmentShader);
         this.uniforms = getUniforms(this.program);
@@ -228,7 +235,7 @@ function SplashCursor({
       return uniforms;
     }
 
-    function compileShader(type, source, keywords) {
+    function compileShader(type: any, source: any, keywords?: any) {
       source = addKeywords(source, keywords);
       const shader = gl.createShader(type);
       gl.shaderSource(shader, source);

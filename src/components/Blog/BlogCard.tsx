@@ -5,7 +5,7 @@ import { BookText } from 'lucide-react';
 import { useState } from 'react';
 import { usePortfolio } from '../../context/PortfolioContext';
 
-const BlogCard = ({ Img, Title, Description, id }) => {
+const BlogCard = ({ Img, Title, Description, id }: any) => {
   const [isImageLoaded, setIsImageLoaded] = useState(false);
   const { setPageTransitionLoading } = usePortfolio();
 

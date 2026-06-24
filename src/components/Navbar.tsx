@@ -40,7 +40,7 @@ const Navbar = () => {
         const handleScroll = () => {
             setScrolled(window.scrollY > 20);
             const sections = navItems.map(item => {
-                const section = document.querySelector(item.href);
+                const section = document.querySelector(item.href) as any;
                 if (section) {
                     return {
                         id: item.href.replace("#", ""),
@@ -77,7 +77,7 @@ const Navbar = () => {
 
     const scrollToSection = (e, href) => {
         e.preventDefault();
-        const section = document.querySelector(href);
+        const section = document.querySelector(href) as any;
         if (section) {
             const top = section.offsetTop - 100;
             window.scrollTo({

@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 import { fetchAiContext } from '../lib/api';
 import PremiumLoader from '../components/PremiumLoader';
 
-const PortfolioContext = createContext();
+const PortfolioContext = createContext<any>(null);
 
 export const PortfolioProvider = ({ children }) => {
   const pathname = usePathname();

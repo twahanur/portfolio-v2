@@ -1,7 +1,7 @@
 import { memo } from "react";
 import GradientText from "./AnimationComponents/GradientText";
 
-const MainTitle = memo(({ title = "Fullstack Developer" }) => {
+const MainTitle = memo(({ title = "Fullstack Developer" }: any) => {
   const words = title.split(" ");
   const firstWord = words[0] || "";
   const restOfTitle = words.slice(1).join(" ");

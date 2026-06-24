@@ -52,7 +52,7 @@ const Header = memo(() => (
   </div>
 ));
 
-const ProfileImage = memo(({ src }) => (
+const ProfileImage = memo(({ src }: any) => (
   <div className="flex justify-end items-center sm:p-12 sm:py-0 sm:pb-0 p-0 py-2 pb-2">
     <div className="relative group" data-aos="fade-up" data-aos-duration="1000">
       {/* Optimized gradient backgrounds with reduced complexity for mobile */}
@@ -90,7 +90,7 @@ const ProfileImage = memo(({ src }) => (
 ));
 
 const StatCard = memo(
-  ({ icon: Icon, color, value, label, description, animation }) => (
+  ({ icon: Icon, color, value, label, description, animation }: any) => (
     <div
       data-aos={animation}
       data-aos-duration={1300}

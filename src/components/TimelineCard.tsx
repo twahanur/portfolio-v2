@@ -118,7 +118,7 @@ const TimelineCard = ({ data }) => {
     target: containerRef,
     offset: ["start center", "end center"],
     trackContentSize: true,
-  });
+  } as any);
 
   const pathLength = useTransform(scrollYProgress, [0.02, 0.98], [0, 1]);
 
@@ -131,7 +131,7 @@ const TimelineCard = ({ data }) => {
     const circles = container.querySelectorAll(".timeline-circle-marker");
     const containerRect = container.getBoundingClientRect();
 
-    const points = Array.from(circles).map((circle) => {
+    const points = Array.from(circles).map((circle: any) => {
       const rect = circle.getBoundingClientRect();
       return {
         x: rect.left - containerRect.left + rect.width / 2,

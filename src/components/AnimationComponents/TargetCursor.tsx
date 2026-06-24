@@ -6,9 +6,10 @@ import { gsap } from "gsap";
 const TargetCursor = ({
   targetSelector = ".cursor-target",
   hideDefaultCursor = true,
-}) => {
-  const cursorRef = useRef(null);
-  const cornersRef = useRef(null);
+  ...props
+}: any) => {
+  const cursorRef = useRef<any>(null);
+  const cornersRef = useRef<any>(null);
 
   // Memoized constants for cursor properties
   const constants = useMemo(
@@ -69,7 +70,7 @@ const TargetCursor = ({
       // Animate the cursor to become visible
       gsap.to(cursorRef.current, { autoAlpha: 1, duration: 0.3, ease: "power2.out" });
 
-      const updateCorners = (mouseX, mouseY) => {
+      const updateCorners = (mouseX?: any, mouseY?: any) => {
         const rect = target.getBoundingClientRect();
         const cursorRect = cursorRef.current.getBoundingClientRect();
         const cursorCenterX = cursorRect.left + cursorRect.width / 2;
@@ -99,7 +100,7 @@ const TargetCursor = ({
         const tl = gsap.timeline();
         const corners = [tlc, trc, brc, blc];
         const offsets = [tlOffset, trOffset, brOffset, blOffset];
-        corners.forEach((corner, index) => {
+        corners.forEach((corner: any, index) => {
           tl.to(corner, { x: offsets[index].x, y: offsets[index].y, duration: 0.2, ease: "power2.out" }, 0);
         });
       };
@@ -123,7 +124,7 @@ const TargetCursor = ({
           const tl = gsap.timeline();
           // Fade out the entire cursor at the same time
           tl.to(cursorRef.current, { autoAlpha: 0, duration: 0.3, ease: "power3.in" }, 0);
-          corners.forEach((corner, index) => {
+          corners.forEach((corner: any, index) => {
             tl.to(corner, { x: positions[index].x, y: positions[index].y, duration: 0.3, ease: "power3.out" }, 0);
           });
         }
