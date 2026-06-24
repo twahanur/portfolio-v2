@@ -95,6 +95,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { label: "Admin Profile", href: "/admin/profile", icon: FiUser },
     { label: "Projects", href: "/admin/projects", icon: FiBriefcase },
     { label: "Blogs", href: "/admin/blogs", icon: FiBookOpen },
+    { label: "Activities", href: "/admin/activities", icon: FiActivity },
     { label: "Experiences", href: "/admin/experiences", icon: FiSliders },
     { label: "Education", href: "/admin/education", icon: FiFileText },
     { label: "Skills", href: "/admin/skills", icon: FiCheckSquare },

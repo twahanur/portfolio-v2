@@ -123,4 +123,15 @@ export interface Education {
   order: number;
 }
 
+export interface Activity {
+  id: string;
+  title: string | null;
+  status: string;
+  image: string | null;
+  link: string | null;
+  date: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
 

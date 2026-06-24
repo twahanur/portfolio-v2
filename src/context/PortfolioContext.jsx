@@ -27,6 +27,7 @@ export const PortfolioProvider = ({ children }) => {
     projects: [],
     certificates: [],
     blogs: [],
+    activities: [],
     cv: null,
   });
 
@@ -124,6 +125,7 @@ export const PortfolioProvider = ({ children }) => {
           projects: projects?.success ? projects.data : [],
           certificates: certificates?.success ? certificates.data : [],
           blogs: blogs?.success ? blogs.data : [],
+          activities: aiContext?.success ? aiContext.data.activities : [],
           cv: cv?.success && cv.data ? { Link: cv.data.url } : null,
         };
 
@@ -171,6 +173,9 @@ export const PortfolioProvider = ({ children }) => {
               PublishedAt: b.publishedAt,
             }));
             localStorage.setItem("blogs", JSON.stringify(blogtData));
+          }
+          if (mergedData.activities && mergedData.activities.length > 0) {
+            localStorage.setItem("activities", JSON.stringify(mergedData.activities));
           }
         }
 

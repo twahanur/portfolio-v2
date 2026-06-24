@@ -9,6 +9,7 @@ import AnimatedBackground from "../Background";
 import Home from "../../Pages/Home";
 import About from "../../Pages/About";
 import Portofolio from "../../Pages/Portofolio";
+import Activities from "../../Pages/Activities";
 import Blog from "../../Pages/Blog";
 import ContactPage from "../../Pages/Contact";
 import PropTypes from "prop-types";
@@ -141,6 +142,7 @@ const LandingPage = ({ showWelcome, setShowWelcome }) => {
               projects={portfolioData.projects}
               certificates={portfolioData.certificates}
             />
+            <Activities activities={portfolioData.activities} />
             <Blog blogs={portfolioData.blogs} />
             <ContactPage />
             <Footer />
