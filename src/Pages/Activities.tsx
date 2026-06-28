@@ -4,7 +4,13 @@ import React, { useState, useEffect, useCallback } from "react";
 import PropTypes from "prop-types";
 import { Modal, IconButton, Box, Backdrop } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { Calendar, MapPin, ExternalLink, Activity, ArrowDown } from "lucide-react";
+import {
+  Calendar,
+  MapPin,
+  ExternalLink,
+  Activity,
+  ArrowDown,
+} from "lucide-react";
 
 // Reusable ToggleButton matching Portofolio style
 const ToggleButton = ({ onClick, isShowingMore }) => (
@@ -79,12 +85,17 @@ export default function Activities({ activities }) {
       id="Activities"
     >
       {/* Header section */}
-      <div className="text-center pb-12" data-aos="fade-up" data-aos-duration="1000">
+      <div
+        className="text-center pb-12"
+        data-aos="fade-up"
+        data-aos-duration="1000"
+      >
         <h2 className="inline-block text-3xl md:text-5xl font-extrabold text-center mx-auto text-transparent bg-clip-text bg-gradient-to-r from-[#6366f1] to-[#a855f7]">
           Recent Activities
         </h2>
         <p className="text-slate-400 max-w-2xl mx-auto text-sm md:text-base mt-3 leading-relaxed">
-          Here is a stream of my recent involvements, tech conferences, meetups, and major milestones.
+          Here is a stream of my recent involvements, tech conferences, meetups,
+          and major milestones.
         </p>
       </div>
 
@@ -116,7 +127,9 @@ export default function Activities({ activities }) {
                 </div>
 
                 {/* Left Side (Desktop Only) / Align opposite to content */}
-                <div className={`hidden md:block w-[45%] ${isLeft ? "text-right" : "order-last text-left"}`}>
+                <div
+                  className={`hidden md:block w-[45%] ${isLeft ? "text-right" : "order-last text-left"}`}
+                >
                   <span className="inline-flex items-center gap-2 px-3 py-1 bg-white/5 border border-white/10 rounded-full text-xs font-semibold text-slate-350">
                     <Calendar size={13} className="text-indigo-400" />
                     {dateStr}
@@ -147,7 +160,10 @@ export default function Activities({ activities }) {
                       <h3 className="text-lg md:text-xl font-bold text-zinc-100 tracking-tight leading-snug group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-purple-200 transition-all duration-300">
                         {act.title || "Activity Update"}
                       </h3>
-                      <Activity size={18} className="text-purple-400 shrink-0 mt-1" />
+                      <Activity
+                        size={18}
+                        className="text-purple-400 shrink-0 mt-1"
+                      />
                     </div>
 
                     {/* Status Content */}
@@ -182,7 +198,7 @@ export default function Activities({ activities }) {
                         Professional Event
                       </span>
 
-                      {act.link && (
+                      {act.link ? (
                         <a
                           href={act.link}
                           target="_blank"
@@ -195,7 +211,7 @@ export default function Activities({ activities }) {
                             className="transition-transform duration-200 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5"
                           />
                         </a>
-                      )}
+                      ) : null}
                     </div>
                   </div>
                 </div>
@@ -292,6 +308,6 @@ Activities.propTypes = {
       image: PropTypes.string,
       link: PropTypes.string,
       date: PropTypes.string.isRequired,
-    })
+    }),
   ).isRequired,
 };
