@@ -92,7 +92,7 @@ export default function SkillsPanel({
     setMessage({ text: "", type: "" });
     try {
       const defaults = [
-        { name: "Backend", slug: "backend", order: 0 },
+        { name: "Backend & Authentication", slug: "backend", order: 0 },
         { name: "Frontend", slug: "frontend", order: 1 },
         { name: "Database", slug: "database", order: 2 },
         { name: "DevOps & Infrastructure", slug: "devops", order: 3 },
@@ -490,7 +490,7 @@ export default function SkillsPanel({
                             }}
                           >
                             <FiMove size={11} className="text-zinc-500" />
-                            {skill.name}
+                            {skill.name} ({skill.order})
                             <div className="flex items-center gap-1.5 ml-1 border-l border-zinc-850 pl-1.5">
                               <button
                                 type="button"

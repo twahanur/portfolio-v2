@@ -4,6 +4,63 @@ import { useEffect, useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { Terminal, Cpu, Database, Server, Settings, ShieldAlert, Award } from "lucide-react";
 import { fetchAiContext } from "../lib/api";
+import {
+  SiFastapi,
+  SiPrisma,
+  SiWebrtc,
+  SiPm2,
+  SiJsonwebtokens,
+  SiPostgresql,
+  SiMongodb,
+  SiRedis,
+  SiMysql,
+  SiGraphql,
+  SiDocker,
+  SiGithubactions,
+  SiNginx,
+  SiStripe,
+  SiReact,
+  SiNextdotjs,
+  SiTailwindcss,
+  SiExpress,
+  SiNestjs,
+  SiGo,
+  SiOpenai
+} from "react-icons/si";
+import { FaNodeJs, FaAws } from "react-icons/fa";
+import { TbApi, TbTopologyStar3 } from "react-icons/tb";
+import { LuBoxes } from "react-icons/lu";
+import { FiMail } from "react-icons/fi";
+
+const IconMap: Record<string, any> = {
+  FaNodeJs,
+  FaAws,
+  SiExpress,
+  SiNestjs,
+  SiGo,
+  SiFastapi,
+  SiPostgresql,
+  SiMongodb,
+  SiRedis,
+  SiMysql,
+  SiPrisma,
+  LuBoxes,
+  SiGraphql,
+  TbApi,
+  TbTopologyStar3,
+  SiWebrtc,
+  SiDocker,
+  SiGithubactions,
+  SiNginx,
+  SiPm2,
+  SiJsonwebtokens,
+  SiStripe,
+  FiMail,
+  SiOpenai,
+  SiReact,
+  SiNextdotjs,
+  SiTailwindcss,
+};
 
 // Helper to match icons to category slugs
 const getCategoryIcon = (slug) => {
@@ -145,6 +202,8 @@ export default function TechStackPage({ skills: propSkills, skillCategories: pro
                     const badgeColor = skill.color || '#6366f1';
                     const hoverBg = hasHexColor ? `${skill.color}15` : 'rgba(99, 102, 241, 0.15)';
                     const defaultBorder = hasHexColor ? `${skill.color}35` : 'rgba(148, 163, 184, 0.3)';
+                    const IconComp = skill.iconName ? IconMap[skill.iconName] : null;
+
                     return (
                       <motion.span
                         key={skill.id}
@@ -154,13 +213,21 @@ export default function TechStackPage({ skills: propSkills, skillCategories: pro
                           color: '#ffffff',
                           backgroundColor: hoverBg
                         }}
-                        className="px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-100/80 dark:bg-slate-900/60 transition-all duration-200 cursor-default border"
+                        className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-100/80 dark:bg-slate-900/60 transition-all duration-200 cursor-default border"
                         style={{
                           borderColor: defaultBorder,
                           color: skill.color ? skill.color : 'var(--text-muted)',
                         }}
                       >
-                        {skill.name}
+                        {IconComp && (
+                          <span 
+                            style={{ color: skill.iconColor || skill.color || undefined }}
+                            className="text-sm shrink-0"
+                          >
+                            <IconComp className="w-4 h-4" />
+                          </span>
+                        )}
+                        <span>{skill.name}</span>
                       </motion.span>
                     );
                   })}
