@@ -5,7 +5,8 @@ import { adminRequest } from "@/lib/admin-api";
 
 export function useAdminData<T>(
   extractor: (data: any) => T,
-  errorMessage: string = "Failed to load dashboard data"
+  errorMessage: string = "Failed to load dashboard data",
+  endpoint: string = "/api/ai-context"
 ) {
   const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState(true);
@@ -21,7 +22,7 @@ export function useAdminData<T>(
     try {
       setLoading(true);
       setError("");
-      const res = await adminRequest("/api/ai-context");
+      const res = await adminRequest(endpoint);
       if (res.success && res.data) {
         setData(extractorRef.current(res.data));
       } else {

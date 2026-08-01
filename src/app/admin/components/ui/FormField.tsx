@@ -12,8 +12,8 @@ interface SelectOption {
 interface FormFieldProps {
   label: string;
   type?: FieldType;
-  value: string | number;
-  onChange: (value: string) => void;
+  value?: string | number;
+  onChange?: (value: string) => void;
   required?: boolean;
   placeholder?: string;
   /** For textarea */
@@ -24,6 +24,7 @@ interface FormFieldProps {
   fullWidth?: boolean;
   disabled?: boolean;
   className?: string;
+  children?: React.ReactNode;
 }
 
 const INPUT_CLASS =
@@ -32,7 +33,7 @@ const INPUT_CLASS =
 export default function FormField({
   label,
   type = "text",
-  value,
+  value = "",
   onChange,
   required = false,
   placeholder,
@@ -41,17 +42,22 @@ export default function FormField({
   fullWidth = false,
   disabled = false,
   className = "",
+  children,
 }: FormFieldProps) {
   const wrapperClass = `space-y-2 ${fullWidth ? "md:col-span-2" : ""} ${className}`;
 
   const renderInput = () => {
+    if (children) {
+      return children;
+    }
+
     if (type === "textarea") {
       return (
         <textarea
           rows={rows}
           required={required}
           value={value}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={(e) => onChange?.(e.target.value)}
           placeholder={placeholder}
           disabled={disabled}
           className={INPUT_CLASS}
@@ -63,7 +69,7 @@ export default function FormField({
       return (
         <select
           value={value}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={(e) => onChange?.(e.target.value)}
           disabled={disabled}
           className={INPUT_CLASS}
         >
@@ -81,7 +87,7 @@ export default function FormField({
         type={type}
         required={required}
         value={value}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={(e) => onChange?.(e.target.value)}
         placeholder={placeholder}
         disabled={disabled}
         className={INPUT_CLASS}

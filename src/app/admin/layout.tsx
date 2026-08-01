@@ -18,6 +18,10 @@ import {
   FiFileText,
   FiMessageSquare,
   FiBookOpen,
+  FiStar,
+  FiSend,
+  FiMessageCircle,
+  FiTrendingUp,
 } from "react-icons/fi";
 import Link from "next/link";
 import Image from "next/image";
@@ -92,15 +96,19 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   const menuItems = [
     { label: "Overview", href: "/admin", icon: FiLayout },
+    { label: "Realtime Analytics", href: "/admin/analytics", icon: FiTrendingUp },
     { label: "Admin Profile", href: "/admin/profile", icon: FiUser },
     { label: "Projects", href: "/admin/projects", icon: FiBriefcase },
     { label: "Blogs", href: "/admin/blogs", icon: FiBookOpen },
+    { label: "Comments", href: "/admin/comments", icon: FiMessageCircle },
     { label: "Activities", href: "/admin/activities", icon: FiActivity },
     { label: "Experiences", href: "/admin/experiences", icon: FiSliders },
     { label: "Education", href: "/admin/education", icon: FiFileText },
     { label: "Skills", href: "/admin/skills", icon: FiCheckSquare },
     { label: "Certificates", href: "/admin/certificates", icon: FiAward },
+    { label: "Testimonials", href: "/admin/testimonials", icon: FiStar },
     { label: "Leads", href: "/admin/leads", icon: FiMail },
+    { label: "Newsletter", href: "/admin/newsletter", icon: FiSend },
     { label: "SEO Settings", href: "/admin/seo", icon: FiSearch },
     { label: "Resume Manager", href: "/admin/resume", icon: FiFileText },
     { label: "AI Chat Audit", href: "/admin/audit", icon: FiMessageSquare },
@@ -232,8 +240,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       </aside>
 
       {/* Main Workspace */}
-      <main className="relative z-10 flex-1 overflow-y-auto px-8 py-10 lg:px-12">
-        <div className="mx-auto max-w-5xl">{children}</div>
+      <main className="relative z-10 flex-1 overflow-y-auto px-6 py-8 md:px-10 lg:px-12">
+        <div className="mx-auto max-w-7xl w-full">{children}</div>
       </main>
     </div>
   );

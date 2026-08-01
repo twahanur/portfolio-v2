@@ -94,6 +94,12 @@ export default function AiPortfolioAssistant() {
         : "Share the requested detail...";
 
   useEffect(() => {
+    const handleOpen = () => setOpen(true);
+    window.addEventListener("open-chat", handleOpen);
+    return () => window.removeEventListener("open-chat", handleOpen);
+  }, []);
+
+  useEffect(() => {
     const fetchProfile = async () => {
       try {
         const payload = await fetchAiContext();

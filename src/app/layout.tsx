@@ -41,6 +41,10 @@ export const viewport = {
 
 import { PortfolioProvider } from '../context/PortfolioContext';
 
+import TerminalModal from '../components/TerminalModal';
+import CustomContextMenu from '../components/CustomContextMenu';
+import VisitorTracker from '../components/VisitorTracker';
+
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
@@ -59,12 +63,26 @@ export default function RootLayout({ children }) {
             `,
           }}
         />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function(c,l,a,r,i,t,y){
+                c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+                t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+                y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+              })(window, document, "clarity", "script", "${process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID || 'xvf7z4zj8f'}");
+            `,
+          }}
+        />
       </head>
       <body suppressHydrationWarning>
         <StyledComponentsRegistry>
           <PortfolioProvider>
+            <VisitorTracker />
             {children}
             <AiPortfolioAssistant />
+            <TerminalModal />
+            <CustomContextMenu />
           </PortfolioProvider>
         </StyledComponentsRegistry>
       </body>

@@ -3,9 +3,10 @@
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable no-unused-vars */
 import { useState, useEffect, useRef } from "react";
-import { Share2, User, Mail, MessageSquare, Send, UploadCloud, FileText, Trash2, MessageCircle, MapPin } from "lucide-react";
+import { Share2, User, Mail, MessageSquare, Send, UploadCloud, FileText, Trash2, MessageCircle, MapPin, Video } from "lucide-react";
 import SocialLinks from "../components/SocialLinks";
 import Komentar from "../components/Commentar";
+import MeetingSchedulerModal from "../components/MeetingSchedulerModal";
 import Swal from "sweetalert2";
 
 const ContactPage = () => {
@@ -17,6 +18,7 @@ const ContactPage = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [activeTab, setActiveTab] = useState("message");
+  const [isSchedulerOpen, setIsSchedulerOpen] = useState(false);
   const fileInputRef = useRef(null);
 
   const handleChange = (e) => {
@@ -149,10 +151,10 @@ const ContactPage = () => {
       </div>
 
       <div
-        className="h-auto py-10 flex items-center justify-center px-[5%] md:px-0"
+        className="h-auto py-10 flex items-center justify-center md:px-[10%] px-[5%]"
         id="Contact"
       >
-        <div className="container px-[1%] grid grid-cols-1 lg:grid-cols-12 gap-8 max-w-7xl mx-auto">
+        <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 mx-auto">
           {/* Left Column: Let's Connect & SocialLinks */}
           <div className="flex flex-col gap-6 w-full lg:col-span-5" data-aos="fade-right" data-aos-duration="1200">
             {/* Let's Connect Card */}
@@ -212,6 +214,21 @@ const ContactPage = () => {
                     <p className="text-sm font-semibold text-slate-800 dark:text-white truncate">Dhaka, Bangladesh</p>
                   </div>
                 </div>
+
+                {/* Schedule 1-on-1 Call Card */}
+                <button
+                  type="button"
+                  onClick={() => setIsSchedulerOpen(true)}
+                  className="w-full flex items-center gap-4 p-4 rounded-xl bg-gradient-to-r from-[#6366f1]/15 to-[#a855f7]/15 border border-[#6366f1]/30 hover:border-[#6366f1] transition-all duration-300 group text-left shadow-lg shadow-[#6366f1]/10"
+                >
+                  <div className="p-3 rounded-lg bg-[#6366f1] text-white group-hover:scale-110 transition-transform duration-300">
+                    <Video className="w-5 h-5" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-[11px] text-[#6366f1] dark:text-indigo-400 font-bold uppercase tracking-wider">Recruiters & Clients</p>
+                    <p className="text-sm font-bold text-slate-800 dark:text-white truncate">Schedule 1-on-1 Call 📅</p>
+                  </div>
+                </button>
               </div>
             </div>
 
@@ -379,6 +396,12 @@ const ContactPage = () => {
           </div>
         </div>
       </div>
+
+      {/* 1-on-1 Call Meeting Scheduler Modal */}
+      <MeetingSchedulerModal
+        isOpen={isSchedulerOpen}
+        onClose={() => setIsSchedulerOpen(false)}
+      />
     </>
   );
 };

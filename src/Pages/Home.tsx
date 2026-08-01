@@ -3,319 +3,42 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react/display-name */
 import { useState, useEffect, memo } from "react";
-import { Mail, ExternalLink, Github, Linkedin, Instagram, Facebook, Twitter, Youtube, Globe } from "lucide-react";
-import { DotLottieReact } from "@lottiefiles/dotlottie-react";
-import StatusBadge from "../components/StatusBatch";
-import MainTitle from "../components/MainTitle";
-import TechStack from "../components/TechStack";
-import CTAButton from "../components/CTAButton";
-import SocialLinkBtn from "../components/SocialLink";
-import { DataStore } from "../assets/DataStore";
-
-import Magnet from "../components/AnimationComponents/Magnet";
-import RotatingText from "../components/AnimationComponents/RotetingText";
+import HeroSection from "../components/Hero/HeroSection";
 import { fetchAiContext } from "../lib/api";
-const { TECH_STACK } = DataStore;
 
-const Home = ({ profile, skills }) => {
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [isHovering, setIsHovering] = useState(false);
-  const [words, setWords] = useState([]);
-  const [title, setTitle] = useState("Fullstack Developer");
-  const [shortBio, setShortBio] = useState("");
-  const [bio, setBio] = useState("✨ A curious mind crafting scalable systems — I specialize in building backend services that power modern applications.");
-  const [techStack, setTechStack] = useState([]);
-  const [socialLinks, setSocialLinks] = useState([]);
-  const [heroAnimationUrl, setHeroAnimationUrl] = useState("");
+const Home = ({ profile: initialProfile, skills: initialSkills }) => {
+  const [profileData, setProfileData] = useState(initialProfile);
+  const [skillsData, setSkillsData] = useState(initialSkills);
 
   useEffect(() => {
-    if (profile || skills) {
-      if (profile) {
-        if (profile.words) {
-          const parsedWords = profile.words.split(",").map(w => w.trim()).filter(Boolean);
-          if (parsedWords.length > 0) {
-            setWords(parsedWords);
-          }
-        }
-        if (profile.title) {
-          setTitle(profile.title);
-        }
-        if (profile.shortBio) {
-          setShortBio(profile.shortBio);
-        }
-        if (profile.bio) {
-          setBio(profile.bio);
-        }
-        if (profile.heroAnimationUrl) {
-          setHeroAnimationUrl(profile.heroAnimationUrl);
-        }
-
-        // Build dynamic socials list
-        const socials = [];
-        if (profile.github) socials.push({ icon: Github, link: profile.github });
-        if (profile.linkedin) socials.push({ icon: Linkedin, link: profile.linkedin });
-        if (profile.instagram) socials.push({ icon: Instagram, link: profile.instagram });
-        if (profile.facebook) socials.push({ icon: Facebook, link: profile.facebook });
-        if (profile.twitter) socials.push({ icon: Twitter, link: profile.twitter });
-        if (profile.youtube) socials.push({ icon: Youtube, link: profile.youtube });
-        if (profile.stackoverflow) socials.push({ icon: Globe, link: profile.stackoverflow });
-        if (profile.medium) socials.push({ icon: Globe, link: profile.medium });
-        if (profile.devto) socials.push({ icon: Globe, link: profile.devto });
-        
-        setSocialLinks(socials);
-      }
-      if (skills) {
-        const sortedSkills = [...skills]
-          .sort((a, b) => a.order - b.order)
-          .map(s => s.name);
-        setTechStack(sortedSkills.slice(0, 8));
-      }
-      return;
+    if (initialProfile) {
+      setProfileData(initialProfile);
+    }
+    if (initialSkills) {
+      setSkillsData(initialSkills);
     }
 
-    const fetchProfile = async () => {
-      try {
-        const payload = await fetchAiContext();
-        if (payload.success && payload.data) {
-          if (payload.data.profile) {
-            const p = payload.data.profile;
-            if (p.words) {
-              const parsedWords = p.words.split(",").map(w => w.trim()).filter(Boolean);
-              if (parsedWords.length > 0) {
-                setWords(parsedWords);
-              }
+    if (!initialProfile) {
+      const fetchProfile = async () => {
+        try {
+          const payload = await fetchAiContext();
+          if (payload.success && payload.data) {
+            if (payload.data.profile) {
+              setProfileData(payload.data.profile);
             }
-            if (p.title) {
-              setTitle(p.title);
+            if (payload.data.skills) {
+              setSkillsData(payload.data.skills);
             }
-            if (p.shortBio) {
-              setShortBio(p.shortBio);
-            }
-            if (p.bio) {
-              setBio(p.bio);
-            }
-            if (p.heroAnimationUrl) {
-              setHeroAnimationUrl(p.heroAnimationUrl);
-            }
-
-            // Build dynamic socials list
-            const socials = [];
-            if (p.github) socials.push({ icon: Github, link: p.github });
-            if (p.linkedin) socials.push({ icon: Linkedin, link: p.linkedin });
-            if (p.instagram) socials.push({ icon: Instagram, link: p.instagram });
-            if (p.facebook) socials.push({ icon: Facebook, link: p.facebook });
-            if (p.twitter) socials.push({ icon: Twitter, link: p.twitter });
-            if (p.youtube) socials.push({ icon: Youtube, link: p.youtube });
-            if (p.stackoverflow) socials.push({ icon: Globe, link: p.stackoverflow });
-            if (p.medium) socials.push({ icon: Globe, link: p.medium });
-            if (p.devto) socials.push({ icon: Globe, link: p.devto });
-            
-            setSocialLinks(socials);
           }
-          if (payload.data.skills) {
-            const sortedSkills = [...payload.data.skills]
-              .sort((a, b) => a.order - b.order)
-              .map(s => s.name);
-            setTechStack(sortedSkills.slice(0, 8));
-          }
+        } catch (err) {
+          console.error("Failed to fetch profile info in Home:", err);
         }
-      } catch (err) {
-        console.error("Failed to fetch profile info:", err);
-      }
-    };
+      };
+      fetchProfile();
+    }
+  }, [initialProfile, initialSkills]);
 
-    fetchProfile();
-  }, [profile, skills]);
-
-  useEffect(() => {
-    setIsLoaded(true);
-    return () => setIsLoaded(false);
-  }, []);
-  // Lottie configuration
-  const lottieOptions = {
-    src: "https://lottie.host/58753882-bb6a-49f5-a2c0-950eda1e135a/NLbpVqGegK.lottie",
-    loop: true,
-    autoplay: true,
-    settings: {
-      preserveAspectRatio: "xMidYMid slice",
-      progressiveLoad: true,
-    },
-    style: { width: "100%", height: "100%" },
-    className: `w-full h-full transition-all duration-500 ${
-      isHovering
-        ? "scale-[180%] sm:scale-[160%] md:scale-[150%] lg:scale-[145%] rotate-2"
-        : "scale-[175%] sm:scale-[155%] md:scale-[145%] lg:scale-[140%]"
-    }`,
-  };
-
-  return (
-    <div className="min-h-screen bg-transparent overflow-hidden" id="Home">
-      <div
-        className={`relative z-10 transition-all duration-1000 ${
-          isLoaded ? "opacity-100" : "opacity-0"
-        }`}
-      >
-        <div className="container mx-auto px-[5%] sm:px-6 lg:px-[5%] min-h-screen">
-          <div className="flex flex-col lg:flex-row items-center justify-center min-h-screen md:justify-between gap-12 sm:gap-16 lg:gap-20 py-24 md:py-32 lg:py-0">
-            {/* Left Column */}
-            <div
-              className="w-full lg:w-1/2 space-y-6 sm:space-y-8 text-left lg:text-left order-1 lg:order-1 lg:mt-0"
-              data-aos="fade-right"
-              data-aos-delay="200"
-            >
-              <div className="space-y-4 sm:space-y-6">
-                <StatusBadge />
-                <MainTitle title={title} />
-
-                {/* Typing Effect */}
-                {/* <TypingEffect /> */}
-                {words.length > 0 && (
-                  <RotatingText
-                    texts={words}
-                    staticText=""
-                    staticTextClassName="text-slate-500 dark:text-gray-400"
-                    mainClassName="overflow-hidden py-0.5 sm:py-1 md:py-2 text-3xl rounded-lg"
-                    staggerFrom={"last"}
-                    initial={{ y: "100%" }}
-                    animate={{ y: 0 }}
-                    exit={{ y: "-120%" }}
-                    staggerDuration={0.025}
-                    splitLevelClassName="overflow-hidden pb-0.5 sm:pb-1 md:pb-1"
-                    transition={{ type: "spring", damping: 30, stiffness: 400 }}
-                    rotationInterval={2000}
-                  />
-                )}
-
-                {/* Description */}
-                <p
-                  className="text-base md:text-lg text-slate-650 dark:text-gray-400 max-w-xl leading-relaxed font-light"
-                  data-aos="fade-up"
-                  data-aos-delay="1000"
-                >
-                  {shortBio}
-                </p>
-
-                {/* Tech Stack */}
-                {techStack.length > 0 && (
-                  <div
-                    className="flex flex-wrap gap-3 justify-start"
-                    data-aos="fade-up"
-                    data-aos-delay="1200"
-                  >
-                    {techStack.map((tech, index) => (
-                      <Magnet
-                        key={index}
-                        padding={20}
-                        disabled={false}
-                        magnetStrength={10}
-                      >
-                        <TechStack key={index} tech={tech} />
-                      </Magnet>
-                    ))}
-                  </div>
-                )}
-
-                {/* CTA Buttons */}
-                <div
-                  className="flex flex-row gap-3 w-full justify-start"
-                  data-aos="fade-up"
-                  data-aos-delay="1400"
-                >
-                  <CTAButton
-                  
-                    href="#Portofolio"
-                    text="Projects"
-                    icon={ExternalLink}
-                  />
-                  <CTAButton href="#Contact" text="Contact" icon={Mail} />
-                </div>
-
-                {/* Social Links */}
-                {socialLinks.length > 0 && (
-                  <div
-                    className="hidden sm:flex gap-4 justify-start"
-                    data-aos="fade-up"
-                    data-aos-delay="1600"
-                  >
-                    {socialLinks.map((social, index) => (
-                      <Magnet
-                        key={index}
-                        padding={10}
-                        disabled={false}
-                        magnetStrength={5}
-                      >
-                        <SocialLinkBtn key={index} {...social} />
-                      </Magnet>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Right Column - Optimized Lottie Animation */}
-            <div
-              className="w-full py-[10%] sm:py-0 lg:w-1/2 h-auto lg:h-[600px] xl:h-[750px] relative flex items-center justify-center order-2 lg:order-2 mt-8 lg:mt-0"
-              onMouseEnter={() => setIsHovering(true)}
-              onMouseLeave={() => setIsHovering(false)}
-              data-aos="fade-left"
-              data-aos-delay="600"
-            >
-              <div className="relative w-full opacity-90">
-                <div
-                  className={`absolute inset-0 bg-gradient-to-r from-[#6366f1]/10 to-[#a855f7]/10 rounded-3xl blur-3xl transition-all duration-700 ease-in-out ${
-                    isHovering ? "opacity-50 scale-105" : "opacity-20 scale-100"
-                  }`}
-                ></div>
-
-                <div
-                  className={`relative z-10 w-full opacity-90 transform transition-transform duration-500 ${
-                    isHovering ? "scale-105" : "scale-100"
-                  }`}
-                >
-                  {heroAnimationUrl ? (
-                    heroAnimationUrl.includes(".json") || heroAnimationUrl.includes(".lottie") || heroAnimationUrl.includes("lottie.host") ? (
-                      <DotLottieReact
-                        src={heroAnimationUrl}
-                        loop
-                        autoplay
-                        className={`w-full h-full transition-all duration-500 ${
-                          isHovering
-                            ? "scale-[180%] sm:scale-[160%] md:scale-[150%] lg:scale-[145%] rotate-2"
-                            : "scale-[175%] sm:scale-[155%] md:scale-[145%] lg:scale-[140%]"
-                        }`}
-                      />
-                    ) : (
-                      <img
-                        src={heroAnimationUrl}
-                        alt="Hero Animation"
-                        className={`w-full h-auto max-h-[450px] object-contain transition-all duration-500 ${
-                          isHovering ? "scale-105 rotate-2" : "scale-100"
-                        }`}
-                      />
-                    )
-                  ) : (
-                    <DotLottieReact {...lottieOptions} />
-                  )}
-                </div>
-
-                <div
-                  className={`absolute inset-0 pointer-events-none transition-all duration-700 ${
-                    isHovering ? "opacity-50" : "opacity-20"
-                  }`}
-                >
-                  <div
-                    className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-gradient-to-br from-indigo-500/10 to-purple-500/10 blur-3xl animate-[pulse_6s_cubic-bezier(0.4,0,0.6,1)_infinite] transition-all duration-700 ${
-                      isHovering ? "scale-110" : "scale-100"
-                    }`}
-                  ></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+  return <HeroSection profile={profileData} skills={skillsData} />;
 };
 
 export default memo(Home);

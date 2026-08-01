@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Lead } from "../leads/page";
 import { adminRequest } from "@/lib/admin-api";
-import { FiMail, FiTrash2, FiCheckCircle, FiArchive, FiClock, FiSearch } from "react-icons/fi";
+import { FiMail, FiTrash2, FiCheckCircle, FiArchive, FiClock, FiSearch, FiBell, FiSave, FiX } from "react-icons/fi";
 import PageHeader from "./ui/PageHeader";
 import AdminMessage from "./ui/AdminMessage";
 
@@ -22,6 +22,53 @@ export default function LeadsPanel({ initialLeads, onRefresh }: LeadsPanelProps)
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({ text: "", type: "" });
+
+  // Discord & Telegram Notification Config State
+  const [showConfig, setShowConfig] = useState(false);
+  const [discordWebhookUrl, setDiscordWebhookUrl] = useState("");
+  const [isDiscordEnabled, setIsDiscordEnabled] = useState(false);
+  const [telegramBotToken, setTelegramBotToken] = useState("");
+  const [telegramChatId, setTelegramChatId] = useState("");
+  const [isTelegramEnabled, setIsTelegramEnabled] = useState(false);
+  const [savingConfig, setSavingConfig] = useState(false);
+
+  useEffect(() => {
+    const fetchNotifConfig = async () => {
+      try {
+        const res = await adminRequest("/api/notifications/config", "GET");
+        if (res.success && res.data) {
+          setDiscordWebhookUrl(res.data.discordWebhookUrl || "");
+          setIsDiscordEnabled(res.data.isDiscordEnabled || false);
+          setTelegramBotToken(res.data.telegramBotToken || "");
+          setTelegramChatId(res.data.telegramChatId || "");
+          setIsTelegramEnabled(res.data.isTelegramEnabled || false);
+        }
+      } catch (err) {
+        console.error("Failed to load notification config", err);
+      }
+    };
+    fetchNotifConfig();
+  }, []);
+
+  const handleSaveNotifConfig = async () => {
+    setSavingConfig(true);
+    try {
+      await adminRequest("/api/notifications/config", "PUT", {
+        discordWebhookUrl,
+        isDiscordEnabled,
+        telegramBotToken,
+        telegramChatId,
+        isTelegramEnabled,
+      });
+      showMessage("Notification webhooks updated successfully!", "success");
+      setShowConfig(false);
+    } catch (err: any) {
+      console.error(err);
+      showMessage(err.message || "Failed to update notification config", "error");
+    } finally {
+      setSavingConfig(false);
+    }
+  };
 
   const showMessage = (text: string, type: "success" | "error") => {
     setMessage({ text, type });
@@ -102,11 +149,100 @@ export default function LeadsPanel({ initialLeads, onRefresh }: LeadsPanelProps)
 
   return (
     <div className="space-y-6">
-      <PageHeader
-        title="Contact Leads"
-        description="Review and manage collaboration inquiries from your portfolio"
-        showAction={false}
-      />
+      <div className="flex items-center justify-between">
+        <PageHeader
+          title="Contact Leads"
+          description="Review and manage collaboration inquiries from your portfolio"
+          showAction={false}
+        />
+        <button
+          onClick={() => setShowConfig(true)}
+          className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-400 border border-indigo-500/30 font-bold text-xs transition"
+        >
+          <FiBell className="w-4 h-4 text-indigo-400" />
+          <span>Notification Webhooks</span>
+        </button>
+      </div>
+
+      {/* Notification Webhooks Config Modal */}
+      {showConfig && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+          <div className="w-full max-w-lg bg-zinc-950 border border-zinc-800 rounded-3xl p-6 space-y-5 shadow-2xl text-xs text-zinc-200">
+            <div className="flex justify-between items-center pb-3 border-b border-zinc-800">
+              <h3 className="font-bold text-base text-zinc-100 flex items-center gap-2">
+                <FiBell className="text-indigo-400" /> Discord & Telegram Notification Webhooks
+              </h3>
+              <button onClick={() => setShowConfig(false)} className="text-zinc-400 hover:text-zinc-100">
+                <FiX className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Discord Webhook */}
+            <div className="space-y-2 bg-zinc-900/50 p-4 rounded-2xl border border-zinc-800/80">
+              <div className="flex items-center justify-between">
+                <label className="font-bold text-zinc-200">Discord Push Alerts</label>
+                <input
+                  type="checkbox"
+                  checked={isDiscordEnabled}
+                  onChange={(e) => setIsDiscordEnabled(e.target.checked)}
+                  className="w-4 h-4 rounded accent-indigo-500 cursor-pointer"
+                />
+              </div>
+              <input
+                type="text"
+                value={discordWebhookUrl}
+                onChange={(e) => setDiscordWebhookUrl(e.target.value)}
+                placeholder="https://discord.com/api/webhooks/..."
+                className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2 text-zinc-200 focus:outline-none focus:border-indigo-500 font-mono text-[11px]"
+              />
+            </div>
+
+            {/* Telegram Webhook */}
+            <div className="space-y-2.5 bg-zinc-900/50 p-4 rounded-2xl border border-zinc-800/80">
+              <div className="flex items-center justify-between">
+                <label className="font-bold text-zinc-200">Telegram Push Alerts</label>
+                <input
+                  type="checkbox"
+                  checked={isTelegramEnabled}
+                  onChange={(e) => setIsTelegramEnabled(e.target.checked)}
+                  className="w-4 h-4 rounded accent-indigo-500 cursor-pointer"
+                />
+              </div>
+              <input
+                type="text"
+                value={telegramBotToken}
+                onChange={(e) => setTelegramBotToken(e.target.value)}
+                placeholder="Telegram Bot Token (e.g. 123456789:ABC...)"
+                className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2 text-zinc-200 focus:outline-none focus:border-indigo-500 font-mono text-[11px]"
+              />
+              <input
+                type="text"
+                value={telegramChatId}
+                onChange={(e) => setTelegramChatId(e.target.value)}
+                placeholder="Telegram Chat ID (e.g. 987654321)"
+                className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2 text-zinc-200 focus:outline-none focus:border-indigo-500 font-mono text-[11px]"
+              />
+            </div>
+
+            <div className="flex justify-end gap-3 pt-2">
+              <button
+                onClick={() => setShowConfig(false)}
+                className="px-4 py-2 rounded-xl bg-zinc-900 text-zinc-400 hover:text-zinc-200"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSaveNotifConfig}
+                disabled={savingConfig}
+                className="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold flex items-center gap-1.5 shadow-lg disabled:opacity-50"
+              >
+                <FiSave className="w-4 h-4" />
+                <span>{savingConfig ? "Saving..." : "Save Webhook Config"}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <AdminMessage
         text={message.text}

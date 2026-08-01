@@ -23,6 +23,7 @@ export default function ProfilePanel({ initialProfile, onRefresh }: ProfilePanel
   const [shortBio, setShortBio] = useState("");
   const [profilePictureUrl, setProfilePictureUrl] = useState("");
   const [heroAnimationUrl, setHeroAnimationUrl] = useState("");
+  const [audioBioUrl, setAudioBioUrl] = useState("");
 
   // Contact details
   const [phone, setPhone] = useState("");
@@ -39,6 +40,12 @@ export default function ProfilePanel({ initialProfile, onRefresh }: ProfilePanel
   const [stackoverflow, setStackoverflow] = useState("");
   const [medium, setMedium] = useState("");
   const [devto, setDevto] = useState("");
+
+  // Availability states
+  const [availStatus, setAvailStatus] = useState("");
+  const [availStatusType, setAvailStatusType] = useState("available");
+  const [availNotice, setAvailNotice] = useState("");
+  const [availRolesText, setAvailRolesText] = useState("");
 
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -58,6 +65,7 @@ export default function ProfilePanel({ initialProfile, onRefresh }: ProfilePanel
       setShortBio(initialProfile.shortBio || "");
       setProfilePictureUrl(initialProfile.profilePictureUrl || "");
       setHeroAnimationUrl(initialProfile.heroAnimationUrl || "");
+      setAudioBioUrl((initialProfile as any).audioBioUrl || "");
       setPhone(initialProfile.phone || "");
       setLocation(initialProfile.location || "");
       setMapEmbedUrl(initialProfile.mapEmbedUrl || "");
@@ -72,6 +80,28 @@ export default function ProfilePanel({ initialProfile, onRefresh }: ProfilePanel
       setDevto(initialProfile.devto || "");
     }
   }, [initialProfile]);
+
+  useEffect(() => {
+    const fetchAvailability = async () => {
+      try {
+        const res = await adminRequest("/api/availability");
+        if (res.success && res.data) {
+          setAvailStatus(res.data.status || "");
+          setAvailStatusType(res.data.statusType || "available");
+          setAvailNotice(res.data.notice || "");
+          const roles = Array.isArray(res.data.preferredRoles)
+            ? res.data.preferredRoles
+            : typeof res.data.preferredRoles === "string"
+            ? JSON.parse(res.data.preferredRoles || "[]")
+            : [];
+          setAvailRolesText(roles.join(", "));
+        }
+      } catch (err) {
+        console.error("Failed to load availability config", err);
+      }
+    };
+    fetchAvailability();
+  }, []);
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -98,29 +128,38 @@ export default function ProfilePanel({ initialProfile, onRefresh }: ProfilePanel
     setMessage({ text: "", type: "" });
 
     try {
-      await adminRequest("/api/auth/profile", "PUT", {
-        name,
-        email,
-        title,
-        words,
-        bio,
-        shortBio,
-        profilePictureUrl,
-        heroAnimationUrl,
-        phone,
-        location,
-        mapEmbedUrl,
-        github,
-        linkedin,
-        twitter,
-        facebook,
-        instagram,
-        youtube,
-        stackoverflow,
-        medium,
-        devto,
-      });
-      showMessage("Profile updated successfully!", "success");
+      await Promise.all([
+        adminRequest("/api/auth/profile", "PUT", {
+          name,
+          email,
+          title,
+          words,
+          bio,
+          shortBio,
+          profilePictureUrl,
+          heroAnimationUrl,
+          audioBioUrl,
+          phone,
+          location,
+          mapEmbedUrl,
+          github,
+          linkedin,
+          twitter,
+          facebook,
+          instagram,
+          youtube,
+          stackoverflow,
+          medium,
+          devto,
+        }),
+        adminRequest("/api/availability", "PUT", {
+          status: availStatus,
+          statusType: availStatusType,
+          notice: availNotice,
+          preferredRoles: availRolesText.split(",").map((r) => r.trim()).filter(Boolean),
+        }),
+      ]);
+      showMessage("Profile & Work Availability updated successfully!", "success");
       onRefresh();
     } catch (err: any) {
       console.error(err);
@@ -235,6 +274,14 @@ export default function ProfilePanel({ initialProfile, onRefresh }: ProfilePanel
               placeholder="e.g. https://lottie.host/...json or URL to a GIF/image"
               value={heroAnimationUrl}
               onChange={setHeroAnimationUrl}
+            />
+
+            <FormField
+              label="30-Sec Audio Bio / Voice Greeting URL (MP3/OGG)"
+              fullWidth
+              placeholder="e.g. https://res.cloudinary.com/.../voice-greeting.mp3"
+              value={audioBioUrl}
+              onChange={setAudioBioUrl}
             />
 
             <FormField
@@ -359,6 +406,49 @@ export default function ProfilePanel({ initialProfile, onRefresh }: ProfilePanel
               placeholder="https://dev.to/username"
               value={devto}
               onChange={setDevto}
+            />
+          </div>
+        </div>
+
+        {/* Work Availability Status Section */}
+        <div className="space-y-6 pt-4 border-t border-zinc-900/60">
+          <h4 className="font-bold text-zinc-250 text-sm border-l-2 border-emerald-500 pl-3">
+            Work Availability Settings
+          </h4>
+
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <FormField
+              label="Availability Status Banner"
+              placeholder="e.g. Available for Full-time Remote Roles & Select Freelance Projects"
+              value={availStatus}
+              onChange={setAvailStatus}
+            />
+
+            <div>
+              <label className="mb-2 block text-xs font-semibold text-zinc-300">Status Type</label>
+              <select
+                value={availStatusType}
+                onChange={(e) => setAvailStatusType(e.target.value)}
+                className="w-full rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-2.5 text-xs text-zinc-100 focus:border-emerald-500 focus:outline-none"
+              >
+                <option value="available">Available 🟢</option>
+                <option value="busy">Busy / Fully Booked 🔴</option>
+                <option value="open">Open for Inquiries 🟡</option>
+              </select>
+            </div>
+
+            <FormField
+              label="Notice Period"
+              placeholder="e.g. Can start within 1-2 weeks"
+              value={availNotice}
+              onChange={setAvailNotice}
+            />
+
+            <FormField
+              label="Preferred Roles (Comma Separated)"
+              placeholder="e.g. Full-Stack Engineer, Backend Developer, System Architect"
+              value={availRolesText}
+              onChange={setAvailRolesText}
             />
           </div>
         </div>

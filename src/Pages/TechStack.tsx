@@ -24,8 +24,7 @@ import {
   SiTailwindcss,
   SiExpress,
   SiNestjs,
-  SiGo,
-  SiOpenai
+  SiGo
 } from "react-icons/si";
 import { FaNodeJs, FaAws } from "react-icons/fa";
 import { TbApi, TbTopologyStar3 } from "react-icons/tb";
@@ -38,6 +37,7 @@ const IconMap: Record<string, any> = {
   SiExpress,
   SiNestjs,
   SiGo,
+  SiOpenai: Cpu,
   SiFastapi,
   SiPostgresql,
   SiMongodb,
@@ -56,7 +56,6 @@ const IconMap: Record<string, any> = {
   SiJsonwebtokens,
   SiStripe,
   FiMail,
-  SiOpenai,
   SiReact,
   SiNextdotjs,
   SiTailwindcss,
@@ -205,19 +204,41 @@ export default function TechStackPage({ skills: propSkills, skillCategories: pro
                     const IconComp = skill.iconName ? IconMap[skill.iconName] : null;
 
                     return (
-                      <motion.span
+                      <motion.button
                         key={skill.id}
+                        onClick={async (e) => {
+                          e.stopPropagation();
+                          try {
+                            const res = await fetch(`https://api.twahanur.dev/api/skills/${skill.id}/endorse`, {
+                              method: "POST",
+                            });
+                            if (res.ok) {
+                              const json = await res.json();
+                              if (json.success) {
+                                setSkillsData((prev) => ({
+                                  ...prev,
+                                  skills: prev.skills.map((s: any) =>
+                                    s.id === skill.id ? { ...s, endorsements: (s.endorsements || 0) + 1 } : s
+                                  ),
+                                }));
+                              }
+                            }
+                          } catch (err) {
+                            console.error("Endorse error", err);
+                          }
+                        }}
                         whileHover={{ 
-                          scale: 1.05,
+                          scale: 1.06,
                           borderColor: badgeColor,
-                          color: '#ffffff',
                           backgroundColor: hoverBg
                         }}
-                        className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-100/80 dark:bg-slate-900/60 transition-all duration-200 cursor-default border"
+                        whileTap={{ scale: 0.95 }}
+                        className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100/80 dark:bg-slate-900/60 transition-all duration-200 cursor-pointer border group"
                         style={{
                           borderColor: defaultBorder,
                           color: skill.color ? skill.color : 'var(--text-muted)',
                         }}
+                        title={`Click to endorse ${skill.name}!`}
                       >
                         {IconComp && (
                           <span 
@@ -228,7 +249,10 @@ export default function TechStackPage({ skills: propSkills, skillCategories: pro
                           </span>
                         )}
                         <span>{skill.name}</span>
-                      </motion.span>
+                        <span className="ml-1 text-[10px] px-1.5 py-0.5 rounded-md bg-indigo-500/10 dark:bg-indigo-500/20 text-indigo-400 font-bold border border-indigo-500/20 group-hover:scale-110 transition-transform flex items-center gap-0.5">
+                          👍 {skill.endorsements || 0}
+                        </span>
+                      </motion.button>
                     );
                   })}
                 </div>

@@ -45,6 +45,9 @@ export interface Project {
   devOps: string[];
   live: string;
   code: string;
+  backendCode?: string | null;
+  isFrontendPrivate?: boolean;
+  isBackendPrivate?: boolean;
   sourceNote: string | null;
   problem: string;
   architecture: string;

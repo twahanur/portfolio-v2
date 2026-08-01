@@ -6,6 +6,10 @@ import Magnet from "../components/AnimationComponents/Magnet";
 import SocialLinkBtn from "../components/SocialLink";
 import { fetchAiContext } from "../lib/api";
 
+import LiveAnalyticsWidget from "../components/LiveAnalyticsWidget";
+import NewsletterForm from "../components/NewsletterForm";
+import GitHubContributionGraph from "../components/GitHubContributionGraph";
+
 const Footer = () => {
   const [year] = useState(new Date().getFullYear());
   const [socialLinks, setSocialLinks] = useState([]);
@@ -49,8 +53,20 @@ const Footer = () => {
 
   return (
     <footer className="bg-slate-50 dark:bg-[#030014] border-t border-slate-200 dark:border-transparent text-slate-650 dark:text-[#e2d3fd] transition-colors duration-300">
-      <div className="py-16 px-6 lg:px-8">
-        <div className="text-center">
+      <div className="py-16 md:px-[10%] px-[5%] w-full mx-auto space-y-12">
+        
+        {/* GitHub Contribution Graph — full width */}
+        <div className="text-left">
+          <GitHubContributionGraph />
+        </div>
+
+        {/* Live Analytics & Newsletter — side by side */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
+          <LiveAnalyticsWidget />
+          <NewsletterForm />
+        </div>
+
+        <div className="text-center pt-8 border-t border-slate-800/40">
           <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white">
             Let&apos;s Build Something New
           </h2>
@@ -69,7 +85,7 @@ const Footer = () => {
           </div>
           {socialLinks.length > 0 && (
             <div
-              className="hidden sm:flex gap-4 justify-center"
+              className="hidden sm:flex gap-4 justify-center mt-6"
               data-aos="fade-up"
               data-aos-delay="1600"
             >
@@ -86,11 +102,10 @@ const Footer = () => {
             </div>
           )}
         </div>
-        <div className="mt-16 border-t border-slate-250 dark:border-[#5f5a78]/30 pt-8 flex flex-col sm:flex-row items-center justify-between">
+        <div className="border-t border-slate-250 dark:border-[#5f5a78]/30 pt-8 flex flex-col sm:flex-row items-center justify-between">
           <p className="text-sm text-slate-500 dark:text-[#a79cc7] order-2 sm:order-1 mt-4 sm:mt-0">
             © {year} Twahanur. All Rights Reserved.
           </p>
-          
         </div>
       </div>
     </footer>

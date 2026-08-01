@@ -231,4 +231,63 @@ a#logo{
 	-webkit-text-stroke: 1.5px #a855f7; /* Violet-pink stroke */
 	text-stroke: 1.5px #a855f7;
   }
+
+  .text-stroke-white {
+	color: transparent;
+	-webkit-text-stroke: 2px rgba(255, 255, 255, 0.25);
+  }
+
+  .text-stroke-white-bold {
+	-webkit-text-stroke: 1px rgba(255, 255, 255, 0.8);
+  }
+
+  @keyframes diagonalSweep {
+	0% {
+	  transform: translate(-120%, -120%) rotate(35deg);
+	  opacity: 0;
+	}
+	8% {
+	  opacity: 1;
+	}
+	55% {
+	  transform: translate(150%, 150%) rotate(35deg);
+	  opacity: 1;
+	}
+	70%, 100% {
+	  transform: translate(300%, 300%) rotate(35deg);
+	  opacity: 0;
+	}
+  }
+
+  .animate-diagonal-sweep {
+	animation: diagonalSweep 14s cubic-bezier(0.3, 0, 0.2, 1) infinite;
+  }
+
+  .animate-diagonal-sweep-delayed {
+	animation: diagonalSweep 14s cubic-bezier(0.3, 0, 0.2, 1) infinite 5s;
+  }
+
+
+  @keyframes floatSlow {
+	0%, 100% {
+	  transform: translateY(0px) rotate(0deg);
+	}
+	50% {
+	  transform: translateY(-8px) rotate(4deg);
+	}
+  }
+
+  .animate-float-slow {
+	animation: floatSlow 4s ease-in-out infinite;
+  }
+
+  .animate-float-reverse {
+	animation: floatSlow 5s ease-in-out infinite reverse;
+  }
+
+  .writing-mode-vertical {
+	writing-mode: vertical-rl;
+	text-orientation: mixed;
+  }
+
   
