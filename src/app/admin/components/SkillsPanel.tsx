@@ -1,10 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Skill, SkillCategory } from "../types";
 import { adminRequest } from "@/lib/admin-api";
 import { FiLoader, FiPlus, FiTrash2, FiMove, FiFolder, FiFolderPlus, FiCpu, FiEdit2 } from "react-icons/fi";
 import FormField from "./ui/FormField";
+import ColorPickerInput from "./ui/ColorPickerInput";
+import IconPickerModal, { ICON_CATALOG } from "./ui/IconPickerModal";
 import AdminMessage from "./ui/AdminMessage";
 
 interface SkillsPanelProps {
@@ -24,6 +26,7 @@ export default function SkillsPanel({
   const [color, setColor] = useState("");
   const [iconColor, setIconColor] = useState("");
   const [iconName, setIconName] = useState("");
+  const [isIconPickerOpen, setIsIconPickerOpen] = useState(false);
   const [editingSkill, setEditingSkill] = useState<Skill | null>(null);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({ text: "", type: "" });
@@ -31,14 +34,21 @@ export default function SkillsPanel({
 
   // Dynamic Category Form States
   const [newCategoryName, setNewCategoryName] = useState("");
+  const [newCategoryScore, setNewCategoryScore] = useState(85);
   const [categoryLoading, setCategoryLoading] = useState(false);
 
+  const [categoriesList, setCategoriesList] = useState<SkillCategory[]>(initialCategories);
+
+  useEffect(() => {
+    setCategoriesList(initialCategories);
+  }, [initialCategories]);
+
   // Set default category when categories change
-  useState(() => {
+  useEffect(() => {
     if (initialCategories.length > 0 && !category) {
       setCategory(initialCategories[0].slug);
     }
-  });
+  }, [initialCategories, category]);
 
   const showMessage = (text: string, type: "success" | "error") => {
     setMessage({ text, type });
@@ -55,16 +65,33 @@ export default function SkillsPanel({
       await adminRequest("/api/skill-categories", "POST", {
         name: newCategoryName.trim(),
         slug,
+        score: Number(newCategoryScore),
         order: initialCategories.length,
       });
-      setNewCategoryName("");
       showMessage("Category added successfully!", "success");
+      setNewCategoryName("");
+      setNewCategoryScore(85);
       onRefresh();
     } catch (err: any) {
       console.error(err);
       showMessage(err.message || "Failed to add category", "error");
     } finally {
       setCategoryLoading(false);
+    }
+  };
+
+  const handleUpdateCategoryScore = async (id: string, score: number) => {
+    setCategoriesList((prev) =>
+      prev.map((cat) => (cat.id === id ? { ...cat, score } : cat))
+    );
+    try {
+      await adminRequest(`/api/skill-categories/${id}`, "PUT", { score: Number(score) });
+      showMessage("Category proficiency updated successfully!", "success");
+      onRefresh();
+    } catch (err: any) {
+      console.error(err);
+      showMessage(err.message || "Failed to update category score", "error");
+      setCategoriesList(initialCategories);
     }
   };
 
@@ -316,6 +343,14 @@ export default function SkillsPanel({
                 value={newCategoryName}
                 onChange={setNewCategoryName}
               />
+              <FormField
+                label="Proficiency Score (%)"
+                type="number"
+                required
+                placeholder="e.g. 70, 95"
+                value={newCategoryScore}
+                onChange={(val) => setNewCategoryScore(Number(val))}
+              />
               <button
                 type="submit"
                 disabled={categoryLoading}
@@ -368,26 +403,50 @@ export default function SkillsPanel({
                 onChange={(val) => setOrder(Number(val))}
               />
 
-              <FormField
-                label="Badge Color (Hex Color Code)"
+              <ColorPickerInput
+                label="Badge Color"
                 placeholder="e.g. #6366f1"
                 value={color}
                 onChange={setColor}
               />
 
-              <FormField
-                label="Icon Color (Hex Color Code)"
+              <ColorPickerInput
+                label="Icon Color"
                 placeholder="e.g. #a855f7"
                 value={iconColor}
                 onChange={setIconColor}
               />
 
-              <FormField
-                label="React Icon Name (Optional)"
-                placeholder="e.g. FaNodeJs, DiPython"
-                value={iconName}
-                onChange={setIconName}
-              />
+              <div className="space-y-2">
+                <label className="block text-sm font-semibold text-zinc-350">
+                  Technology Icon (Visual Picker or Name)
+                </label>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setIsIconPickerOpen(true)}
+                    className="flex items-center gap-2 shrink-0 rounded-xl border border-purple-500/30 bg-purple-500/10 px-3.5 py-2.5 text-xs font-bold text-purple-300 hover:border-purple-500/60 hover:bg-purple-500/20 transition active:scale-95"
+                  >
+                    {iconName && ICON_CATALOG.find((i) => i.name === iconName) ? (
+                      (() => {
+                        const IconComp = ICON_CATALOG.find((i) => i.name === iconName)!.icon;
+                        return <IconComp size={16} className="text-purple-400" />;
+                      })()
+                    ) : (
+                      <FiCpu size={16} className="text-purple-400" />
+                    )}
+                    <span>{iconName ? "Change Icon" : "Browse Icons"}</span>
+                  </button>
+
+                  <input
+                    type="text"
+                    placeholder="e.g. FaNodeJs, SiReact"
+                    value={iconName}
+                    onChange={(e) => setIconName(e.target.value)}
+                    className="block w-full rounded-xl border border-zinc-800 bg-zinc-950/80 px-4 py-2.5 text-zinc-200 text-sm font-mono outline-none transition focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/20 placeholder:text-zinc-600"
+                  />
+                </div>
+              </div>
 
               <div className="flex gap-3">
                 {editingSkill && (
@@ -402,9 +461,8 @@ export default function SkillsPanel({
                 <button
                   type="submit"
                   disabled={loading || initialCategories.length === 0}
-                  className={`flex-1 flex items-center justify-center gap-2 rounded-xl py-3 text-sm font-bold shadow transition active:scale-[0.97] disabled:opacity-50 ${
-                    editingSkill ? "bg-emerald-500 text-white hover:bg-emerald-400" : "bg-zinc-100 text-zinc-950 hover:bg-zinc-50"
-                  }`}
+                  className={`flex-1 flex items-center justify-center gap-2 rounded-xl py-3 text-sm font-bold shadow transition active:scale-[0.97] disabled:opacity-50 ${editingSkill ? "bg-emerald-500 text-white hover:bg-emerald-400" : "bg-zinc-100 text-zinc-950 hover:bg-zinc-50"
+                    }`}
                 >
                   {loading ? (
                     <FiLoader className="animate-spin" size={18} />
@@ -442,7 +500,7 @@ export default function SkillsPanel({
               </button>
             </div>
           ) : (
-            initialCategories.map((cat) => {
+            categoriesList.map((cat) => {
               const list = skillsByCategory[cat.slug] || [];
               return (
                 <div
@@ -451,8 +509,31 @@ export default function SkillsPanel({
                   onDrop={() => handleDropToCategory(cat.slug)}
                   className="rounded-2xl border border-zinc-800 bg-zinc-900/10 p-5 backdrop-blur-md hover:border-zinc-700/80 transition duration-300 min-h-[120px]"
                 >
-                  <div className="flex items-center justify-between border-b border-zinc-800/85 pb-3">
-                    <h4 className="font-bold text-zinc-300">{cat.name}</h4>
+                  <div className="flex flex-wrap items-center justify-between border-b border-zinc-800/85 pb-3 gap-2">
+                    <div className="flex items-center gap-3">
+                      <h4 className="font-bold text-zinc-300">{cat.name}</h4>
+                      <div className="flex items-center gap-1.5 bg-zinc-800/80 px-2.5 py-1 rounded-lg border border-zinc-700/60">
+                        <span className="text-[11px] text-zinc-400 font-semibold">Proficiency:</span>
+                        <input
+                          type="number"
+                          min={0}
+                          max={100}
+                          defaultValue={cat.score ?? 85}
+                          onBlur={(e) => {
+                            const val = Number(e.target.value);
+                            if (val !== cat.score) handleUpdateCategoryScore(cat.id, val);
+                          }}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                              const val = Number((e.target as HTMLInputElement).value);
+                              if (val !== cat.score) handleUpdateCategoryScore(cat.id, val);
+                            }
+                          }}
+                          className="w-12 bg-zinc-900 border border-zinc-700 rounded px-1 text-xs text-emerald-400 font-mono font-bold text-center focus:outline-none focus:border-emerald-500"
+                        />
+                        <span className="text-xs text-emerald-400 font-mono font-bold">%</span>
+                      </div>
+                    </div>
                     <button
                       type="button"
                       onClick={() => handleDeleteCategory(cat.id, cat.name)}
@@ -477,13 +558,12 @@ export default function SkillsPanel({
                             onDragStart={() => handleDragStart(skill)}
                             onDragOver={handleDragOver}
                             onDrop={(e) => handleDrop(skill, e)}
-                            className={`inline-flex items-center gap-2 rounded-lg border px-3 py-1.5 text-xs font-medium transition cursor-grab active:cursor-grabbing ${
-                              draggedSkill?.id === skill.id
+                            className={`inline-flex items-center gap-2 rounded-lg border px-3 py-1.5 text-xs font-medium transition cursor-grab active:cursor-grabbing ${draggedSkill?.id === skill.id
                                 ? "border-emerald-500 bg-emerald-500/10 text-emerald-400"
                                 : editingSkill?.id === skill.id
                                   ? "border-amber-500 bg-amber-500/10 text-amber-400"
                                   : "border-zinc-800 bg-zinc-900/40 text-zinc-300 hover:border-zinc-700"
-                            }`}
+                              }`}
                             style={{
                               borderColor: skill.color ? `${skill.color}50` : undefined,
                               color: skill.color ? skill.color : undefined,
@@ -519,6 +599,13 @@ export default function SkillsPanel({
           )}
         </div>
       </div>
+
+      <IconPickerModal
+        isOpen={isIconPickerOpen}
+        onClose={() => setIsIconPickerOpen(false)}
+        selectedIconName={iconName}
+        onSelectIcon={setIconName}
+      />
     </div>
   );
 }

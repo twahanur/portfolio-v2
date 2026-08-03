@@ -16,6 +16,7 @@ import PropTypes from "prop-types";
 import Education from "../../Pages/Education";
 import Experience from "../../Pages/Experience";
 import TechStackPage from "../../Pages/TechStack";
+import GitHubContributionGraph from "../GitHubContributionGraph";
 import Footer from "../../Pages/Footer";
 import { usePortfolio } from "../../context/PortfolioContext";
 import "aos/dist/aos.css";
@@ -136,6 +137,9 @@ const LandingPage = ({ showWelcome, setShowWelcome }) => {
               skills={portfolioData.skills}
               skillCategories={portfolioData.skillCategories}
             />
+            <div className="md:px-[10%] px-[5%] py-12 bg-slate-950/40 relative">
+              <GitHubContributionGraph />
+            </div>
             <Experience experiences={portfolioData.experiences} />
             <Education educations={portfolioData.educations} />
             <Portofolio

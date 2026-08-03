@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Project } from "../types";
 import { adminRequest } from "@/lib/admin-api";
 import { FiPlus, FiMove, FiEdit2, FiTrash2 } from "react-icons/fi";
@@ -16,10 +16,16 @@ interface ProjectsPanelProps {
 }
 
 export default function ProjectsPanel({ initialProjects, onRefresh }: ProjectsPanelProps) {
+  const [projectsList, setProjectsList] = useState<Project[]>(initialProjects);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [message, setMessage] = useState({ text: "", type: "" });
   const [draggedProject, setDraggedProject] = useState<Project | null>(null);
+  const [dragOverProjectId, setDragOverProjectId] = useState<string | null>(null);
+
+  useEffect(() => {
+    setProjectsList(initialProjects);
+  }, [initialProjects]);
 
   const showMessage = (text: string, type: "success" | "error") => {
     setMessage({ text, type });
@@ -57,42 +63,65 @@ export default function ProjectsPanel({ initialProjects, onRefresh }: ProjectsPa
   };
 
   // Drag and drop handlers
-  const handleDragStart = (proj: Project) => {
+  const handleDragStart = (e: React.DragEvent, proj: Project) => {
     setDraggedProject(proj);
+    e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.setData("text/plain", proj.id);
   };
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
   };
 
-  const handleDrop = async (targetProj: Project) => {
+  const handleDragEnter = (e: React.DragEvent, projId: string) => {
+    e.preventDefault();
+    if (draggedProject && draggedProject.id !== projId) {
+      setDragOverProjectId(projId);
+    }
+  };
+
+  const handleDragLeave = (e: React.DragEvent, projId: string) => {
+    e.preventDefault();
+    if (dragOverProjectId === projId) {
+      setDragOverProjectId(null);
+    }
+  };
+
+  const handleDrop = async (e: React.DragEvent, targetProj: Project) => {
+    e.preventDefault();
+    setDragOverProjectId(null);
+
     if (!draggedProject || draggedProject.id === targetProj.id) return;
 
-    const sortedProjects = [...initialProjects].sort((a, b) => a.order - b.order);
-    const draggedIndex = sortedProjects.findIndex((p) => p.id === draggedProject.id);
-    const targetIndex = sortedProjects.findIndex((p) => p.id === targetProj.id);
+    const currentSorted = [...projectsList].sort((a, b) => a.order - b.order);
+    const draggedIndex = currentSorted.findIndex((p) => p.id === draggedProject.id);
+    const targetIndex = currentSorted.findIndex((p) => p.id === targetProj.id);
 
     if (draggedIndex === -1 || targetIndex === -1) return;
 
-    const updatedProjects = [...sortedProjects];
+    const updatedProjects = [...currentSorted];
     updatedProjects.splice(draggedIndex, 1);
     updatedProjects.splice(targetIndex, 0, draggedProject);
 
+    const reordered = updatedProjects.map((proj, index) => ({
+      ...proj,
+      order: index,
+    }));
+
+    // Optimistic UI update
+    setProjectsList(reordered);
+    setDraggedProject(null);
+
     try {
-      const promises = updatedProjects.map((proj, index) => {
-        const newOrder = index;
-        if (proj.order !== newOrder) {
-          return adminRequest(`/api/projects/${proj.id}`, "PUT", { order: newOrder });
-        }
-        return Promise.resolve();
-      });
-      await Promise.all(promises);
+      const payload = reordered.map((p) => ({ id: p.id, order: p.order }));
+      await adminRequest("/api/projects/reorder", "PUT", { orders: payload });
+      showMessage("Project order updated successfully!", "success");
       onRefresh();
     } catch (err: any) {
       console.error("Failed to update projects order:", err);
-      showMessage("Failed to update project ordering", "error");
-    } finally {
-      setDraggedProject(null);
+      showMessage(err.message || "Failed to update project ordering", "error");
+      setProjectsList(initialProjects);
     }
   };
 
@@ -100,7 +129,7 @@ export default function ProjectsPanel({ initialProjects, onRefresh }: ProjectsPa
     <div className="space-y-6">
       <PageHeader
         title="Projects"
-        description="Manage your work portfolio case studies"
+        description="Manage your work portfolio case studies (Drag and drop items to reorder)"
         actionLabel="Add Project"
         actionIcon={FiPlus}
         onAction={handleAdd}
@@ -113,26 +142,38 @@ export default function ProjectsPanel({ initialProjects, onRefresh }: ProjectsPa
         onDismiss={() => setMessage({ text: "", type: "" })}
       />
 
-      <div className="flex flex-col gap-4">
-        {initialProjects
+      <div className="flex flex-col gap-3.5">
+        {[...projectsList]
           .sort((a, b) => a.order - b.order)
           .map((proj) => {
             const featuredImage = proj.images.find((img) => img.isFeatured) || proj.images[0];
+            const isBeingDragged = draggedProject?.id === proj.id;
+            const isDragOver = dragOverProjectId === proj.id;
+
             return (
               <div
                 key={proj.id}
                 draggable
-                onDragStart={() => handleDragStart(proj)}
+                onDragStart={(e) => handleDragStart(e, proj)}
                 onDragOver={handleDragOver}
-                onDrop={() => handleDrop(proj)}
-                className={`group rounded-2xl border p-4 bg-zinc-900/20 backdrop-blur-md flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition duration-300 cursor-grab active:cursor-grabbing hover:border-zinc-700/80 ${
-                  draggedProject?.id === proj.id
-                    ? "border-emerald-500 bg-emerald-500/10 shadow-[0_0_15px_rgba(16,185,129,0.15)]"
+                onDragEnter={(e) => handleDragEnter(e, proj.id)}
+                onDragLeave={(e) => handleDragLeave(e, proj.id)}
+                onDrop={(e) => handleDrop(e, proj)}
+                className={`group rounded-2xl border p-4 bg-zinc-900/20 backdrop-blur-md flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all duration-200 cursor-grab active:cursor-grabbing hover:border-purple-500/50 ${
+                  isBeingDragged
+                    ? "opacity-30 border-2 border-dashed border-purple-500/80 bg-purple-500/5 scale-[0.98]"
+                    : isDragOver
+                    ? "border-2 border-purple-500 bg-purple-500/15 shadow-[0_0_30px_rgba(168,85,247,0.35)] translate-x-2 ring-2 ring-purple-400/30"
                     : "border-zinc-800"
                 }`}
               >
                 <div className="flex items-center gap-4 flex-grow min-w-0">
-                  <FiMove className="text-zinc-500 group-hover:text-zinc-350 transition shrink-0" size={18} />
+                  <div className="flex items-center gap-2 text-zinc-500 group-hover:text-purple-400 transition shrink-0">
+                    <FiMove size={18} className="animate-pulse" />
+                    <span className="text-[10px] uppercase font-bold tracking-widest hidden sm:inline text-zinc-500 group-hover:text-purple-400">
+                      Drag
+                    </span>
+                  </div>
                   {featuredImage ? (
                     <div className="relative h-12 w-20 overflow-hidden rounded-lg bg-zinc-950 shrink-0 border border-zinc-850">
                       <Image src={featuredImage.url} alt={proj.title} fill className="object-cover" />
@@ -148,7 +189,7 @@ export default function ProjectsPanel({ initialProjects, onRefresh }: ProjectsPa
                   </div>
                 </div>
                 <div className="flex items-center gap-3 justify-end shrink-0">
-                  <span className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider">
+                  <span className="px-2.5 py-1 rounded-md bg-purple-500/10 border border-purple-500/20 text-[11px] text-purple-300 font-extrabold uppercase tracking-wider">
                     Order: {proj.order}
                   </span>
                   <button

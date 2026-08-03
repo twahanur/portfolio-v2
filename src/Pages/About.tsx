@@ -5,6 +5,7 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react/display-name */
 import { useEffect, memo, useMemo, useState } from "react";
+import Magnet from "../components/AnimationComponents/Magnet";
 import {
   FileText,
   Code,
@@ -53,7 +54,7 @@ const Header = memo(() => (
 ));
 
 const ProfileImage = memo(({ src }: any) => (
-  <div className="flex justify-end items-center sm:p-12 sm:py-0 sm:pb-0 p-0 py-2 pb-2">
+  <div className="flex justify-center lg:justify-end items-center sm:p-12 sm:py-0 sm:pb-0 p-0 py-2 pb-2">
     <div className="relative group" data-aos="fade-up" data-aos-duration="1000">
       {/* Optimized gradient backgrounds with reduced complexity for mobile */}
       <div className="absolute -inset-6 opacity-[25%] z-0 hidden sm:block">
@@ -63,7 +64,7 @@ const ProfileImage = memo(({ src }: any) => (
       </div>
 
       <div className="relative">
-        <div className="w-72 h-72 sm:w-80 sm:h-80 rounded-full overflow-hidden shadow-[0_0_40px_rgba(120,119,198,0.3)] transform transition-all duration-700 group-hover:scale-105">
+        <div className="w-60 h-60 sm:w-80 sm:h-80 rounded-full overflow-hidden shadow-[0_0_40px_rgba(120,119,198,0.3)] transform transition-all duration-700 group-hover:scale-105">
           <div className="absolute inset-0 border-4 border-white/20 rounded-full z-20 transition-all duration-700 group-hover:border-white/40 group-hover:scale-105" />
 
           {/* Optimized overlay effects - disabled on mobile */}
@@ -294,22 +295,26 @@ const AboutPage = ({ profile: propProfile, cv: propCv, projects: propProjects, c
                 rel="noopener noreferrer"
                 className="w-full lg:w-auto cursor-target"
               >
-                <button
-                  data-aos="fade-up"
-                  data-aos-duration="800"
-                  className="w-full lg:w-auto sm:px-6 py-2 sm:py-3 rounded-lg bg-gradient-to-r from-[#6366f1] to-[#a855f7] text-white font-medium transition-all duration-300 hover:scale-105 flex items-center justify-center lg:justify-start gap-2 shadow-lg hover:shadow-xl animate-bounce-slow "
-                >
-                  <FileText className="w-4 h-4 sm:w-5 sm:h-5" /> Download CV
-                </button>
+                <Magnet magnetStrength={3} padding={40}>
+                  <button
+                    data-aos="fade-up"
+                    data-aos-duration="800"
+                    className="w-full lg:w-auto sm:px-6 py-2 sm:py-3 rounded-lg bg-gradient-to-r from-[#6366f1] to-[#a855f7] text-white font-medium transition-all duration-300 hover:scale-105 flex items-center justify-center lg:justify-start gap-2 shadow-lg hover:shadow-xl animate-bounce-slow "
+                  >
+                    <FileText className="w-4 h-4 sm:w-5 sm:h-5" /> Download CV
+                  </button>
+                </Magnet>
               </a>
               <a href="#Portofolio" className="w-full lg:w-auto cursor-target">
-                <button
-                  data-aos="fade-up"
-                  data-aos-duration="1000"
-                  className="w-full lg:w-auto sm:px-6 py-2 sm:py-3 rounded-lg border border-[#a855f7]/50 text-[#a855f7] font-medium transition-all duration-300 hover:scale-105 flex items-center justify-center lg:justify-start gap-2 hover:bg-[#a855f7]/10 animate-bounce-slow delay-200"
-                >
-                  <Code className="w-4 h-4 sm:w-5 sm:h-5" /> View Projects
-                </button>
+                <Magnet magnetStrength={3} padding={40}>
+                  <button
+                    data-aos="fade-up"
+                    data-aos-duration="1000"
+                    className="w-full lg:w-auto sm:px-6 py-2 sm:py-3 rounded-lg border border-[#a855f7]/50 text-[#a855f7] font-medium transition-all duration-300 hover:scale-105 flex items-center justify-center lg:justify-start gap-2 hover:bg-[#a855f7]/10 animate-bounce-slow delay-200"
+                  >
+                    <Code className="w-4 h-4 sm:w-5 sm:h-5" /> View Projects
+                  </button>
+                </Magnet>
               </a>
             </div>
           </div>

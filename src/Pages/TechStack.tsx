@@ -2,8 +2,9 @@
 
 import { useEffect, useState, useMemo } from "react";
 import { motion } from "framer-motion";
-import { Terminal, Cpu, Database, Server, Settings, ShieldAlert, Award } from "lucide-react";
+import { Terminal, Cpu, Database, Server, Settings, ShieldAlert, Award, PieChart, LayoutGrid, Layers } from "lucide-react";
 import { fetchAiContext } from "../lib/api";
+import SkillSpiderChart from "../components/SkillSpiderChart";
 import {
   SiFastapi,
   SiPrisma,
@@ -130,6 +131,7 @@ export default function TechStackPage({ skills: propSkills, skillCategories: pro
           id: cat.id,
           name: cat.name,
           slug: cat.slug,
+          score: (cat as any).score,
           skills: filtered,
         });
       }
@@ -165,7 +167,7 @@ export default function TechStackPage({ skills: propSkills, skillCategories: pro
       <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-purple-500/5 rounded-full blur-[140px] pointer-events-none" />
 
       <div className="w-full mx-auto">
-        <div className="text-center pb-16" data-aos="fade-up" data-aos-duration="1000">
+        <div className="text-center pb-10" data-aos="fade-up" data-aos-duration="1000">
           <h2 className="inline-block text-3xl md:text-5xl font-extrabold text-center mx-auto text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 dark:from-blue-400 dark:via-indigo-400 dark:to-purple-400">
             Skills & Tech Stack
           </h2>
@@ -174,91 +176,9 @@ export default function TechStackPage({ skills: propSkills, skillCategories: pro
           </p>
         </div>
 
-        {/* Categories Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-          {groupedSkills.map((category, idx) => (
-            <div
-              key={category.id || category.slug}
-              data-aos="fade-up"
-              data-aos-delay={idx * 50}
-              className="relative bg-white/80 dark:bg-[#060713]/80 backdrop-blur-xl border border-slate-200 dark:border-slate-800/80 hover:border-indigo-500/30 rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_30px_rgba(99,102,241,0.08)] flex flex-col justify-between"
-            >
-              <div>
-                {/* Category Header */}
-                <div className="flex items-center gap-3 border-b border-slate-100 dark:border-slate-800/60 pb-4 mb-5">
-                  <div className="p-2 bg-indigo-500/10 rounded-lg border border-indigo-500/20">
-                    {getCategoryIcon(category.slug)}
-                  </div>
-                  <h3 className="text-lg font-bold text-slate-900 dark:text-white tracking-wide">
-                    {category.name}
-                  </h3>
-                </div>
-
-                {/* Skill Badges */}
-                <div className="flex flex-wrap gap-2.5">
-                  {category.skills.map((skill) => {
-                    const hasHexColor = skill.color && skill.color.startsWith('#');
-                    const badgeColor = skill.color || '#6366f1';
-                    const hoverBg = hasHexColor ? `${skill.color}15` : 'rgba(99, 102, 241, 0.15)';
-                    const defaultBorder = hasHexColor ? `${skill.color}35` : 'rgba(148, 163, 184, 0.3)';
-                    const IconComp = skill.iconName ? IconMap[skill.iconName] : null;
-
-                    return (
-                      <motion.button
-                        key={skill.id}
-                        onClick={async (e) => {
-                          e.stopPropagation();
-                          try {
-                            const res = await fetch(`https://api.twahanur.dev/api/skills/${skill.id}/endorse`, {
-                              method: "POST",
-                            });
-                            if (res.ok) {
-                              const json = await res.json();
-                              if (json.success) {
-                                setSkillsData((prev) => ({
-                                  ...prev,
-                                  skills: prev.skills.map((s: any) =>
-                                    s.id === skill.id ? { ...s, endorsements: (s.endorsements || 0) + 1 } : s
-                                  ),
-                                }));
-                              }
-                            }
-                          } catch (err) {
-                            console.error("Endorse error", err);
-                          }
-                        }}
-                        whileHover={{ 
-                          scale: 1.06,
-                          borderColor: badgeColor,
-                          backgroundColor: hoverBg
-                        }}
-                        whileTap={{ scale: 0.95 }}
-                        className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100/80 dark:bg-slate-900/60 transition-all duration-200 cursor-pointer border group"
-                        style={{
-                          borderColor: defaultBorder,
-                          color: skill.color ? skill.color : 'var(--text-muted)',
-                        }}
-                        title={`Click to endorse ${skill.name}!`}
-                      >
-                        {IconComp && (
-                          <span 
-                            style={{ color: skill.iconColor || skill.color || undefined }}
-                            className="text-sm shrink-0"
-                          >
-                            <IconComp className="w-4 h-4" />
-                          </span>
-                        )}
-                        <span>{skill.name}</span>
-                        <span className="ml-1 text-[10px] px-1.5 py-0.5 rounded-md bg-indigo-500/10 dark:bg-indigo-500/20 text-indigo-400 font-bold border border-indigo-500/20 group-hover:scale-110 transition-transform flex items-center gap-0.5">
-                          👍 {skill.endorsements || 0}
-                        </span>
-                      </motion.button>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
-          ))}
+        {/* Spider Radar Chart View */}
+        <div className="mb-6" data-aos="fade-up">
+          <SkillSpiderChart categories={groupedSkills} />
         </div>
       </div>
     </div>

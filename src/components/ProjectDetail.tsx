@@ -35,10 +35,12 @@ import {
   Lightbulb,
   Clock,
   Sparkles,
-  ChevronLeft
+  ChevronLeft,
+  Monitor,
 } from "lucide-react";
 import Swal from "sweetalert2";
 import PremiumLoader from "./PremiumLoader";
+import LivePreviewModal from "./LivePreviewModal";
 
 const TECH_ICONS = {
   React: Globe,
@@ -161,6 +163,7 @@ const ProjectDetails = () => {
   const [activeCodeFile, setActiveCodeFile] = useState("architecture.json");
   const [hoveredCardIndex, setHoveredCardIndex] = useState(null);
   const [expandedChallengeIndex, setExpandedChallengeIndex] = useState(null);
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
   const scrollContainerRef = useRef(null);
 
@@ -330,7 +333,7 @@ module.exports = {
                 Case Study
               </span>
               
-              <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent leading-none">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent leading-tight">
                 {project.Title}
               </h1>
 
@@ -365,15 +368,27 @@ module.exports = {
                 )}
               </a>
 
-              <a
-                href={project.Link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 rounded-xl text-white font-medium shadow-[0_4px_20px_-4px_rgba(59,130,246,0.4)] hover:shadow-[0_4px_20px_-2px_rgba(59,130,246,0.6)] transition-all duration-300 text-sm"
-              >
-                <ExternalLink className="w-4.5 h-4.5" />
-                <span>Live System</span>
-              </a>
+              {project.Link && (
+                <>
+                  <button
+                    onClick={() => setIsPreviewOpen(true)}
+                    className="flex items-center gap-2 px-4.5 py-2.5 bg-white/10 hover:bg-white/20 border border-white/15 rounded-xl text-white font-medium shadow-md transition-all duration-300 text-sm"
+                  >
+                    <Monitor className="w-4.5 h-4.5 text-indigo-400" />
+                    <span>Live Frame View</span>
+                  </button>
+
+                  <a
+                    href={project.Link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 rounded-xl text-white font-medium shadow-[0_4px_20px_-4px_rgba(59,130,246,0.4)] hover:shadow-[0_4px_20px_-2px_rgba(59,130,246,0.6)] transition-all duration-300 text-sm"
+                  >
+                    <ExternalLink className="w-4.5 h-4.5" />
+                    <span>Live System</span>
+                  </a>
+                </>
+              )}
             </div>
           </div>
 
@@ -959,6 +974,15 @@ module.exports = {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {project.Link && (
+        <LivePreviewModal
+          isOpen={isPreviewOpen}
+          onClose={() => setIsPreviewOpen(false)}
+          projectUrl={project.Link}
+          projectTitle={project.Title || project.title || "Project Live Preview"}
+        />
+      )}
 
     </div>
   );

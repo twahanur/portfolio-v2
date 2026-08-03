@@ -41,11 +41,20 @@ html:not(.dark) {
 
 html,
 body {
-	overflow-x: hidden;
+	width: 100%;
+	max-width: 100vw;
+	overflow-x: clip;
 	background: var(--bg-primary);
 	color: var(--text-primary);
 	scroll-behavior: smooth !important;
 	transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#root,
+main,
+section,
+div[data-nextjs-scroll-focus-boundary] {
+	max-width: 100vw;
 }
 
 @keyframes blob {

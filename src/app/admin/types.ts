@@ -100,6 +100,7 @@ export interface SkillCategory {
   id: string;
   name: string;
   slug: string;
+  score?: number;
   order: number;
 }
 

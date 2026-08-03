@@ -1,9 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { ChevronRight, Calendar, MapPin } from "lucide-react";
+import { useEffect, useState, useRef } from "react";
+import { motion, AnimatePresence, useScroll, useSpring, useTransform } from "framer-motion";
+import { ChevronDown, ChevronUp, ChevronRight, Calendar, MapPin } from "lucide-react";
 import { fetchAiContext } from "../lib/api";
+
+const FALLBACK_IMAGES = [
+  "https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=800&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=800&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=800&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=800&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=800&auto=format&fit=crop",
+];
 
 const DEFAULT_EXPERIENCES = [
   {
@@ -14,6 +22,7 @@ const DEFAULT_EXPERIENCES = [
     isCurrent: true,
     location: "Remote",
     workMode: "Full-time",
+    image: FALLBACK_IMAGES[0],
     summary:
       "Leading cross-functional engineering teams in architecting high-throughput microservices and modern Next.js cloud platforms.",
     highlights: [
@@ -31,12 +40,13 @@ const DEFAULT_EXPERIENCES = [
     isCurrent: false,
     location: "Khulna, Bangladesh",
     workMode: "On-site / Hybrid",
+    image: FALLBACK_IMAGES[1],
     summary:
       "Built and maintained scalable full-stack applications serving production users using React.js and Node.js.",
     highlights: [
       "Built and maintained scalable full-stack applications serving production users using React.js and Node.js.",
       "Improved backend efficiency by ~20-35% through query optimization and structured API design.",
-      "Developed REST APIs handling 10K-50K+ daily requests (estimated production scale) with stable performance.",
+      "Developed REST APIs handling 10K-50K+ daily requests with stable performance.",
     ],
     techStack: ["React.js", "Next.js", "Node.js", "Prisma", "PostgreSQL", "Tailwind"],
   },
@@ -48,6 +58,7 @@ const DEFAULT_EXPERIENCES = [
     isCurrent: false,
     location: "Khulna, Bangladesh",
     workMode: "Internship",
+    image: FALLBACK_IMAGES[2],
     summary:
       "Developed responsive frontend user interfaces, integrated RESTful APIs, and optimized client-side state management.",
     highlights: [
@@ -62,6 +73,10 @@ const DEFAULT_EXPERIENCES = [
 export default function ExperiencePage({ experiences: propExperiences }) {
   const [experiences, setExperiences] = useState([]);
   const [activeIdx, setActiveIdx] = useState(0);
+
+  const containerRef = useRef(null);
+  const timelineRef = useRef(null);
+  const itemRefs = useRef([]);
 
   const formatExperiences = (exps) => {
     if (!exps || exps.length === 0) return DEFAULT_EXPERIENCES;
@@ -80,13 +95,14 @@ export default function ExperiencePage({ experiences: propExperiences }) {
         isCurrent: exp.isCurrent || false,
         location: exp.location || "Remote",
         workMode: exp.workMode || "Full-time",
+        image: exp.image || FALLBACK_IMAGES[i % FALLBACK_IMAGES.length],
         summary: exp.summary || exp.duties || "",
         highlights:
           exp.highlights && exp.highlights.length > 0
             ? exp.highlights
             : exp.summary
-            ? [exp.summary]
-            : [],
+              ? [exp.summary]
+              : [],
         techStack: exp.techStack || [],
       };
     });
@@ -115,169 +131,308 @@ export default function ExperiencePage({ experiences: propExperiences }) {
   }, [propExperiences]);
 
   const listToRender = experiences.length > 0 ? experiences : DEFAULT_EXPERIENCES;
-  const activeExp = listToRender[activeIdx] || listToRender[0];
+
+  // Timeline Progress animation scoped to the timeline list
+  const { scrollYProgress } = useScroll({
+    target: timelineRef,
+    offset: ["start 70%", "end 50%"],
+  });
+
+  const smoothLineProgress = useSpring(scrollYProgress, {
+    stiffness: 40,
+    damping: 35,
+    restDelta: 0.001,
+  });
+
+  const beamTop = useTransform(smoothLineProgress, [0, 1], ["0%", "100%"]);
+
+  // Auto-activate card when scrolled into center view
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const observers = [];
+    itemRefs.current.forEach((el, index) => {
+      if (!el) return;
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            setActiveIdx(index);
+          }
+        },
+        {
+          threshold: 0.4,
+          rootMargin: "-15% 0px -25% 0px",
+        }
+      );
+      observer.observe(el);
+      observers.push(observer);
+    });
+
+    return () => observers.forEach((obs) => obs.disconnect());
+  }, [listToRender.length]);
 
   return (
     <div
-      className="md:px-[10%] px-[5%] py-16 bg-transparent relative overflow-hidden"
+      ref={containerRef}
+      className="relative h-auto bg-slate-950/60 text-slate-100 py-16 md:py-24 px-[5%] md:px-[8%] overflow-hidden"
       id="experience"
     >
       {/* Background ambient glowing shapes */}
-      <div className="absolute top-1/3 -left-32 w-96 h-96 bg-purple-600/10 rounded-full blur-[140px] pointer-events-none" />
-      <div className="absolute bottom-10 -right-32 w-96 h-96 bg-indigo-600/10 rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute top-1/4 -left-32 w-96 h-96 bg-lime-500/10 rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute bottom-10 -right-32 w-96 h-96 bg-purple-600/10 rounded-full blur-[140px] pointer-events-none" />
 
-      {/* Header section matching reference design */}
-      <div className="w-full mx-auto mb-12" data-aos="fade-up" data-aos-duration="1000">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-300 text-xs font-semibold tracking-wider uppercase mb-3 backdrop-blur-md">
-          <span className="w-2 h-2 rounded-full bg-purple-400 animate-pulse" />
-          <span>EXPERIENCE</span>
-        </div>
-        <h2 className="text-3xl md:text-5xl font-extrabold text-white tracking-tight leading-tight">
-          A non-linear path.
-        </h2>
-        <p className="text-slate-400 max-w-2xl text-sm md:text-base mt-2.5 leading-relaxed">
-          From co-founding ventures to leading media production crews — the throughline is shipping.
-        </p>
-      </div>
+      {/* Main Experience Layout: Left Column (Sticky Header & Images) & Right Column (Scroll Timeline) */}
+      <div className="w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start relative z-10">
+        
+        {/* Left Column: Header Title + Dynamic Staggered Image Gallery (Sticky at top-24) */}
+        <div className="lg:col-span-6 hidden lg:block lg:sticky lg:top-24 self-start space-y-6 py-2 z-20">
+          {/* Header section */}
+          <div>
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-lime-500/10 border border-lime-500/20 text-lime-400 text-xs font-semibold tracking-wider uppercase mb-3 backdrop-blur-md">
+              <span className="w-2 h-2 rounded-full bg-lime-400 animate-pulse" />
+              <span>EXPERIENCE & TIMELINE</span>
+            </div>
+            <h2 className="text-3xl md:text-5xl font-extrabold text-white tracking-tight leading-tight">
+              Professional Journey.
+            </h2>
+            <p className="text-slate-400 max-w-xl text-sm md:text-base mt-2.5 leading-relaxed">
+              Scroll down to explore my career evolution, key accomplishments, and technical impact.
+            </p>
+          </div>
 
-      {/* Main Tabbed Experience Layout */}
-      <div className="w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
-        {/* Left Column: Interactive Company Cards List */}
-        <div className="lg:col-span-4 space-y-3">
-          {listToRender.map((exp, idx) => {
-            const isActive = activeIdx === idx;
+          {/* Dynamic Multi-Column Staggered Pill Layout */}
+          {(() => {
+            const numCols = listToRender.length <= 2 ? 2 : 3;
+            const columns = Array.from({ length: numCols }, () => []);
+
+            listToRender.forEach((exp, idx) => {
+              columns[idx % numCols].push({ exp, originalIdx: idx });
+            });
+
             return (
-              <button
-                key={exp.id}
-                onClick={() => setActiveIdx(idx)}
-                className={`w-full text-left p-4 md:p-5 rounded-2xl transition-all duration-300 relative overflow-hidden group border backdrop-blur-xl ${
-                  isActive
-                    ? "bg-purple-950/30 border-purple-500/50 shadow-[0_0_25px_rgba(168,85,247,0.15)]"
-                    : "bg-white/[0.02] hover:bg-white/[0.05] border-white/5 hover:border-purple-500/20 text-slate-400"
-                }`}
-              >
-                {/* Active Indicator Bar on Left Edge */}
-                {isActive && (
-                  <motion.div
-                    layoutId="activeIndicator"
-                    className="absolute left-0 top-0 bottom-0 w-1.5 bg-gradient-to-b from-purple-500 to-indigo-500 rounded-r-full shadow-[0_0_12px_#a855f7]"
-                    transition={{ type: "spring", stiffness: 350, damping: 30 }}
-                  />
-                )}
+              <div className={`grid gap-3.5 sm:gap-4 items-start ${numCols === 2 ? "grid-cols-2" : "grid-cols-3"}`}>
+                {columns.map((colItems, colIdx) => (
+                  <div
+                    key={`col-${colIdx}`}
+                    className={`flex flex-col gap-3.5 sm:gap-4 ${
+                      colIdx === 1 ? "mt-6 sm:mt-8" : colIdx === 2 ? "mt-1 sm:mt-2" : "mt-0"
+                    }`}
+                  >
+                    {colItems.map(({ exp, originalIdx }) => {
+                      const isActive = activeIdx === originalIdx;
+                      return (
+                        <div
+                          key={exp.id || originalIdx}
+                          onClick={() => setActiveIdx(originalIdx)}
+                          className={`relative aspect-[3/4.5] w-full rounded-[1.8rem] sm:rounded-[2.2rem] overflow-hidden cursor-pointer transition-all duration-300 ease-out transform-gpu ${
+                            isActive
+                              ? "border-2 border-lime-400/90 shadow-[0_0_30px_rgba(163,230,53,0.35)] ring-4 ring-lime-400/30 scale-[1.04] z-20"
+                              : "border border-white/10 opacity-40 grayscale hover:opacity-90 hover:grayscale-0 hover:border-white/30 scale-100"
+                          }`}
+                        >
+                          <img
+                            src={exp.image}
+                            alt={exp.company}
+                            className="w-full h-full object-cover"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent" />
 
-                <div className="pl-2 flex items-start justify-between gap-3">
-                  <div>
-                    <h3
-                      className={`font-bold text-base md:text-lg transition-colors duration-200 ${
-                        isActive
-                          ? "text-white"
-                          : "text-slate-300 group-hover:text-white"
-                      }`}
-                    >
-                      {exp.company}
-                    </h3>
-                    <p className="text-xs md:text-sm text-slate-400 mt-0.5 font-medium">
-                      {exp.period}
-                    </p>
+                          <div className="absolute bottom-3 left-3 right-3 flex flex-col gap-1">
+                            <span className="text-[11px] sm:text-xs font-extrabold text-white truncate drop-shadow-md">
+                              {exp.company}
+                            </span>
+                            {isActive && (
+                              <span className="self-start px-2 py-0.5 text-[8px] sm:text-[9px] font-black uppercase tracking-wider rounded-md bg-lime-400 text-slate-950 shadow-[0_0_12px_#a3e635]">
+                                Active
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
-
-                  {exp.isCurrent && (
-                    <span className="px-2 py-0.5 rounded-md bg-purple-500/20 text-purple-300 text-[10px] font-bold border border-purple-500/30 shrink-0">
-                      Present
-                    </span>
-                  )}
-                </div>
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Right Column: Selected Experience Detail Card */}
-        <div className="lg:col-span-8">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={activeExp.id}
-              initial={{ opacity: 0, y: 15, scale: 0.98 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -15, scale: 0.98 }}
-              transition={{ duration: 0.3, ease: "easeOut" }}
-              className="group relative rounded-2xl border border-purple-500/30 bg-slate-950/80 backdrop-blur-2xl p-6 md:p-8 shadow-2xl overflow-hidden"
-            >
-              {/* Subtle Ambient Background Gradient */}
-              <div className="absolute inset-0 -z-10 bg-gradient-to-br from-purple-500/10 via-indigo-500/5 to-transparent opacity-80 rounded-2xl" />
-
-              {/* Top Header: Role Title, Company & Date Badge */}
-              <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 pb-6 border-b border-white/10">
-                <div>
-                  <h3 className="text-2xl md:text-3xl font-extrabold text-white tracking-tight">
-                    {activeExp.role}
-                  </h3>
-                  <div className="flex items-center gap-2 mt-1">
-                    <span className="text-lg md:text-xl font-bold text-purple-400">
-                      @ {activeExp.company}
-                    </span>
-                    {activeExp.location && (
-                      <span className="inline-flex items-center gap-1 text-xs text-slate-400 bg-white/5 border border-white/10 px-2.5 py-0.5 rounded-full font-medium ml-2">
-                        <MapPin size={11} className="text-purple-400" />
-                        {activeExp.location}
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                {/* Date Badge */}
-                <div className="shrink-0">
-                  <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-white/5 border border-white/10 rounded-full text-xs font-semibold text-slate-200 backdrop-blur-md shadow-inner">
-                    <Calendar size={13} className="text-purple-400" />
-                    {activeExp.period}
-                  </span>
-                </div>
+                ))}
               </div>
+            );
+          })()}
+        </div>
 
-              {/* Main Summary Paragraph if available */}
-              {activeExp.summary && (
-                <p className="text-slate-300 text-sm md:text-base leading-relaxed mt-6 mb-4 font-normal">
-                  {activeExp.summary}
-                </p>
-              )}
+        {/* Mobile Header (Visible only on mobile screens < lg) */}
+        <div className="lg:hidden block col-span-1 mb-4">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-lime-500/10 border border-lime-500/20 text-lime-400 text-xs font-semibold tracking-wider uppercase mb-3 backdrop-blur-md">
+            <span className="w-2 h-2 rounded-full bg-lime-400 animate-pulse" />
+            <span>EXPERIENCE & TIMELINE</span>
+          </div>
+          <h2 className="text-3xl font-extrabold text-white tracking-tight leading-tight">
+            Professional Journey.
+          </h2>
+          <p className="text-slate-400 text-sm mt-2 leading-relaxed">
+            Scroll down to explore my career evolution, key accomplishments, and technical impact.
+          </p>
+        </div>
 
-              {/* Key Contributions & Highlights Bullet List */}
-              {activeExp.highlights && activeExp.highlights.length > 0 && (
-                <div className="space-y-3 my-6">
-                  {activeExp.highlights.map((item, idx) => (
-                    <div key={idx} className="flex items-start gap-3">
-                      <span className="shrink-0 mt-1 text-purple-400">
-                        <ChevronRight size={16} strokeWidth={2.5} />
-                      </span>
-                      <p className="text-slate-300 text-sm md:text-base leading-relaxed">
-                        {item}
-                      </p>
+        {/* Right Column: Scroll-Driven Timeline with Smooth Progress Line & Accordion */}
+        <div ref={timelineRef} className="lg:col-span-6 relative pl-6 md:pl-10 pb-6">
+
+          {/* Base Track Line */}
+          <div className="absolute left-[11px] md:left-[15px] top-4 bottom-4 w-1 rounded-full bg-slate-800/80" />
+
+          {/* Smooth Scroll-Driven Active Progress Line */}
+          <motion.div
+            className="absolute left-[11px] md:left-[15px] top-4 bottom-4 w-1 rounded-full bg-gradient-to-b from-lime-400 via-emerald-400 to-purple-500 shadow-[0_0_14px_#a3e635] origin-top"
+            style={{ scaleY: smoothLineProgress }}
+          />
+
+          {/* Glowing Beam Tracer at Tip of Scroll Progress Line */}
+          <motion.div
+            className="absolute left-[7px] md:left-[11px] w-3 h-3 rounded-full bg-lime-300 shadow-[0_0_18px_#a3e635] z-10 pointer-events-none"
+            style={{ top: beamTop }}
+          />
+
+          <div className="space-y-6">
+            {listToRender.map((exp, idx) => {
+              const isActive = activeIdx === idx;
+
+              return (
+                <div
+                  key={exp.id || idx}
+                  data-index={idx}
+                  ref={(el) => {
+                    itemRefs.current[idx] = el;
+                  }}
+                  className="relative group"
+                >
+                  {/* Timeline Marker Node */}
+                  <div
+                    onClick={() => setActiveIdx(idx)}
+                    className={`absolute -left-[24px] md:-left-[28px] top-6 -translate-y-1/2 cursor-pointer transition-all duration-300 ${
+                      isActive
+                        ? "w-4 h-9 rounded-full bg-lime-400 shadow-[0_0_18px_#a3e635] ring-4 ring-lime-400/25 z-20"
+                        : "w-3 h-3 rounded-full bg-slate-700 hover:bg-slate-400 border border-slate-600 z-10"
+                    }`}
+                  />
+
+                  {/* Experience Card Container (Borderless Clean Layout) */}
+                  <div
+                    onClick={() => setActiveIdx(idx)}
+                    className={`transition-all duration-300 py-3 px-2 cursor-pointer ${
+                      isActive ? "opacity-100" : "opacity-60 hover:opacity-90"
+                    }`}
+                  >
+                    {/* Collapsed / Always Visible Header */}
+                    <div className="flex items-start justify-between gap-4">
+                      <div>
+                        <h3
+                          className={`font-bold text-lg md:text-xl transition-colors ${
+                            isActive ? "text-white" : "text-slate-300 group-hover:text-white"
+                          }`}
+                        >
+                          {exp.company}
+                        </h3>
+                        <p className="text-xs md:text-sm font-semibold uppercase tracking-wider text-lime-400 mt-0.5">
+                          {exp.role}
+                        </p>
+                      </div>
+
+                      <div className="flex items-center gap-2 shrink-0">
+                        {exp.isCurrent && (
+                          <span className="px-2.5 py-0.5 rounded-full bg-lime-400/20 text-lime-300 text-[10px] font-bold border border-lime-400/30">
+                            Present
+                          </span>
+                        )}
+                        <button
+                          aria-label="Toggle details"
+                          className={`p-1.5 rounded-lg transition-colors ${
+                            isActive
+                              ? "bg-lime-400/20 text-lime-400"
+                              : "text-slate-400 group-hover:text-white"
+                          }`}
+                        >
+                          {isActive ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                        </button>
+                      </div>
                     </div>
-                  ))}
-                </div>
-              )}
 
-              {/* Bottom Tech Stack Tags */}
-              {activeExp.techStack && activeExp.techStack.length > 0 && (
-                <div className="pt-6 border-t border-white/10">
-                  <span className="text-xs font-semibold text-slate-400 block mb-3 uppercase tracking-wider">
-                    Technologies Used
-                  </span>
-                  <div className="flex flex-wrap gap-2">
-                    {activeExp.techStack.map((tech, tidx) => (
-                      <span
-                        key={tidx}
-                        className="px-3 py-1 rounded-full text-xs font-semibold bg-purple-500/10 text-purple-300 border border-purple-500/20 backdrop-blur-md hover:bg-purple-500/20 transition-colors"
-                      >
-                        {tech}
-                      </span>
-                    ))}
+                    {/* Smooth Ultra-Fluid Accordion Body */}
+                    <AnimatePresence initial={false}>
+                      {isActive && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: "auto", opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                          className="overflow-hidden border-t border-white/10 pt-4"
+                        >
+                          {/* Date and Location Badges */}
+                          <div className="flex flex-wrap items-center gap-2 mb-4">
+                            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-white/5 border border-white/10 rounded-full text-xs font-medium text-slate-300">
+                              <Calendar size={12} className="text-lime-400" />
+                              {exp.period}
+                            </span>
+                            {exp.location && (
+                              <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-white/5 border border-white/10 rounded-full text-xs font-medium text-slate-300">
+                                <MapPin size={12} className="text-lime-400" />
+                                {exp.location}
+                              </span>
+                            )}
+                            {exp.workMode && (
+                              <span className="inline-flex items-center gap-1 px-3 py-1 bg-lime-500/10 border border-lime-500/20 rounded-full text-xs font-medium text-lime-300">
+                                {exp.workMode}
+                              </span>
+                            )}
+                          </div>
+
+                          {/* Summary text */}
+                          {exp.summary && (
+                            <p className="text-slate-300 text-sm md:text-base leading-relaxed mb-4 font-normal">
+                              {exp.summary}
+                            </p>
+                          )}
+
+                          {/* Highlights bullet points */}
+                          {exp.highlights && exp.highlights.length > 0 && (
+                            <div className="space-y-2 mb-5">
+                              {exp.highlights.map((item, hIdx) => (
+                                <div key={hIdx} className="flex items-start gap-2.5">
+                                  <span className="shrink-0 mt-1 text-lime-400">
+                                    <ChevronRight size={15} strokeWidth={2.5} />
+                                  </span>
+                                  <p className="text-slate-300 text-xs md:text-sm leading-relaxed">
+                                    {item}
+                                  </p>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+
+                          {/* Tech stack badges */}
+                          {exp.techStack && exp.techStack.length > 0 && (
+                            <div className="pt-3 border-t border-white/5">
+                              <span className="text-[11px] font-semibold text-slate-400 block mb-2 uppercase tracking-wider">
+                                Technologies & Tools
+                              </span>
+                              <div className="flex flex-wrap gap-1.5">
+                                {exp.techStack.map((tech, tIdx) => (
+                                  <span
+                                    key={tIdx}
+                                    className="px-2.5 py-0.5 rounded-md text-xs font-medium bg-lime-400/10 text-lime-300 border border-lime-400/20"
+                                  >
+                                    {tech}
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </div>
                 </div>
-              )}
-            </motion.div>
-          </AnimatePresence>
+              );
+            })}
+          </div>
         </div>
+
       </div>
     </div>
   );

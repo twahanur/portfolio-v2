@@ -8,7 +8,6 @@ import { fetchAiContext } from "../lib/api";
 
 import LiveAnalyticsWidget from "../components/LiveAnalyticsWidget";
 import NewsletterForm from "../components/NewsletterForm";
-import GitHubContributionGraph from "../components/GitHubContributionGraph";
 
 const Footer = () => {
   const [year] = useState(new Date().getFullYear());
@@ -30,7 +29,7 @@ const Footer = () => {
           if (p.stackoverflow) socials.push({ icon: Globe, link: p.stackoverflow });
           if (p.medium) socials.push({ icon: Globe, link: p.medium });
           if (p.devto) socials.push({ icon: Globe, link: p.devto });
-          
+
           setSocialLinks(socials);
         }
       } catch (err) {
@@ -54,11 +53,6 @@ const Footer = () => {
   return (
     <footer className="bg-slate-50 dark:bg-[#030014] border-t border-slate-200 dark:border-transparent text-slate-650 dark:text-[#e2d3fd] transition-colors duration-300">
       <div className="py-16 md:px-[10%] px-[5%] w-full mx-auto space-y-12">
-        
-        {/* GitHub Contribution Graph — full width */}
-        <div className="text-left">
-          <GitHubContributionGraph />
-        </div>
 
         {/* Live Analytics & Newsletter — side by side */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">

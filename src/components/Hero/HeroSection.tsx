@@ -6,6 +6,7 @@
 
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Magnet from "../AnimationComponents/Magnet";
 import {
   Github,
   Linkedin,
@@ -105,22 +106,23 @@ export default function HeroSection({ profile }: HeroSectionProps) {
     if (url && url !== "#") window.open(url, "_blank", "noopener,noreferrer");
   };
 
-  // Safe helper to render social icon at specific wireframe positions
+  // Safe helper to render social icon at specific wireframe positions with Magnet & TargetCursor
   const renderSocialIcon = (index: number, className: string) => {
     const item = socialItems[index % socialItems.length];
     if (!item) return null;
     const IconComponent = item.icon;
     return (
-      <motion.button
-        key={`${item.key}-${index}`}
-        whileHover={{ scale: 1.25, rotate: index % 2 === 0 ? 12 : -12 }}
-        whileTap={{ scale: 0.9 }}
-        onClick={() => handleSocialClick(item.link)}
-        className={className}
-        title={item.label}
-      >
-        <IconComponent className="w-5 h-5 sm:w-6 sm:h-6 stroke-[1.5]" />
-      </motion.button>
+      <Magnet key={`${item.key}-${index}`} magnetStrength={4} padding={40}>
+        <motion.button
+          whileHover={{ scale: 1.25, rotate: index % 2 === 0 ? 12 : -12 }}
+          whileTap={{ scale: 0.9 }}
+          onClick={() => handleSocialClick(item.link)}
+          className={`${className} cursor-target`}
+          title={item.label}
+        >
+          <IconComponent className="w-5 h-5 sm:w-6 sm:h-6 stroke-[1.5]" />
+        </motion.button>
+      </Magnet>
     );
   };
 
@@ -163,12 +165,12 @@ export default function HeroSection({ profile }: HeroSectionProps) {
             )}
 
             {titleParts.head && (
-              <div className="relative text-5xl sm:text-7xl md:text-8xl lg:text-[8.5rem] xl:text-[10rem] bg-gradient-to-b from-white via-gray-100 to-gray-400 bg-clip-text text-transparent">
+              <div className="relative text-3xl sm:text-5xl md:text-7xl lg:text-[7.5rem] xl:text-[9rem] bg-gradient-to-b from-white via-gray-100 to-gray-400 bg-clip-text text-transparent">
                 {titleParts.head}
               </div>
             )}
 
-            <div className="relative flex items-center justify-center gap-2 sm:gap-4 text-5xl sm:text-7xl md:text-8xl lg:text-[9.5rem] xl:text-[11rem]">
+            <div className="relative flex items-center justify-center gap-2 sm:gap-4 text-3xl sm:text-5xl md:text-7xl lg:text-[8rem] xl:text-[9.5rem]">
               <span className="text-[var(--text-primary)]">{titleParts.lFirstA}</span>
 
               {/* Lightning Bolt Accent */}
@@ -184,7 +186,7 @@ export default function HeroSection({ profile }: HeroSectionProps) {
                   strokeWidth="2.2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  className="w-10 h-10 sm:w-16 sm:h-16 md:w-24 md:h-24 lg:w-32 lg:h-32 xl:w-36 xl:h-36 drop-shadow-[0_0_35px_rgba(168,85,247,0.65)]"
+                  className="w-8 h-8 sm:w-14 sm:h-14 md:w-20 md:h-20 lg:w-28 lg:h-28 xl:w-32 xl:h-32 drop-shadow-[0_0_35px_rgba(168,85,247,0.65)]"
                 >
                   <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
                 </svg>
@@ -207,10 +209,10 @@ export default function HeroSection({ profile }: HeroSectionProps) {
         </div>
 
         {/* ── ROW 2: [ Title End Part ]  [ Right Bottom Text ] ── */}
-        <div className="relative w-full flex flex-col-reverse lg:flex-row items-center lg:items-center justify-between gap-6 lg:gap-12">
+        <div className="relative w-full flex flex-col lg:flex-row items-center lg:items-center justify-between gap-6 lg:gap-12">
           
           {/* 4. Title End Part */}
-          <div className="relative grow flex items-center justify-center lg:justify-start text-5xl sm:text-7xl md:text-8xl lg:text-[9.5rem] xl:text-[11rem] font-black tracking-[-0.04em] uppercase leading-[0.88] text-[var(--text-primary)]">
+          <div className="relative grow flex items-center justify-center lg:justify-start text-3xl sm:text-5xl md:text-7xl lg:text-[8rem] xl:text-[9.5rem] font-black tracking-[-0.04em] uppercase leading-[0.88] text-[var(--text-primary)]">
             {/* ICON 3 (Bottom Left of Title End Part) */}
             {renderSocialIcon(
               3,
@@ -233,7 +235,7 @@ export default function HeroSection({ profile }: HeroSectionProps) {
                   strokeWidth="2.2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  className="w-10 h-10 sm:w-16 sm:h-16 md:w-24 md:h-24 lg:w-32 lg:h-32 xl:w-36 xl:h-36 drop-shadow-[0_0_35px_rgba(251,191,36,0.65)]"
+                  className="w-8 h-8 sm:w-14 sm:h-14 md:w-20 md:h-20 lg:w-28 lg:h-28 xl:w-32 xl:h-32 drop-shadow-[0_0_35px_rgba(251,191,36,0.65)]"
                 >
                   <rect x="3" y="11" width="18" height="10" rx="2" />
                   <circle cx="8.5" cy="16" r="1.5" fill="currentColor" />
@@ -250,7 +252,7 @@ export default function HeroSection({ profile }: HeroSectionProps) {
           </div>
 
           {/* 5. Right Bottom Text Block */}
-          <div className="relative w-full lg:w-auto lg:max-w-[260px] shrink-0 font-mono text-xs sm:text-sm tracking-[0.12em] uppercase leading-relaxed text-[var(--text-secondary)] text-right font-medium">
+          <div className="relative w-full lg:w-auto lg:max-w-[260px] shrink-0 font-mono text-xs sm:text-sm tracking-[0.12em] uppercase leading-relaxed text-[var(--text-secondary)] text-left lg:text-right font-medium">
             {/* ICON 4 (Between Title End Part and Right Bottom Text) */}
             {renderSocialIcon(
               4,
@@ -268,14 +270,95 @@ export default function HeroSection({ profile }: HeroSectionProps) {
       {/* ===== BOTTOM FOOTER BAR ===== */}
       <div className="relative z-20 w-full max-w-7xl mx-auto flex items-center justify-end gap-4 font-mono text-[11px] sm:text-xs text-[var(--text-secondary)] pt-6">
         <span className="tracking-[0.25em] uppercase">DHAKA, BD — 2026</span>
-        <a
-          href="#About"
-          className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 border border-white/10 text-[var(--text-primary)] flex items-center justify-center shadow-lg hover:scale-110 transition-transform cursor-pointer"
-          title="Scroll Down"
-        >
-          <ArrowDownRight className="w-5 h-5 stroke-[2.5]" />
-        </a>
+        <Magnet magnetStrength={3} padding={30}>
+          <a
+            href="#About"
+            className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 border border-white/10 text-[var(--text-primary)] flex items-center justify-center shadow-lg hover:scale-110 transition-transform cursor-pointer cursor-target"
+            title="Scroll Down"
+          >
+            <ArrowDownRight className="w-5 h-5 stroke-[2.5]" />
+          </a>
+        </Magnet>
       </div>
+
+      {/* ===== BACKDROP OVERLAY FOR AVAILABLE MODAL (CLOSES ON TOUCH/CLICK OUTSIDE) ===== */}
+      <AnimatePresence>
+        {(isCardHovered || isMobileCardOpen) && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => {
+              setIsMobileCardOpen(false);
+              setIsCardHovered(false);
+            }}
+            className="fixed inset-0 bg-black/80 backdrop-blur-md z-[100] cursor-pointer flex items-center justify-center p-4"
+          >
+            {/* MOBILE CENTERED MODAL DIALOG */}
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+              className="sm:hidden relative w-full max-w-sm bg-slate-950/95 border border-purple-500/30 rounded-3xl p-6 shadow-2xl flex flex-col items-center text-center cursor-default z-[101]"
+            >
+              {/* Close Button */}
+              <button
+                onClick={() => {
+                  setIsMobileCardOpen(false);
+                  setIsCardHovered(false);
+                }}
+                className="absolute top-4 right-4 p-2 rounded-full bg-white/10 text-gray-300 hover:text-white"
+              >
+                <X className="w-4 h-4" />
+              </button>
+
+              {/* Avatar Image */}
+              <div className="relative w-24 h-24 rounded-full overflow-hidden border-2 border-purple-500/50 shadow-xl mb-3 bg-slate-900">
+                {avatarUrl ? (
+                  <img src={avatarUrl} alt={name} className="w-full h-full object-cover" />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-xs text-slate-400">
+                    Hero Image
+                  </div>
+                )}
+              </div>
+
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-[10px] font-mono mb-3">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                <span>Available for Opportunity</span>
+              </div>
+
+              <h3 className="text-xl font-bold text-white mb-0.5">
+                {name}
+              </h3>
+              <span className="text-xs font-mono text-purple-400 uppercase tracking-wider mb-3">
+                {title}
+              </span>
+
+              <p className="text-xs text-slate-300 leading-relaxed font-light mb-4 px-1 line-clamp-4">
+                {bio}
+              </p>
+
+              <div className="flex items-center justify-center gap-3 pt-3 border-t border-white/10 w-full">
+                {socialItems.slice(0, 5).map((social) => {
+                  const IconComp = social.icon;
+                  return (
+                    <button
+                      key={social.key}
+                      onClick={() => handleSocialClick(social.link)}
+                      className="p-2 rounded-full bg-white/5 hover:bg-white/15 border border-white/10 text-white transition-all cursor-pointer"
+                      title={social.label}
+                    >
+                      <IconComp className="w-4 h-4" />
+                    </button>
+                  );
+                })}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* ===== LEFT VERTICAL "AVAILABLE FOR OPPORTUNITY" BADGE + HOVER CARD ===== */}
       <div
@@ -284,16 +367,18 @@ export default function HeroSection({ profile }: HeroSectionProps) {
         onMouseLeave={() => setIsCardHovered(false)}
       >
         {/* Vertical pill badge using theme colors */}
-        <div
-          onClick={() => setIsMobileCardOpen(!isMobileCardOpen)}
-          className="cursor-pointer flex items-center bg-white/10 hover:bg-white/20 text-[var(--text-primary)] border border-white/15 backdrop-blur-xl rounded-r-2xl py-7 px-3 shadow-2xl transition-colors z-50"
-        >
-          <div className="writing-mode-vertical uppercase font-mono text-[10px] sm:text-[11px] tracking-[0.3em] font-bold">
-            AVAILABLE FOR OPPORTUNITY
+        <Magnet magnetStrength={3} padding={40}>
+          <div
+            onClick={() => setIsMobileCardOpen(!isMobileCardOpen)}
+            className="cursor-pointer cursor-target flex items-center bg-white/10 hover:bg-white/20 text-[var(--text-primary)] border border-white/15 backdrop-blur-xl rounded-r-2xl py-7 px-3 shadow-2xl transition-colors z-50"
+          >
+            <div className="writing-mode-vertical uppercase font-mono text-[10px] sm:text-[11px] tracking-[0.3em] font-bold">
+              AVAILABLE FOR OPPORTUNITY
+            </div>
           </div>
-        </div>
+        </Magnet>
 
-        {/* Dynamic Hover Card using Theme Vars */}
+        {/* DESKTOP HOVER CARD ONLY */}
         <AnimatePresence>
           {(isCardHovered || isMobileCardOpen) && (
             <motion.div
@@ -301,10 +386,10 @@ export default function HeroSection({ profile }: HeroSectionProps) {
               animate={{ opacity: 1, x: 0, scale: 1 }}
               exit={{ opacity: 0, x: -30, scale: 0.95 }}
               transition={{ type: "spring", stiffness: 280, damping: 24 }}
-              className="ml-3 sm:ml-4 flex items-start z-50 pointer-events-auto"
+              className="hidden sm:flex ml-4 flex-row items-start z-50 pointer-events-auto"
             >
               {/* 1. HERO IMAGE */}
-              <div className="relative w-[200px] sm:w-[250px] md:w-[280px] h-[280px] sm:h-[330px] md:h-[360px] rounded-[2.5rem] overflow-hidden border border-white/15 shadow-2xl shrink-0 z-10 bg-[var(--bg-secondary)]">
+              <div className="relative w-[250px] md:w-[280px] h-[330px] md:h-[360px] rounded-[2.5rem] overflow-hidden border border-white/15 shadow-2xl shrink-0 z-10 bg-[var(--bg-secondary)]">
                 {avatarUrl ? (
                   <img
                     src={avatarUrl}
@@ -323,50 +408,39 @@ export default function HeroSection({ profile }: HeroSectionProps) {
                 </div>
               </div>
 
-              {/* 2. DETAILS CARD using Theme Card Vars */}
-              <div className="relative mt-5 sm:mt-3 md:mt-5 -ml-5 sm:-ml-10 md:-ml-10 z-20 w-[310px] sm:w-[380px] md:w-[530px] p-6 sm:p-7 rounded-[2.5rem] bg-[var(--card-bg)] border border-[var(--border-primary)] backdrop-blur-2xl shadow-[0_25px_60px_rgba(0,0,0,0.85)] flex flex-col justify-between gap-3 text-left">
-                {/* Mobile close button */}
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setIsMobileCardOpen(false);
-                    setIsCardHovered(false);
-                  }}
-                  className="sm:hidden absolute top-3 right-3 p-1 rounded-full bg-white/10 text-gray-400 hover:text-white"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-
+              {/* 2. DETAILS CARD */}
+              <div className="relative mt-3 md:mt-5 -ml-10 z-20 w-[380px] md:w-[530px] p-7 rounded-[2.5rem] bg-[var(--card-bg)] border border-[var(--border-primary)] backdrop-blur-2xl shadow-[0_25px_60px_rgba(0,0,0,0.85)] flex flex-col justify-between gap-3 text-left">
                 {/* Top Section */}
                 <div className="relative w-full pt-1">
-                  <h3 className="text-xl sm:text-2xl md:text-xl font-bold text-[var(--text-primary)] pt-4 sm:pt-3">
-                    {name.split("").join(" ")}
+                  <h3 className="text-2xl md:text-xl font-bold text-[var(--text-primary)]">
+                    {name}
                   </h3>
-                  <span className="text-lg sm:text-xs font-mono text-purple-400 uppercase tracking-wider">
+                  <span className="text-xs font-mono text-purple-400 uppercase tracking-wider block mt-1">
                     {title}
                   </span>
                 </div>
 
                 {/* Body Section */}
-                <p className="text-xs sm:text-sm text-[var(--text-secondary)] leading-relaxed font-light line-clamp-4 my-2 px-2">
+                <p className="text-sm text-[var(--text-secondary)] leading-relaxed font-light line-clamp-4 my-2 px-2">
                   {bio}
                 </p>
 
                 {/* Bottom Section */}
-                <div className="flex items-center justify-center gap-3 pt-3 border-t border-[var(--border-primary)]">
+                <div className="flex items-center justify-start gap-3 pt-3 border-t border-[var(--border-primary)]">
                   {socialItems.slice(0, 5).map((social) => {
                     const IconComp = social.icon;
                     return (
-                      <motion.button
-                        key={social.key}
-                        whileHover={{ scale: 1.2, y: -3 }}
-                        whileTap={{ scale: 0.95 }}
-                        onClick={() => handleSocialClick(social.link)}
-                        className="p-1.5 sm:p-2 rounded-full bg-white/5 hover:bg-white/15 border border-white/10 hover:border-purple-400/40 text-[var(--text-primary)] transition-all cursor-pointer shadow-lg"
-                        title={social.label}
-                      >
-                        <IconComp className="w-4 h-4 sm:w-5 sm:h-5" />
-                      </motion.button>
+                      <Magnet key={social.key} magnetStrength={3} padding={20}>
+                        <motion.button
+                          whileHover={{ scale: 1.2, y: -3 }}
+                          whileTap={{ scale: 0.95 }}
+                          onClick={() => handleSocialClick(social.link)}
+                          className="p-2 rounded-full bg-white/5 hover:bg-white/15 border border-white/10 hover:border-purple-400/40 text-[var(--text-primary)] transition-all cursor-pointer cursor-target shadow-lg"
+                          title={social.label}
+                        >
+                          <IconComp className="w-5 h-5" />
+                        </motion.button>
+                      </Magnet>
                     );
                   })}
                 </div>
