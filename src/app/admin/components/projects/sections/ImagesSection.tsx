@@ -126,7 +126,7 @@ export default function ImagesSection({
                 }`}
               >
                 <div className="relative aspect-video w-full overflow-hidden rounded-lg">
-                  <Image src={img.url} alt={img.alt || ""} fill className="object-cover" />
+                  <Image src={img.url} alt={img.alt || ""} fill className="object-cover" unoptimized />
                 </div>
                 <div className="mt-2.5 space-y-2">
                   <input
@@ -190,7 +190,7 @@ export default function ImagesSection({
                   img.isFeatured ? "border-emerald-500/30" : "border-zinc-900"
                 }`}
               >
-                <Image src={img.url} alt={img.alt || ""} fill className="object-cover" />
+                <Image src={img.url} alt={img.alt || ""} fill className="object-cover" unoptimized />
                 {img.isFeatured && (
                   <span className="absolute top-2 left-2 bg-emerald-555 text-zinc-950 font-bold text-[9px] px-1.5 py-0.5 rounded-md uppercase tracking-wider shadow">
                     Cover Image

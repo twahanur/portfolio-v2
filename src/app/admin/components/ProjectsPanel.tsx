@@ -176,7 +176,7 @@ export default function ProjectsPanel({ initialProjects, onRefresh }: ProjectsPa
                   </div>
                   {featuredImage ? (
                     <div className="relative h-12 w-20 overflow-hidden rounded-lg bg-zinc-950 shrink-0 border border-zinc-850">
-                      <Image src={featuredImage.url} alt={proj.title} fill className="object-cover" />
+                      <Image src={featuredImage.url} alt={proj.title} fill className="object-cover" unoptimized />
                     </div>
                   ) : (
                     <div className="h-12 w-20 bg-zinc-900 rounded-lg flex items-center justify-center text-[10px] text-zinc-500 font-bold shrink-0 border border-zinc-850">
