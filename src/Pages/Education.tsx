@@ -157,8 +157,8 @@ export default function EducationPage({ educations: propEducations }) {
           }
         },
         {
-          threshold: 0.4,
-          rootMargin: "-15% 0px -25% 0px",
+          threshold: 0.1,
+          rootMargin: "-20% 0px -40% 0px",
         }
       );
       observer.observe(el);
@@ -171,12 +171,14 @@ export default function EducationPage({ educations: propEducations }) {
   return (
     <div
       ref={containerRef}
-      className="relative h-auto bg-slate-950/70 text-slate-100 py-16 md:py-24 px-[5%] md:px-[8%] overflow-hidden"
+      className="relative h-auto bg-slate-950/70 text-slate-100 py-16 md:py-24 px-[5%] md:px-[8%]"
       id="education"
     >
-      {/* Background ambient glowing shapes */}
-      <div className="absolute top-1/4 -right-32 w-96 h-96 bg-purple-500/10 rounded-full blur-[140px] pointer-events-none" />
-      <div className="absolute bottom-10 -left-32 w-96 h-96 bg-pink-600/10 rounded-full blur-[140px] pointer-events-none" />
+      {/* Background ambient glowing shapes — isolated overflow-hidden wrapper so sticky works */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-1/4 -right-32 w-96 h-96 bg-purple-500/10 rounded-full blur-[140px]" />
+        <div className="absolute bottom-10 -left-32 w-96 h-96 bg-pink-600/10 rounded-full blur-[140px]" />
+      </div>
 
       {/* Main Education Layout: Scrollable Timeline (Left) & Sticky Image Gallery (Right) */}
       <div className="w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start relative z-10">

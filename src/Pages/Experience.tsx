@@ -160,8 +160,8 @@ export default function ExperiencePage({ experiences: propExperiences }) {
           }
         },
         {
-          threshold: 0.4,
-          rootMargin: "-15% 0px -25% 0px",
+          threshold: 0.1,
+          rootMargin: "-20% 0px -40% 0px",
         }
       );
       observer.observe(el);
@@ -174,12 +174,14 @@ export default function ExperiencePage({ experiences: propExperiences }) {
   return (
     <div
       ref={containerRef}
-      className="relative h-auto bg-slate-950/60 text-slate-100 py-16 md:py-24 px-[5%] md:px-[8%] overflow-hidden"
+      className="relative h-auto bg-slate-950/60 text-slate-100 py-16 md:py-24 px-[5%] md:px-[8%]"
       id="experience"
     >
-      {/* Background ambient glowing shapes */}
-      <div className="absolute top-1/4 -left-32 w-96 h-96 bg-lime-500/10 rounded-full blur-[140px] pointer-events-none" />
-      <div className="absolute bottom-10 -right-32 w-96 h-96 bg-purple-600/10 rounded-full blur-[140px] pointer-events-none" />
+      {/* Background ambient glowing shapes — isolated overflow-hidden wrapper so sticky works */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-1/4 -left-32 w-96 h-96 bg-lime-500/10 rounded-full blur-[140px]" />
+        <div className="absolute bottom-10 -right-32 w-96 h-96 bg-purple-600/10 rounded-full blur-[140px]" />
+      </div>
 
       {/* Main Experience Layout: Left Column (Sticky Header & Images) & Right Column (Scroll Timeline) */}
       <div className="w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start relative z-10">

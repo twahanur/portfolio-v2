@@ -281,9 +281,9 @@ export default function HeroSection({ profile }: HeroSectionProps) {
         </Magnet>
       </div>
 
-      {/* ===== BACKDROP OVERLAY FOR AVAILABLE MODAL (CLOSES ON TOUCH/CLICK OUTSIDE) ===== */}
+      {/* ===== BACKDROP OVERLAY FOR AVAILABLE MODAL (MOBILE ONLY — CLOSES ON TOUCH/CLICK OUTSIDE) ===== */}
       <AnimatePresence>
-        {(isCardHovered || isMobileCardOpen) && (
+        {isMobileCardOpen && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
