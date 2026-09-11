@@ -96,9 +96,9 @@ const WelcomeScreen = ({ progress, isLoaded, onLoadingComplete }) => {
             </div>
 
             {/* Brand */}
-            <h1 className="text-lg md:text-xl font-bold tracking-[0.3em] text-white/90 uppercase mb-1">
+            <div className="text-lg md:text-xl font-bold tracking-[0.3em] text-white/90 uppercase mb-1">
               {ownerName}
-            </h1>
+            </div>
 
             {/* Progress bar with scanning glow */}
             <div className="w-full h-[3px] bg-white/5 rounded-full overflow-hidden relative mb-3">

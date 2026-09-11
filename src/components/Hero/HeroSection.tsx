@@ -131,6 +131,11 @@ export default function HeroSection({ profile }: HeroSectionProps) {
       id="Home"
       className="relative w-full min-h-screen bg-transparent text-[var(--text-primary)] overflow-hidden select-none flex flex-col justify-center items-center px-4 sm:px-8 lg:px-16 py-12"
     >
+      {/* Primary Semantic H1 for SEO & Screen Readers */}
+      <h1 className="sr-only">
+        {name} — Full-Stack Web Developer & Software Engineer (Node.js, NestJS, Next.js)
+      </h1>
+
       {/* ===== DIAGONAL LIGHT WAVE SWEEP ===== */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
         <div className="absolute -top-[60%] -left-[60%] w-[250%] h-[900px] bg-gradient-to-r from-transparent via-purple-500/10 to-transparent blur-3xl animate-diagonal-sweep" />

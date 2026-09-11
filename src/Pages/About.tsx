@@ -73,7 +73,7 @@ const ProfileImage = memo(({ src }: any) => (
 
           <img
             src={src}
-            alt="Profile"
+            alt="Twahanur Rahman - Full-Stack Web Developer"
             className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:rotate-2"
             loading="lazy"
           />

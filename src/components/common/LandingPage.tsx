@@ -98,7 +98,7 @@ const LandingPage = ({ showWelcome, setShowWelcome }) => {
 
   return (
     <>
-      <AnimatePresence mode="wait">
+      <AnimatePresence>
         {showWelcome && (
           <WelcomeScreen
             progress={loadingProgress}
@@ -108,51 +108,52 @@ const LandingPage = ({ showWelcome, setShowWelcome }) => {
         )}
       </AnimatePresence>
 
-      {!showWelcome && (
+      {isDesktop && !showWelcome && (
         <>
-          {isDesktop && (
-            <>
-              <SplashCursor />
-              <TargetCursor spinDuration={2} hideDefaultCursor={false} />
-            </>
-          )}
-          <ClickSpark
-            sparkColor="#fff"
-            sparkSize={10}
-            sparkRadius={65}
-            sparkCount={15}
-            duration={400}
-          >
-            <Navbar />
-            <AnimatedBackground />
-
-            <Home profile={portfolioData.profile} skills={portfolioData.skills} />
-            <About
-              profile={portfolioData.profile}
-              cv={portfolioData.cv}
-              projects={portfolioData.projects}
-              certificates={portfolioData.certificates}
-            />
-            <TechStackPage
-              skills={portfolioData.skills}
-              skillCategories={portfolioData.skillCategories}
-            />
-            <div className="md:px-[10%] px-[5%] py-12 bg-slate-950/40 relative">
-              <GitHubContributionGraph />
-            </div>
-            <Experience experiences={portfolioData.experiences} />
-            <Education educations={portfolioData.educations} />
-            <Portofolio
-              projects={portfolioData.projects}
-              certificates={portfolioData.certificates}
-            />
-            <Activities activities={portfolioData.activities} />
-            <Blog blogs={portfolioData.blogs} />
-            <ContactPage />
-            <Footer />
-          </ClickSpark>
+          <SplashCursor />
+          <TargetCursor spinDuration={2} hideDefaultCursor={false} />
         </>
       )}
+
+      <ClickSpark
+        sparkColor="#fff"
+        sparkSize={10}
+        sparkRadius={65}
+        sparkCount={15}
+        duration={400}
+      >
+        <header>
+          <Navbar />
+        </header>
+        <AnimatedBackground />
+
+        <main id="main-content" className="relative z-10">
+          <Home profile={portfolioData.profile} skills={portfolioData.skills} />
+          <About
+            profile={portfolioData.profile}
+            cv={portfolioData.cv}
+            projects={portfolioData.projects}
+            certificates={portfolioData.certificates}
+          />
+          <TechStackPage
+            skills={portfolioData.skills}
+            skillCategories={portfolioData.skillCategories}
+          />
+          <div className="md:px-[10%] px-[5%] py-12 bg-slate-950/40 relative">
+            <GitHubContributionGraph />
+          </div>
+          <Experience experiences={portfolioData.experiences} />
+          <Education educations={portfolioData.educations} />
+          <Portofolio
+            projects={portfolioData.projects}
+            certificates={portfolioData.certificates}
+          />
+          <Activities activities={portfolioData.activities} />
+          <Blog blogs={portfolioData.blogs} />
+          <ContactPage />
+        </main>
+        <Footer />
+      </ClickSpark>
     </>
   );
 };

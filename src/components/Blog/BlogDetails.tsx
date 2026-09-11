@@ -25,33 +25,54 @@ const BlogDetails = () => {
     window.scrollTo(0, 0);
     const storedBlogs = JSON.parse(localStorage.getItem("blogs")) || [];
     const selectedBlog = storedBlogs.find((p) => String(p.id) === id);
-    // Ensure selectedBlog exists and has a valid Keywords array
-    if (selectedBlog && Array.isArray(selectedBlog.Keywords)) {
-      const suggested = storedBlogs.filter(
-        (blog) =>
-          blog.id !== selectedBlog.id &&
-          Array.isArray(blog.Keywords) &&
-          blog.Keywords.some((keyword) =>
-            selectedBlog.Keywords.includes(keyword)
-          )
-      );
-      setSuggestedBlogs(suggested);
-      console.log(suggested);
-    } else {
-      console.log("Selected blog not found or has no valid keywords.");
-    }
-    // console.log(storedBlogs);
-    // console.log(id);
-    // console.log(selectedBlog);
 
     if (selectedBlog) {
-      const enhancedProject = {
+      if (Array.isArray(selectedBlog.Keywords)) {
+        const suggested = storedBlogs.filter(
+          (b) =>
+            b.id !== selectedBlog.id &&
+            Array.isArray(b.Keywords) &&
+            b.Keywords.some((keyword) => selectedBlog.Keywords.includes(keyword))
+        );
+        setSuggestedBlogs(suggested);
+      }
+      setBlog({
         ...selectedBlog,
         Features: selectedBlog.Features || [],
         TechStack: selectedBlog.TechStack || [],
         Github: selectedBlog.Github || "https://github.com/Twahanur",
+      });
+    } else {
+      // Direct visit fallback fetch
+      const fetchDirect = async () => {
+        try {
+          const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
+          const res = await fetch(`${apiUrl}/api/blogs/${id}`);
+          if (res.ok) {
+            const payload = await res.json();
+            const b = payload.data || payload;
+            if (b) {
+              setBlog({
+                id: b.id,
+                Title: b.title || b.Title,
+                Description: b.description || b.Description,
+                Content: b.content || b.Content,
+                BannerUrl: b.bannerUrl || b.BannerUrl || b.image,
+                PublishedAt: b.publishedAt || b.PublishedAt || b.createdAt,
+                Author: b.author || b.Author || "Twahanur Rahman",
+                Keywords: b.keywords || b.Keywords || [],
+                ReadTime: b.readTime || b.ReadTime || "5 min read",
+                Features: b.features || b.Features || [],
+                TechStack: b.techStack || b.TechStack || [],
+                Github: b.github || "https://github.com/Twahanur",
+              });
+            }
+          }
+        } catch (err) {
+          console.error("Failed to fetch blog details:", err);
+        }
       };
-      setBlog(enhancedProject);
+      fetchDirect();
     }
   }, [id]);
 
