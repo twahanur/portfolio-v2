@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-
+/* eslint-disable @next/next/no-img-element */
 
 const TechStackIcon = ({ TechStackIcon, Language }) => {
   return (
@@ -9,7 +9,11 @@ const TechStackIcon = ({ TechStackIcon, Language }) => {
         <img 
           src={TechStackIcon} 
           alt={`${Language} icon`} 
-          className="relative h-16 w-16 md:h-20 md:w-20 transform transition-transform duration-300"
+          width={80}
+          height={80}
+          loading="lazy"
+          decoding="async"
+          className="relative h-16 w-16 md:h-20 md:w-20 transform transition-transform duration-300 object-contain"
         />
       </div>
       <span className="text-slate-600 dark:text-slate-300 font-semibold text-sm md:text-base tracking-wide group-hover:text-slate-900 dark:group-hover:text-white transition-colors duration-300">

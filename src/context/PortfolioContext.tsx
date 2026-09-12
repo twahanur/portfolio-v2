@@ -9,7 +9,7 @@ const PortfolioContext = createContext<any>(null);
 
 export const PortfolioProvider = ({ children }) => {
   const pathname = usePathname();
-  const [showWelcome, setShowWelcome] = useState(true);
+  const [showWelcome, setShowWelcome] = useState(false);
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   const [pageTransitionLoading, setPageTransitionLoading] = useState(null);
@@ -19,7 +19,11 @@ export const PortfolioProvider = ({ children }) => {
     setPageTransitionLoading(null);
   }, [pathname]);
   const [portfolioData, setPortfolioData] = useState({
-    profile: null,
+    profile: {
+      name: "Twahanur Rahman",
+      title: "Software Engineer",
+      bio: "Twahanur Rahman is a dedicated Software Engineer focused on building scalable, intelligent systems and robust software architectures.",
+    },
     skills: [],
     skillCategories: [],
     educations: [],

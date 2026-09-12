@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { useState } from "react"
 import PropTypes from "prop-types"
 import { Modal, IconButton, Box, Backdrop, Typography } from "@mui/material"
@@ -60,6 +61,8 @@ const Certificate = ({ ImgSertif }) => {
 						className="certificate-image"
 						src={ImgSertif}
 						alt="Certificate"
+						loading="lazy"
+						decoding="async"
 						style={{
 							width: "100%",
 							height: "auto",
@@ -102,6 +105,7 @@ const Certificate = ({ ImgSertif }) => {
 							color: "white",
 						}}>
 						<FullscreenIcon
+							aria-hidden="true"
 							sx={{
 								fontSize: 40,
 								mb: 1,
@@ -160,6 +164,7 @@ const Certificate = ({ ImgSertif }) => {
 					{/* Close Button */}
 					<IconButton
 						onClick={handleClose}
+						aria-label="Close certificate modal"
 						sx={{
 							position: "absolute",
 							right: 16,
@@ -174,7 +179,7 @@ const Certificate = ({ ImgSertif }) => {
 							},
 						}}
 						size="large">
-						<CloseIcon sx={{ fontSize: 24 }} />
+						<CloseIcon sx={{ fontSize: 24 }} aria-hidden="true" />
 					</IconButton>
 
 					{/* Modal Image */}

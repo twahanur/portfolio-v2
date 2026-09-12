@@ -8,11 +8,13 @@ const ProjectCardModal = ({ title, description, link }) => {
   return (
     <>
       <button
+        type="button"
+        aria-label="View details"
         className="inline-flex items-center space-x-1 px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-white/90 transition-colors duration-200"
         onClick={() => setIsOpen(true)}
       >
         <span className="text-sm">Details</span>
-        <ArrowRight className="w-4 h-4" />
+        <ArrowRight className="w-4 h-4" aria-hidden="true" />
       </button>
 
       {isOpen && (
@@ -25,10 +27,12 @@ const ProjectCardModal = ({ title, description, link }) => {
             onClick={(e) => e.stopPropagation()}
           >
             <button
+              type="button"
+              aria-label="Close modal"
               className="absolute top-4 right-4 rounded-md p-2 hover:bg-gray-800 transition-colors duration-200"
               onClick={() => setIsOpen(false)}
             >
-              <Eye className="h-5 w-5" />
+              <Eye className="h-5 w-5" aria-hidden="true" />
             </button>
             <h2 className="mb-4 text-2xl font-bold">{title}</h2>
             <p className="mb-6 text-gray-400">{description}</p>
@@ -39,9 +43,10 @@ const ProjectCardModal = ({ title, description, link }) => {
                 rel="noopener noreferrer"
                 className="rounded-md bg-blue-600 px-4 py-2 font-medium hover:bg-blue-700 transition-colors duration-200"
               >
-                Live Demo <ExternalLink className="ml-2 inline-block h-5 w-5" />
+                Live Demo <ExternalLink className="ml-2 inline-block h-5 w-5" aria-hidden="true" />
               </a>
               <button
+                type="button"
                 className="rounded-md bg-gray-800 px-4 py-2 font-medium hover:bg-gray-700 transition-colors duration-200"
                 onClick={() => setIsOpen(false)}
               >

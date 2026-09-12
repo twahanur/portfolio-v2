@@ -80,6 +80,7 @@ export default function GlobalSearchModal() {
       {/* Search trigger button (for Navbar) */}
       <button
         onClick={() => setIsOpen(true)}
+        aria-label="Search portfolio"
         className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-900/60 dark:bg-slate-900/80 border border-slate-700/60 text-xs text-slate-400 hover:text-slate-200 hover:border-indigo-500/40 transition-all shadow-sm group"
       >
         <Search className="w-3.5 h-3.5 text-indigo-400 group-hover:scale-110 transition-transform" />
@@ -106,12 +107,17 @@ export default function GlobalSearchModal() {
                 className="flex-1 bg-transparent text-slate-100 text-sm focus:outline-none placeholder-slate-500"
               />
               {query && (
-                <button onClick={() => setQuery("")} className="text-slate-400 hover:text-slate-200">
+                <button
+                  onClick={() => setQuery("")}
+                  aria-label="Clear search query"
+                  className="text-slate-400 hover:text-slate-200"
+                >
                   <X className="w-4 h-4" />
                 </button>
               )}
               <button
                 onClick={() => setIsOpen(false)}
+                aria-label="Close search modal"
                 className="text-xs px-2 py-1 rounded bg-slate-800 text-slate-400 hover:text-slate-200"
               >
                 ESC

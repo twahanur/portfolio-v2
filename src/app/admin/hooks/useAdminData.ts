@@ -34,7 +34,7 @@ export function useAdminData<T>(
     } finally {
       setLoading(false);
     }
-  }, [errorMessage]);
+  }, [errorMessage, endpoint]);
 
   useEffect(() => {
     fetchData();

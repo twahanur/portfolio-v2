@@ -41,10 +41,20 @@ export default {
           "50%": { backgroundPosition: "100% 50%" },
           "100%": { backgroundPosition: "0% 50%" },
         },
+        floatSubtle: {
+          "0%, 100%": { transform: "translateY(0px)" },
+          "50%": { transform: "translateY(-6px)" },
+        },
+        scalePulse: {
+          "0%, 100%": { transform: "scale(1)" },
+          "50%": { transform: "scale(1.08)" },
+        },
       },
       animation: {
         tubelightFlicker: "tubelightFlicker 3s ease-in-out infinite",
         gradient: "gradient 8s linear infinite",
+        floatSubtle: "floatSubtle 3s ease-in-out infinite",
+        scalePulse: "scalePulse 2.5s ease-in-out infinite",
       },
     },
   },

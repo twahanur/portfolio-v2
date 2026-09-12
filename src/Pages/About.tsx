@@ -4,7 +4,9 @@
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable react/prop-types */
 /* eslint-disable react/display-name */
+/* eslint-disable @next/next/no-img-element */
 import { useEffect, memo, useMemo, useState } from "react";
+import Image from "next/image";
 import Magnet from "../components/AnimationComponents/Magnet";
 import {
   FileText,
@@ -53,42 +55,48 @@ const Header = memo(() => (
   </div>
 ));
 
-const ProfileImage = memo(({ src }: any) => (
-  <div className="flex justify-center lg:justify-end items-center sm:p-12 sm:py-0 sm:pb-0 p-0 py-2 pb-2">
-    <div className="relative group" data-aos="fade-up" data-aos-duration="1000">
-      {/* Optimized gradient backgrounds with reduced complexity for mobile */}
-      <div className="absolute -inset-6 opacity-[25%] z-0 hidden sm:block">
-        <div className="absolute inset-0 bg-gradient-to-r from-violet-600 via-indigo-500 to-purple-600 rounded-full blur-2xl animate-spin-slower" />
-        <div className="absolute inset-0 bg-gradient-to-l from-fuchsia-500 via-rose-500 to-pink-600 rounded-full blur-2xl animate-pulse-slow opacity-50" />
-        <div className="absolute inset-0 bg-gradient-to-t from-blue-600 via-cyan-500 to-teal-400 rounded-full blur-2xl animate-float opacity-50" />
-      </div>
+const ProfileImage = memo(({ src }: any) => {
+  const imgSrc = src || "/Photo.png";
+  return (
+    <div className="flex justify-center lg:justify-end items-center sm:p-12 sm:py-0 sm:pb-0 p-0 py-2 pb-2">
+      <div className="relative group" data-aos="fade-up" data-aos-duration="1000">
+        {/* Optimized gradient backgrounds with reduced complexity for mobile */}
+        <div className="absolute -inset-6 opacity-[25%] z-0 hidden sm:block">
+          <div className="absolute inset-0 bg-gradient-to-r from-violet-600 via-indigo-500 to-purple-600 rounded-full blur-2xl animate-spin-slower" />
+          <div className="absolute inset-0 bg-gradient-to-l from-fuchsia-500 via-rose-500 to-pink-600 rounded-full blur-2xl animate-pulse-slow opacity-50" />
+          <div className="absolute inset-0 bg-gradient-to-t from-blue-600 via-cyan-500 to-teal-400 rounded-full blur-2xl animate-float opacity-50" />
+        </div>
 
-      <div className="relative">
-        <div className="w-60 h-60 sm:w-80 sm:h-80 rounded-full overflow-hidden shadow-[0_0_40px_rgba(120,119,198,0.3)] transform transition-all duration-700 group-hover:scale-105">
-          <div className="absolute inset-0 border-4 border-white/20 rounded-full z-20 transition-all duration-700 group-hover:border-white/40 group-hover:scale-105" />
+        <div className="relative">
+          <div className="w-60 h-60 sm:w-80 sm:h-80 rounded-full overflow-hidden shadow-[0_0_40px_rgba(120,119,198,0.3)] transform transition-all duration-700 group-hover:scale-105">
+            <div className="absolute inset-0 border-4 border-white/20 rounded-full z-20 transition-all duration-700 group-hover:border-white/40 group-hover:scale-105" />
 
-          {/* Optimized overlay effects - disabled on mobile */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/40 z-10 transition-opacity duration-700 group-hover:opacity-0 hidden sm:block" />
-          <div className="absolute inset-0 bg-gradient-to-t from-purple-500/20 via-transparent to-blue-500/20 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-700 hidden sm:block" />
+            {/* Optimized overlay effects - disabled on mobile */}
+            <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/40 z-10 transition-opacity duration-700 group-hover:opacity-0 hidden sm:block" />
+            <div className="absolute inset-0 bg-gradient-to-t from-purple-500/20 via-transparent to-blue-500/20 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-700 hidden sm:block" />
 
-          <img
-            src={src}
-            alt="Twahanur Rahman - Full-Stack Web Developer"
-            className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:rotate-2"
-            loading="lazy"
-          />
+            <Image
+              src={imgSrc}
+              alt="Twahanur Rahman - Full-Stack Web Developer"
+              width={320}
+              height={320}
+              className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:rotate-2"
+              loading="lazy"
+              unoptimized={imgSrc.startsWith("http")}
+            />
 
-          {/* Advanced hover effects - desktop only */}
-          <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-700 z-20 hidden sm:block">
-            <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent transform -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
-            <div className="absolute inset-0 bg-gradient-to-bl from-transparent via-white/10 to-transparent transform translate-y-full group-hover:-translate-y-full transition-transform duration-1000 delay-100" />
-            <div className="absolute inset-0 rounded-full border-8 border-white/10 scale-0 group-hover:scale-100 transition-transform duration-700 animate-pulse-slow" />
+            {/* Advanced hover effects - desktop only */}
+            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-700 z-20 hidden sm:block">
+              <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent transform -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+              <div className="absolute inset-0 bg-gradient-to-bl from-transparent via-white/10 to-transparent transform translate-y-full group-hover:-translate-y-full transition-transform duration-1000 delay-100" />
+              <div className="absolute inset-0 rounded-full border-8 border-white/10 scale-0 group-hover:scale-100 transition-transform duration-700 animate-pulse-slow" />
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-));
+  );
+});
 
 const StatCard = memo(
   ({ icon: Icon, color, value, label, description, animation }: any) => (
@@ -137,11 +145,11 @@ const AboutPage = ({ profile: propProfile, cv: propCv, projects: propProjects, c
   const cvFetch = useFetchCV();
   const cv = propCv || cvFetch;
 
-  const [profile, setProfile] = useState({
-    name: "Twahanur Rahman",
-    bio: "self-dependent, enthusiastic, responsible, and deeply interested in learning new things. I work for mobile and web applications. At the moment, I am looking for a suitable opportunity that gives me a scope to utilize my creativity, knowledge, and skill.",
-    profilePictureUrl: "https://i.ibb.co.com/bjywV4Mn/twahanur-twahanur-rahman-twaha-thohanur-thohanur-rahman.png",
-  });
+  const [profile, setProfile] = useState(() => ({
+    name: propProfile?.name || "Twahanur Rahman",
+    bio: propProfile?.bio || "self-dependent, enthusiastic, responsible, and deeply interested in learning new things. I work for mobile and web applications. At the moment, I am looking for a suitable opportunity that gives me a scope to utilize my creativity, knowledge, and skill.",
+    profilePictureUrl: propProfile?.profilePictureUrl || "https://i.ibb.co.com/bjywV4Mn/twahanur-twahanur-rahman-twaha-thohanur-thohanur-rahman.png",
+  }));
 
   useEffect(() => {
     if (propProfile) {
@@ -180,16 +188,20 @@ const AboutPage = ({ profile: propProfile, cv: propCv, projects: propProjects, c
 
     if (propProjects && propProjects.length > 0) {
       pCount = propProjects.length;
-    } else {
-      const storedProjects = JSON.parse(localStorage.getItem("projects") || "[]");
-      pCount = storedProjects.length;
+    } else if (typeof window !== "undefined") {
+      try {
+        const storedProjects = JSON.parse(localStorage.getItem("projects") || "[]");
+        pCount = storedProjects.length;
+      } catch {}
     }
 
     if (propCertificates && propCertificates.length > 0) {
       cCount = propCertificates.length;
-    } else {
-      const storedCertificates = JSON.parse(localStorage.getItem("certificates") || "[]");
-      cCount = storedCertificates.length;
+    } else if (typeof window !== "undefined") {
+      try {
+        const storedCertificates = JSON.parse(localStorage.getItem("certificates") || "[]");
+        cCount = storedCertificates.length;
+      } catch {}
     }
 
     const startDate = new Date("2021-11-06");
@@ -290,26 +302,33 @@ const AboutPage = ({ profile: propProfile, cv: propCv, projects: propProjects, c
 
             <div className="flex flex-col lg:flex-row items-center lg:items-start gap-4 lg:gap-4 lg:px-0 w-full">
               <a
-                href={cvLink? cvLink : "#"}
+                href={cvLink ? cvLink : "#"}
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label="Download CV"
                 className="w-full lg:w-auto cursor-target"
               >
                 <Magnet magnetStrength={3} padding={40}>
                   <button
                     data-aos="fade-up"
                     data-aos-duration="800"
+                    aria-label="Download CV"
                     className="w-full lg:w-auto sm:px-6 py-2 sm:py-3 rounded-lg bg-gradient-to-r from-[#6366f1] to-[#a855f7] text-white font-medium transition-all duration-300 hover:scale-105 flex items-center justify-center lg:justify-start gap-2 shadow-lg hover:shadow-xl animate-bounce-slow "
                   >
                     <FileText className="w-4 h-4 sm:w-5 sm:h-5" /> Download CV
                   </button>
                 </Magnet>
               </a>
-              <a href="#Portofolio" className="w-full lg:w-auto cursor-target">
+              <a
+                href="#Portofolio"
+                aria-label="View Projects Section"
+                className="w-full lg:w-auto cursor-target"
+              >
                 <Magnet magnetStrength={3} padding={40}>
                   <button
                     data-aos="fade-up"
                     data-aos-duration="1000"
+                    aria-label="View Projects"
                     className="w-full lg:w-auto sm:px-6 py-2 sm:py-3 rounded-lg border border-[#a855f7]/50 text-[#a855f7] font-medium transition-all duration-300 hover:scale-105 flex items-center justify-center lg:justify-start gap-2 hover:bg-[#a855f7]/10 animate-bounce-slow delay-200"
                   >
                     <Code className="w-4 h-4 sm:w-5 sm:h-5" /> View Projects
@@ -322,7 +341,7 @@ const AboutPage = ({ profile: propProfile, cv: propCv, projects: propProjects, c
           <ProfileImage src={profile.profilePictureUrl} />
         </div>
 
-        <a href="#Portofolio">
+        <a href="#Portofolio" aria-label="View Portfolio Projects and Statistics">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-16 cursor-pointer">
             {statsData.map((stat) => (
               <StatCard key={stat.label} {...stat} />

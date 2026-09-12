@@ -16,9 +16,16 @@ const Magnet = ({
 }) => {
   const [isActive, setIsActive] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [isTouch, setIsTouch] = useState(false);
   const magnetRef = useRef(null);
 
   useEffect(() => {
+    const hasTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+    if (hasTouch) {
+      setIsTouch(true);
+      return;
+    }
+
     if (disabled) {
       setPosition({ x: 0, y: 0 });
       return;
@@ -51,6 +58,10 @@ const Magnet = ({
       window.removeEventListener("mousemove", handleMouseMove);
     };
   }, [padding, disabled, magnetStrength]);
+
+  if (isTouch) {
+    return <>{children}</>;
+  }
 
   const transitionStyle = isActive ? activeTransition : inactiveTransition;
 

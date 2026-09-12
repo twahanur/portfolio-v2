@@ -1,4 +1,5 @@
 /* eslint-disable react/prop-types */
+/* eslint-disable @next/next/no-img-element */
 
 import Link from 'next/link';
 import { BookText } from 'lucide-react';
@@ -59,10 +60,12 @@ const BlogCard = ({ Img, Title, Description, id }: any) => {
                 <Link
                   href={`/blog/${id}`}
                   onClick={handleDetails}
+                  aria-label={`Read full article: ${Title}`}
                   className="inline-flex items-center space-x-2 px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-slate-800 dark:text-white/90 border border-slate-200 dark:border-white/10 transition-all duration-200 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
                 >
                   <span className="text-sm font-medium">Read More</span>
-                  <BookText  className="w-4 h-4" />
+                  <span className="sr-only"> about {Title}</span>
+                  <BookText className="w-4 h-4" aria-hidden="true" />
                 </Link>
               ) : (
                 <span className="text-slate-500 dark:text-gray-500 text-sm">Details Not Available</span>

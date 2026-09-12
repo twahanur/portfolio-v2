@@ -1,6 +1,7 @@
 "use client";
 
 /* eslint-disable react/prop-types */
+/* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
 import { ExternalLink, ArrowRight } from "lucide-react";
 import { useState } from "react";
@@ -18,7 +19,10 @@ const CardProject = ({ Img, Title, Description, Link: ProjectLink, id }) => {
           <img
             src={Img}
             alt={Title || "Project"}
+            width={600}
+            height={375}
             loading="lazy"
+            decoding="async"
             onLoad={() => setImgLoaded(true)}
             className={`w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 ${
               imgLoaded ? "opacity-100" : "opacity-0"
@@ -36,9 +40,10 @@ const CardProject = ({ Img, Title, Description, Link: ProjectLink, id }) => {
               target="_blank"
               rel="noopener noreferrer"
               className="p-2 rounded-lg bg-black/50 backdrop-blur-md border border-white/10 text-white/80 hover:text-white hover:bg-black/70 transition-all duration-200"
-              title="Open Live Site"
+              title={`Open Live Site for ${Title}`}
+              aria-label={`Open Live Site for ${Title}`}
             >
-              <ExternalLink className="w-4 h-4" />
+              <ExternalLink className="w-4 h-4" aria-hidden="true" />
             </a>
           </div>
         )}
@@ -62,13 +67,14 @@ const CardProject = ({ Img, Title, Description, Link: ProjectLink, id }) => {
               target="_blank"
               rel="noopener noreferrer"
               className="text-xs text-indigo-400 hover:text-indigo-300 font-medium flex items-center gap-1.5 transition-colors"
+              aria-label={`Live demo for ${Title}`}
             >
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block" />
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block" aria-hidden="true" />
               Live
             </a>
           ) : (
             <span className="text-xs text-slate-600 flex items-center gap-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-slate-600 inline-block" />
+              <span className="w-1.5 h-1.5 rounded-full bg-slate-600 inline-block" aria-hidden="true" />
               No Demo
             </span>
           )}
@@ -77,10 +83,11 @@ const CardProject = ({ Img, Title, Description, Link: ProjectLink, id }) => {
             <Link
               href={`/project/${id}`}
               onClick={() => setPageTransitionLoading("project")}
+              aria-label={`View project details for ${Title}`}
               className="text-xs text-slate-400 hover:text-white font-medium flex items-center gap-1.5 px-3 py-1.5 rounded-md hover:bg-white/[0.06] transition-all duration-200"
             >
               View Details
-              <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+              <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" aria-hidden="true" />
             </Link>
           ) : null}
         </div>

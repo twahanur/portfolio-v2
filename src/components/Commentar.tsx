@@ -4,6 +4,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 /* eslint-disable react/display-name */
+/* eslint-disable @next/next/no-img-element */
 import React, { useState, useEffect, useRef, useCallback, memo } from 'react';
 import { MessageCircle, UserCircle2, Loader2, AlertCircle, Send, ImagePlus, X, User, MessageSquare } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';

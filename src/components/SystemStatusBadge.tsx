@@ -43,6 +43,8 @@ export default function SystemStatusBadge() {
     <div className="relative inline-block text-left">
       <button
         onClick={() => setIsOpen(!isOpen)}
+        aria-label="View live system operational status"
+        aria-expanded={isOpen}
         className="flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900/60 dark:bg-slate-900/80 backdrop-blur-md border border-slate-700/50 hover:border-emerald-500/40 text-xs font-medium text-slate-300 transition-all shadow-sm group"
         title="Click to view live Cloudflare Edge infrastructure health"
       >

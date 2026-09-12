@@ -8,10 +8,26 @@ import CardProject from "../components/CardProject";
 import BlogHeader from "../components/Blog/BlogHeader";
 import BlogCard from "../components/Blog/BlogCard";
 
+const formatBlogs = (data) => {
+  if (!data) return [];
+  return data.map((b) => ({
+    id: b.id,
+    Title: b.title,
+    Description: b.description,
+    Img: b.image,
+    Image: b.image,
+    Author: b.author,
+    Keywords: b.keywords || [],
+    PublishedAt: b.publishedAt,
+  }));
+};
+
 // Separate ShowMore/ShowLess button component
 const ToggleButton = ({ onClick, isShowingMore }) => (
   <button
+    type="button"
     onClick={onClick}
+    aria-label={isShowingMore ? "Show fewer articles" : "Show more articles"}
     className="
       px-3 py-1.5
       text-slate-700 dark:text-slate-300 
@@ -48,6 +64,7 @@ const ToggleButton = ({ onClick, isShowingMore }) => (
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
+        aria-hidden="true"
         className={`
           transition-transform 
           duration-300 
@@ -68,27 +85,12 @@ const ToggleButton = ({ onClick, isShowingMore }) => (
 );
 
 export default function FullWidthTabs({ blogs: propBlogs }) {
-  const [blogs, setBlogs] = useState([]);
+  const [blogs, setBlogs] = useState(() => (propBlogs ? formatBlogs(propBlogs) : []));
   const [showAllBlogs, setShowAllBlogs] = useState(false);
   const [initialItems, setInitialItems] = useState(6);
 
   useEffect(() => {
     setInitialItems(window.innerWidth < 768 ? 4 : 6);
-  }, []);
-
-
-
-  const formatBlogs = useCallback((data) => {
-    return data.map((b) => ({
-      id: b.id,
-      Title: b.title,
-      Description: b.description,
-      Img: b.image,
-      Image: b.image,
-      Author: b.author,
-      Keywords: b.keywords || [],
-      PublishedAt: b.publishedAt,
-    }));
   }, []);
 
   useEffect(() => {
@@ -116,7 +118,7 @@ export default function FullWidthTabs({ blogs: propBlogs }) {
     };
 
     fetchData();
-  }, [propBlogs, formatBlogs]);
+  }, [propBlogs]);
 
   const toggleShowMore = useCallback((type) => {
     if (type === "blogs") {

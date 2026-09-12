@@ -11,10 +11,42 @@ import Certificate from "../components/Certificate";
 import PortfolioHeader from "../components/Portfolio/PortfolioHeader";
 import PortfolioAppbar from "../components/Portfolio/PortfolioAppbar";
 
+const formatProjects = (data) => {
+  if (!data) return [];
+  return data.map((p) => {
+    const featuredImage = p.images?.find((img) => img.isFeatured) || p.images?.[0];
+    return {
+      id: p.id,
+      Title: p.title,
+      Description: p.description,
+      Link: p.live,
+      Github: p.code,
+      TechStack: p.tags ? p.tags.map((t) => typeof t === "object" && t.tag ? t.tag.name : t) : [],
+      Features: (p.metrics && p.metrics.length > 0) ? p.metrics : (p.features || []),
+      Img: featuredImage ? featuredImage.url : "",
+    };
+  });
+};
+
+const formatCertificates = (data) => {
+  if (!data) return [];
+  return data.map((c) => ({
+    id: c.id,
+    Img: c.imageUrl,
+    name: c.name,
+    issuer: c.issuer,
+    issueDate: c.issueDate,
+    credentialId: c.credentialId,
+    credentialUrl: c.credentialUrl,
+  }));
+};
+
 // Separate ShowMore/ShowLess button component
 const ToggleButton = ({ onClick, isShowingMore }) => (
   <button
+    type="button"
     onClick={onClick}
+    aria-label={isShowingMore ? "Show fewer items" : "Show more items"}
     className="
       px-3 py-1.5
       text-slate-300 
@@ -51,6 +83,7 @@ const ToggleButton = ({ onClick, isShowingMore }) => (
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
+        aria-hidden="true"
         className={`
           transition-transform 
           duration-300 
@@ -97,41 +130,13 @@ TabPanel.propTypes = {
 export default function FullWidthTabs({ projects: propProjects, certificates: propCertificates }) {
   const theme = useTheme();
   const [value, setValue] = useState(0);
-  const [projects, setProjects] = useState([]);
-  const [certificates, setCertificates] = useState([]);
+  const [projects, setProjects] = useState(() => (propProjects ? formatProjects(propProjects) : []));
+  const [certificates, setCertificates] = useState(() => (propCertificates ? formatCertificates(propCertificates) : []));
   const [showAllProjects, setShowAllProjects] = useState(false);
   const [showAllCertificates, setShowAllCertificates] = useState(false);
   const [initialItems, setInitialItems] = useState(6);
   useEffect(() => {
     setInitialItems(window.innerWidth < 768 ? 4 : 6);
-  }, []);
-
-  const formatProjects = useCallback((data) => {
-    return data.map((p) => {
-      const featuredImage = p.images?.find((img) => img.isFeatured) || p.images?.[0];
-      return {
-        id: p.id,
-        Title: p.title,
-        Description: p.description,
-        Link: p.live,
-        Github: p.code,
-        TechStack: p.tags ? p.tags.map((t) => typeof t === "object" && t.tag ? t.tag.name : t) : [],
-        Features: (p.metrics && p.metrics.length > 0) ? p.metrics : (p.features || []),
-        Img: featuredImage ? featuredImage.url : "",
-      };
-    });
-  }, []);
-
-  const formatCertificates = useCallback((data) => {
-    return data.map((c) => ({
-      id: c.id,
-      Img: c.imageUrl,
-      name: c.name,
-      issuer: c.issuer,
-      issueDate: c.issueDate,
-      credentialId: c.credentialId,
-      credentialUrl: c.credentialUrl,
-    }));
   }, []);
 
   useEffect(() => {
@@ -175,7 +180,7 @@ export default function FullWidthTabs({ projects: propProjects, certificates: pr
     };
 
     fetchData();
-  }, [propProjects, propCertificates, formatProjects, formatCertificates]);
+  }, [propProjects, propCertificates]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);

@@ -1,6 +1,7 @@
 "use client";
 
 /* eslint-disable react/prop-types */
+/* eslint-disable @next/next/no-img-element */
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import PropTypes from "prop-types";
 import { motion, LayoutGroup } from "framer-motion";
@@ -344,6 +345,7 @@ export default function Activities({ activities }) {
         >
           <IconButton
             onClick={() => setSelectedImage(null)}
+            aria-label="Close activity preview"
             sx={{
               position: "absolute",
               right: 16,
@@ -359,7 +361,7 @@ export default function Activities({ activities }) {
             }}
             size="large"
           >
-            <CloseIcon sx={{ fontSize: 24 }} />
+            <CloseIcon sx={{ fontSize: 24 }} aria-hidden="true" />
           </IconButton>
 
           {selectedImage && (
@@ -398,6 +400,15 @@ function BentoCard({ item, slotIdx, gridColumn, gridRow, onImageClick, isMobile 
       layoutId={`bento-slot-${slotIdx}`}
       layout="position"
       transition={SPRING}
+      role={item.image ? "button" : undefined}
+      tabIndex={item.image ? 0 : undefined}
+      aria-label={item.image ? `View full image for ${item.title || "activity"}` : undefined}
+      onKeyDown={(e) => {
+        if (item.image && (e.key === "Enter" || e.key === " ")) {
+          e.preventDefault();
+          onImageClick(item.image);
+        }
+      }}
       onClick={() => item.image && onImageClick(item.image)}
       style={{
         gridColumn: gridColumn,
@@ -416,6 +427,7 @@ function BentoCard({ item, slotIdx, gridColumn, gridRow, onImageClick, isMobile 
             alt={item.title || "Activity capture"}
             className="w-full h-full object-cover transition-transform duration-[800ms] ease-out group-hover:scale-[1.08]"
             loading="lazy"
+            decoding="async"
           />
           {/* Multi-layer gradient for deep text contrast */}
           <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/50 to-slate-950/10 group-hover:via-slate-950/40 transition-all duration-500" />
@@ -463,11 +475,14 @@ function BentoCard({ item, slotIdx, gridColumn, gridRow, onImageClick, isMobile 
               href={item.link}
               target="_blank"
               rel="noopener noreferrer"
+              aria-label={`View details for ${item.title || "activity"}`}
               className="inline-flex items-center gap-1 text-xs font-bold text-indigo-400 hover:text-purple-300 transition duration-200 group/link"
             >
-              Details
+              <span>Details</span>
+              <span className="sr-only"> about {item.title || "activity"}</span>
               <ExternalLink
                 size={12}
+                aria-hidden="true"
                 className="transition-transform duration-200 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5"
               />
             </a>

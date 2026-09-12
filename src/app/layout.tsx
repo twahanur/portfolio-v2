@@ -1,12 +1,9 @@
 import '../index.css';
-import 'katex/dist/katex.min.css';
 import type { Metadata, Viewport } from 'next';
+import Script from 'next/script';
 import StyledComponentsRegistry from '../lib/registry';
-import AiPortfolioAssistant from '../components/AiPortfolioAssistant';
 import { PortfolioProvider } from '../context/PortfolioContext';
-import TerminalModal from '../components/TerminalModal';
-import CustomContextMenu from '../components/CustomContextMenu';
-import VisitorTracker from '../components/VisitorTracker';
+import ClientWidgets from '../components/ClientWidgets';
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://twahanur.dev';
 
@@ -192,8 +189,20 @@ const jsonLdWebsite = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className="dark" suppressHydrationWarning>
+    <html lang="en" className="dark font-sans" suppressHydrationWarning>
       <head>
+        {/* Google Fonts: Non-blocking async loading to avoid chaining critical requests */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          rel="preload"
+          as="style"
+          href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+        />
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+        />
         <link rel="icon" type="image/png" href="/Photo.png" />
         <link rel="apple-touch-icon" href="/Photo.png" />
         <script
@@ -221,28 +230,40 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             `,
           }}
         />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function(c,l,a,r,i,t,y){
-                c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-                t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-                y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-              })(window, document, "clarity", "script", "${process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID || 'xvf7z4zj8f'}");
-            `,
-          }}
-        />
       </head>
       <body suppressHydrationWarning>
         <StyledComponentsRegistry>
           <PortfolioProvider>
-            <VisitorTracker />
             {children}
-            <AiPortfolioAssistant />
-            <TerminalModal />
-            <CustomContextMenu />
+            <ClientWidgets />
           </PortfolioProvider>
         </StyledComponentsRegistry>
+        <Script
+          id="clarity-script"
+          strategy="lazyOnload"
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function(){
+                function initClarity() {
+                  if (window._clarityInitialized) return;
+                  window._clarityInitialized = true;
+                  (function(c,l,a,r,i,t,y){
+                    c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+                    t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+                    y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+                  })(window, document, "clarity", "script", "${process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID || 'xvf7z4zj8f'}");
+                }
+                var events = ['scroll', 'mousemove', 'touchstart', 'pointerdown', 'keydown'];
+                function onUserInteract() {
+                  initClarity();
+                  events.forEach(function(e){ window.removeEventListener(e, onUserInteract); });
+                }
+                events.forEach(function(e){ window.addEventListener(e, onUserInteract, { passive: true, once: true }); });
+                setTimeout(initClarity, 5000);
+              })();
+            `,
+          }}
+        />
       </body>
     </html>
   );

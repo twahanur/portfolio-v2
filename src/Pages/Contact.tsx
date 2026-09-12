@@ -175,6 +175,7 @@ const ContactPage = () => {
                 {/* Email Row */}
                 <a 
                   href="mailto:twahanur.rahman@gmail.com" 
+                  aria-label="Send email to twahanur.rahman@gmail.com"
                   className="flex items-center gap-4 p-4 rounded-xl bg-slate-100/50 dark:bg-white/5 border border-slate-200 dark:border-white/10 hover:border-[#6366f1]/50 hover:bg-[#6366f1]/5 transition-all duration-300 group"
                 >
                   <div className="p-3 rounded-lg bg-[#6366f1]/10 text-[#6366f1] group-hover:bg-[#6366f1]/20 group-hover:scale-110 transition-all duration-300">
@@ -191,6 +192,7 @@ const ContactPage = () => {
                   href="https://wa.me/8801708902648" 
                   target="_blank" 
                   rel="noopener noreferrer" 
+                  aria-label="Chat on WhatsApp at +880 1708 902648"
                   className="flex items-center gap-4 p-4 rounded-xl bg-slate-100/50 dark:bg-white/5 border border-slate-200 dark:border-white/10 hover:border-green-500/50 hover:bg-green-500/5 transition-all duration-300 group"
                 >
                   <div className="p-3 rounded-lg bg-green-500/10 text-green-400 group-hover:bg-green-500/20 group-hover:scale-110 transition-all duration-300">

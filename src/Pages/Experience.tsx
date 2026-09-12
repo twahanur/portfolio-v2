@@ -1,5 +1,6 @@
 "use client";
 
+/* eslint-disable @next/next/no-img-element */
 import { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence, useScroll, useSpring, useTransform } from "framer-motion";
 import { ChevronDown, ChevronUp, ChevronRight, Calendar, MapPin } from "lucide-react";
@@ -70,43 +71,47 @@ const DEFAULT_EXPERIENCES = [
   },
 ];
 
+const formatExperiences = (exps) => {
+  if (!exps || exps.length === 0) return DEFAULT_EXPERIENCES;
+  return exps.map((exp, i) => {
+    const parts = exp.period ? exp.period.split(/\s*[-–—]\s*/) : [];
+    const startDate = parts[0] || exp.period || "";
+    const endDate = exp.isCurrent ? "Present" : parts[1] || "";
+    const periodStr =
+      startDate && endDate ? `${startDate} – ${endDate}` : exp.period || "";
+
+    return {
+      id: exp.id || `exp-${i}`,
+      company: exp.company || "Company",
+      role: exp.role || exp.position || "Developer",
+      period: periodStr,
+      isCurrent: exp.isCurrent || false,
+      location: exp.location || "Remote",
+      workMode: exp.workMode || "Full-time",
+      image: exp.image || FALLBACK_IMAGES[i % FALLBACK_IMAGES.length],
+      summary: exp.summary || exp.duties || "",
+      highlights:
+        exp.highlights && exp.highlights.length > 0
+          ? exp.highlights
+          : exp.summary
+          ? [exp.summary]
+          : [],
+      techStack: exp.techStack || exp.technologies || [],
+    };
+  });
+};
+
 export default function ExperiencePage({ experiences: propExperiences }) {
-  const [experiences, setExperiences] = useState([]);
+  const [experiences, setExperiences] = useState(() =>
+    propExperiences && propExperiences.length > 0
+      ? formatExperiences(propExperiences)
+      : DEFAULT_EXPERIENCES
+  );
   const [activeIdx, setActiveIdx] = useState(0);
 
   const containerRef = useRef(null);
   const timelineRef = useRef(null);
   const itemRefs = useRef([]);
-
-  const formatExperiences = (exps) => {
-    if (!exps || exps.length === 0) return DEFAULT_EXPERIENCES;
-    return exps.map((exp, i) => {
-      const parts = exp.period ? exp.period.split(/\s*[-–—]\s*/) : [];
-      const startDate = parts[0] || exp.period || "";
-      const endDate = exp.isCurrent ? "Present" : parts[1] || "";
-      const periodStr =
-        startDate && endDate ? `${startDate} – ${endDate}` : exp.period || "";
-
-      return {
-        id: exp.id || `exp-${i}`,
-        company: exp.company || "Company",
-        role: exp.role || exp.position || "Developer",
-        period: periodStr,
-        isCurrent: exp.isCurrent || false,
-        location: exp.location || "Remote",
-        workMode: exp.workMode || "Full-time",
-        image: exp.image || FALLBACK_IMAGES[i % FALLBACK_IMAGES.length],
-        summary: exp.summary || exp.duties || "",
-        highlights:
-          exp.highlights && exp.highlights.length > 0
-            ? exp.highlights
-            : exp.summary
-              ? [exp.summary]
-              : [],
-        techStack: exp.techStack || [],
-      };
-    });
-  };
 
   useEffect(() => {
     if (propExperiences && propExperiences.length > 0) {
@@ -235,6 +240,8 @@ export default function ExperiencePage({ experiences: propExperiences }) {
                           <img
                             src={exp.image}
                             alt={exp.company}
+                            loading="lazy"
+                            decoding="async"
                             className="w-full h-full object-cover"
                           />
                           <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent" />
@@ -343,14 +350,15 @@ export default function ExperiencePage({ experiences: propExperiences }) {
                           </span>
                         )}
                         <button
-                          aria-label="Toggle details"
+                          type="button"
+                          aria-label={`Toggle details for ${exp.company}`}
                           className={`p-1.5 rounded-lg transition-colors ${
                             isActive
                               ? "bg-lime-400/20 text-lime-400"
                               : "text-slate-400 group-hover:text-white"
                           }`}
                         >
-                          {isActive ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                          {isActive ? <ChevronUp size={18} aria-hidden="true" /> : <ChevronDown size={18} aria-hidden="true" />}
                         </button>
                       </div>
                     </div>

@@ -16,7 +16,17 @@ export default function robots(): MetadataRoute.Robots {
         ],
       },
       {
-        userAgent: 'Googlebot',
+        userAgent: [
+          'Googlebot',
+          'Bingbot',
+          'GPTBot',
+          'ChatGPT-User',
+          'ClaudeBot',
+          'Claude-Web',
+          'PerplexityBot',
+          'Applebot-Extended',
+          'CCBot',
+        ],
         allow: '/',
         disallow: [
           '/admin/',
@@ -29,3 +39,4 @@ export default function robots(): MetadataRoute.Robots {
     sitemap: `${siteUrl}/sitemap.xml`,
   };
 }
+

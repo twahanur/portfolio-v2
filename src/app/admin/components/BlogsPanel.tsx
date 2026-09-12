@@ -1,5 +1,6 @@
 "use client";
 
+/* eslint-disable @next/next/no-img-element */
 import { useState, useRef, useEffect } from "react";
 import { Blog } from "../types";
 import { adminRequest, uploadImage } from "@/lib/admin-api";

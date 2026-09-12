@@ -1,5 +1,6 @@
 "use client";
 
+/* eslint-disable @next/next/no-img-element */
 import React, { useEffect, useState } from "react";
 import { API_BASE_URL } from "../config/api";
 import { Github, Star, GitFork, Users, Code2, Activity, ExternalLink, Calendar } from "lucide-react";

@@ -7,19 +7,50 @@ import WelcomeScreen from "../../Pages/WelcomeScreen";
 import Navbar from "../Navbar";
 import AnimatedBackground from "../Background";
 import Home from "../../Pages/Home";
-import About from "../../Pages/About";
-import Portofolio from "../../Pages/Portofolio";
-import Activities from "../../Pages/Activities";
-import Blog from "../../Pages/Blog";
-import ContactPage from "../../Pages/Contact";
 import PropTypes from "prop-types";
-import Education from "../../Pages/Education";
-import Experience from "../../Pages/Experience";
-import TechStackPage from "../../Pages/TechStack";
-import GitHubContributionGraph from "../GitHubContributionGraph";
-import Footer from "../../Pages/Footer";
 import { usePortfolio } from "../../context/PortfolioContext";
 import "aos/dist/aos.css";
+
+// Dynamically import below-the-fold components to reduce initial JS payload & boost Performance score
+const About = dynamic(() => import("../../Pages/About"), {
+  ssr: true,
+  loading: () => <div className="min-h-[400px]" />,
+});
+const TechStackPage = dynamic(() => import("../../Pages/TechStack"), {
+  ssr: true,
+  loading: () => <div className="min-h-[300px]" />,
+});
+const GitHubContributionGraph = dynamic(
+  () => import("../GitHubContributionGraph"),
+  { ssr: false, loading: () => <div className="min-h-[200px]" /> }
+);
+const Experience = dynamic(() => import("../../Pages/Experience"), {
+  ssr: true,
+  loading: () => <div className="min-h-[300px]" />,
+});
+const Education = dynamic(() => import("../../Pages/Education"), {
+  ssr: true,
+  loading: () => <div className="min-h-[300px]" />,
+});
+const Portofolio = dynamic(() => import("../../Pages/Portofolio"), {
+  ssr: true,
+  loading: () => <div className="min-h-[400px]" />,
+});
+const Activities = dynamic(() => import("../../Pages/Activities"), {
+  ssr: true,
+  loading: () => <div className="min-h-[300px]" />,
+});
+const Blog = dynamic(() => import("../../Pages/Blog"), {
+  ssr: true,
+  loading: () => <div className="min-h-[300px]" />,
+});
+const ContactPage = dynamic(() => import("../../Pages/Contact"), {
+  ssr: true,
+  loading: () => <div className="min-h-[300px]" />,
+});
+const Footer = dynamic(() => import("../../Pages/Footer"), {
+  ssr: true,
+});
 
 const SplashCursor = dynamic(
   () => import("../AnimationComponents/SplashCursor"),
@@ -37,6 +68,7 @@ const ClickSpark = dynamic(
 const LandingPage = ({ showWelcome, setShowWelcome }) => {
   const { portfolioData, loadingProgress, isDataLoaded } = usePortfolio();
   const [isDesktop, setIsDesktop] = useState(false);
+  const [hasInteracted, setHasInteracted] = useState(false);
 
   // Mobile check
   useEffect(() => {
@@ -49,31 +81,39 @@ const LandingPage = ({ showWelcome, setShowWelcome }) => {
     return () => window.removeEventListener("resize", checkIsDesktop);
   }, []);
 
+  // Defer cursor animation bundle loading until user first moves mouse or clicks
+  useEffect(() => {
+    if (!isDesktop) return;
+    const onUserInteraction = () => {
+      setHasInteracted(true);
+      window.removeEventListener("mousemove", onUserInteraction);
+      window.removeEventListener("pointerdown", onUserInteraction);
+    };
+    window.addEventListener("mousemove", onUserInteraction, { passive: true });
+    window.addEventListener("pointerdown", onUserInteraction, { passive: true });
+    return () => {
+      window.removeEventListener("mousemove", onUserInteraction);
+      window.removeEventListener("pointerdown", onUserInteraction);
+    };
+  }, [isDesktop]);
+
   useEffect(() => {
     if (!showWelcome) {
-      // DO NOT call AOS.init() — it registers a debounced scroll handler
-      // that delays animations until scroll stops. The AOS CSS (aos/dist/aos.css)
-      // already defines all animation states via [data-aos] selectors.
-      // We just need to add 'aos-animate' class when elements enter viewport.
-
-      // Set global defaults on body (AOS CSS uses body[data-aos-*] for defaults)
       document.body.setAttribute("data-aos-easing", "ease-out-cubic");
       document.body.setAttribute("data-aos-duration", "500");
 
-      // IntersectionObserver fires INSTANTLY during scroll — zero debounce
       const observer = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
             if (entry.isIntersecting) {
               entry.target.classList.add("aos-animate");
-              observer.unobserve(entry.target); // once: true
+              observer.unobserve(entry.target);
             }
           });
         },
-        { rootMargin: "-50px 0px 0px 0px", threshold: 0.05 }
+        { rootMargin: "-30px 0px 0px 0px", threshold: 0.05 }
       );
 
-      // Observe all [data-aos] elements that aren't already animated
       const observeElements = () => {
         document.querySelectorAll("[data-aos]:not(.aos-animate)").forEach((el) => {
           observer.observe(el);
@@ -81,20 +121,52 @@ const LandingPage = ({ showWelcome, setShowWelcome }) => {
       };
 
       observeElements();
-
-      // MutationObserver to handle dynamically rendered sections
-      // (Education, Experience, TechStack return null until data loads)
-      const mutationObs = new MutationObserver(() => observeElements());
-      mutationObs.observe(document.body, { childList: true, subtree: true });
+      const timer = setTimeout(observeElements, 500);
 
       return () => {
+        clearTimeout(timer);
         observer.disconnect();
-        mutationObs.disconnect();
         document.body.removeAttribute("data-aos-easing");
         document.body.removeAttribute("data-aos-duration");
       };
     }
-  }, [showWelcome]);
+  }, [showWelcome, portfolioData]);
+
+  const pageContent = (
+    <>
+      <header>
+        <Navbar />
+      </header>
+      <AnimatedBackground />
+
+      <main id="main-content" className="relative z-10">
+        <Home profile={portfolioData.profile} skills={portfolioData.skills} />
+        <About
+          profile={portfolioData.profile}
+          cv={portfolioData.cv}
+          projects={portfolioData.projects}
+          certificates={portfolioData.certificates}
+        />
+        <TechStackPage
+          skills={portfolioData.skills}
+          skillCategories={portfolioData.skillCategories}
+        />
+        <div className="md:px-[10%] px-[5%] py-12 bg-slate-950/40 relative">
+          <GitHubContributionGraph />
+        </div>
+        <Experience experiences={portfolioData.experiences} />
+        <Education educations={portfolioData.educations} />
+        <Portofolio
+          projects={portfolioData.projects}
+          certificates={portfolioData.certificates}
+        />
+        <Activities activities={portfolioData.activities} />
+        <Blog blogs={portfolioData.blogs} />
+        <ContactPage />
+      </main>
+      <Footer />
+    </>
+  );
 
   return (
     <>
@@ -108,52 +180,26 @@ const LandingPage = ({ showWelcome, setShowWelcome }) => {
         )}
       </AnimatePresence>
 
-      {isDesktop && !showWelcome && (
+      {isDesktop && hasInteracted && !showWelcome && (
         <>
           <SplashCursor />
           <TargetCursor spinDuration={2} hideDefaultCursor={false} />
         </>
       )}
 
-      <ClickSpark
-        sparkColor="#fff"
-        sparkSize={10}
-        sparkRadius={65}
-        sparkCount={15}
-        duration={400}
-      >
-        <header>
-          <Navbar />
-        </header>
-        <AnimatedBackground />
-
-        <main id="main-content" className="relative z-10">
-          <Home profile={portfolioData.profile} skills={portfolioData.skills} />
-          <About
-            profile={portfolioData.profile}
-            cv={portfolioData.cv}
-            projects={portfolioData.projects}
-            certificates={portfolioData.certificates}
-          />
-          <TechStackPage
-            skills={portfolioData.skills}
-            skillCategories={portfolioData.skillCategories}
-          />
-          <div className="md:px-[10%] px-[5%] py-12 bg-slate-950/40 relative">
-            <GitHubContributionGraph />
-          </div>
-          <Experience experiences={portfolioData.experiences} />
-          <Education educations={portfolioData.educations} />
-          <Portofolio
-            projects={portfolioData.projects}
-            certificates={portfolioData.certificates}
-          />
-          <Activities activities={portfolioData.activities} />
-          <Blog blogs={portfolioData.blogs} />
-          <ContactPage />
-        </main>
-        <Footer />
-      </ClickSpark>
+      {isDesktop ? (
+        <ClickSpark
+          sparkColor="#fff"
+          sparkSize={10}
+          sparkRadius={65}
+          sparkCount={15}
+          duration={400}
+        >
+          {pageContent}
+        </ClickSpark>
+      ) : (
+        pageContent
+      )}
     </>
   );
 };

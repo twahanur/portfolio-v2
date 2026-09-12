@@ -5,6 +5,7 @@
 /* eslint-disable react/prop-types */
 
 import { useState, useMemo } from "react";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import Magnet from "../AnimationComponents/Magnet";
 import {
@@ -117,6 +118,7 @@ export default function HeroSection({ profile }: HeroSectionProps) {
           whileHover={{ scale: 1.25, rotate: index % 2 === 0 ? 12 : -12 }}
           whileTap={{ scale: 0.9 }}
           onClick={() => handleSocialClick(item.link)}
+          aria-label={item.label}
           className={`${className} cursor-target`}
           title={item.label}
         >
@@ -137,7 +139,7 @@ export default function HeroSection({ profile }: HeroSectionProps) {
       </h1>
 
       {/* ===== DIAGONAL LIGHT WAVE SWEEP ===== */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
+      <div className="absolute inset-0 pointer-events-none overflow-hidden z-0 hidden md:block">
         <div className="absolute -top-[60%] -left-[60%] w-[250%] h-[900px] bg-gradient-to-r from-transparent via-purple-500/10 to-transparent blur-3xl animate-diagonal-sweep" />
         <div className="absolute -top-[50%] -left-[50%] w-[230%] h-[600px] bg-gradient-to-r from-transparent via-indigo-500/10 to-transparent blur-2xl animate-diagonal-sweep-delayed" />
       </div>
@@ -179,11 +181,7 @@ export default function HeroSection({ profile }: HeroSectionProps) {
               <span className="text-[var(--text-primary)]">{titleParts.lFirstA}</span>
 
               {/* Lightning Bolt Accent */}
-              <motion.div
-                animate={{ scale: [1, 1.08, 1] }}
-                transition={{ repeat: Infinity, duration: 2.5, ease: "easeInOut" }}
-                className="inline-flex items-center justify-center text-purple-400"
-              >
+              <div className="inline-flex items-center justify-center text-purple-400 animate-scalePulse will-change-transform">
                 <svg
                   viewBox="0 0 24 24"
                   fill="none"
@@ -191,11 +189,12 @@ export default function HeroSection({ profile }: HeroSectionProps) {
                   strokeWidth="2.2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
+                  aria-hidden="true"
                   className="w-8 h-8 sm:w-14 sm:h-14 md:w-20 md:h-20 lg:w-28 lg:h-28 xl:w-32 xl:h-32 drop-shadow-[0_0_35px_rgba(168,85,247,0.65)]"
                 >
                   <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
                 </svg>
-              </motion.div>
+              </div>
 
               <span className="bg-gradient-to-r from-gray-200 via-gray-400 to-gray-600 bg-clip-text text-transparent">
                 {titleParts.lFirstB}
@@ -228,11 +227,7 @@ export default function HeroSection({ profile }: HeroSectionProps) {
               <span className="text-[var(--text-primary)]">{titleParts.lEndA}</span>
 
               {/* Robot Accent */}
-              <motion.div
-                animate={{ y: [0, -6, 0] }}
-                transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
-                className="inline-flex items-center justify-center text-amber-400"
-              >
+              <div className="inline-flex items-center justify-center text-amber-400 animate-floatSubtle will-change-transform">
                 <svg
                   viewBox="0 0 24 24"
                   fill="none"
@@ -240,6 +235,7 @@ export default function HeroSection({ profile }: HeroSectionProps) {
                   strokeWidth="2.2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
+                  aria-hidden="true"
                   className="w-8 h-8 sm:w-14 sm:h-14 md:w-20 md:h-20 lg:w-28 lg:h-28 xl:w-32 xl:h-32 drop-shadow-[0_0_35px_rgba(251,191,36,0.65)]"
                 >
                   <rect x="3" y="11" width="18" height="10" rx="2" />
@@ -248,7 +244,7 @@ export default function HeroSection({ profile }: HeroSectionProps) {
                   <path d="M12 2v5" />
                   <circle cx="12" cy="2" r="1.5" fill="currentColor" />
                 </svg>
-              </motion.div>
+              </div>
 
               <span className="bg-gradient-to-r from-gray-300 via-gray-500 to-gray-700 bg-clip-text text-transparent">
                 {titleParts.lEndB}
@@ -278,6 +274,7 @@ export default function HeroSection({ profile }: HeroSectionProps) {
         <Magnet magnetStrength={3} padding={30}>
           <a
             href="#About"
+            aria-label="Scroll to About section"
             className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 border border-white/10 text-[var(--text-primary)] flex items-center justify-center shadow-lg hover:scale-110 transition-transform cursor-pointer cursor-target"
             title="Scroll Down"
           >
@@ -297,7 +294,7 @@ export default function HeroSection({ profile }: HeroSectionProps) {
               setIsMobileCardOpen(false);
               setIsCardHovered(false);
             }}
-            className="fixed inset-0 bg-black/80 backdrop-blur-md z-[100] cursor-pointer flex items-center justify-center p-4"
+            className="fixed inset-0 bg-black/80 backdrop-blur-md z-[100] cursor-pointer flex sm:hidden items-center justify-center p-4"
           >
             {/* MOBILE CENTERED MODAL DIALOG */}
             <motion.div
@@ -313,6 +310,7 @@ export default function HeroSection({ profile }: HeroSectionProps) {
                   setIsMobileCardOpen(false);
                   setIsCardHovered(false);
                 }}
+                aria-label="Close details dialog"
                 className="absolute top-4 right-4 p-2 rounded-full bg-white/10 text-gray-300 hover:text-white"
               >
                 <X className="w-4 h-4" />
@@ -321,7 +319,14 @@ export default function HeroSection({ profile }: HeroSectionProps) {
               {/* Avatar Image */}
               <div className="relative w-24 h-24 rounded-full overflow-hidden border-2 border-purple-500/50 shadow-xl mb-3 bg-slate-900">
                 {avatarUrl ? (
-                  <img src={avatarUrl} alt={name} className="w-full h-full object-cover" />
+                  <Image
+                    src={avatarUrl}
+                    alt={name}
+                    width={96}
+                    height={96}
+                    className="w-full h-full object-cover"
+                    unoptimized={avatarUrl.startsWith("http")}
+                  />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center text-xs text-slate-400">
                     Hero Image
@@ -352,6 +357,7 @@ export default function HeroSection({ profile }: HeroSectionProps) {
                     <button
                       key={social.key}
                       onClick={() => handleSocialClick(social.link)}
+                      aria-label={social.label}
                       className="p-2 rounded-full bg-white/5 hover:bg-white/15 border border-white/10 text-white transition-all cursor-pointer"
                       title={social.label}
                     >
@@ -373,14 +379,21 @@ export default function HeroSection({ profile }: HeroSectionProps) {
       >
         {/* Vertical pill badge using theme colors */}
         <Magnet magnetStrength={3} padding={40}>
-          <div
-            onClick={() => setIsMobileCardOpen(!isMobileCardOpen)}
-            className="cursor-pointer cursor-target flex items-center bg-white/10 hover:bg-white/20 text-[var(--text-primary)] border border-white/15 backdrop-blur-xl rounded-r-2xl py-7 px-3 shadow-2xl transition-colors z-50"
+          <button
+            type="button"
+            aria-label="View availability and profile"
+            onClick={() => {
+              // Only toggle mobile modal on small screens (matches Tailwind sm: 640px breakpoint)
+              if (window.innerWidth < 640) {
+                setIsMobileCardOpen(!isMobileCardOpen);
+              }
+            }}
+            className="cursor-pointer cursor-target flex items-center bg-white/10 hover:bg-white/20 text-[var(--text-primary)] border border-white/15 backdrop-blur-xl rounded-r-2xl py-7 px-3 shadow-2xl transition-colors z-50 focus:outline-none"
           >
-            <div className="writing-mode-vertical uppercase font-mono text-[10px] sm:text-[11px] tracking-[0.3em] font-bold">
+            <span className="writing-mode-vertical uppercase font-mono text-[10px] sm:text-[11px] tracking-[0.3em] font-bold">
               AVAILABLE FOR OPPORTUNITY
-            </div>
-          </div>
+            </span>
+          </button>
         </Magnet>
 
         {/* DESKTOP HOVER CARD ONLY */}
@@ -396,18 +409,21 @@ export default function HeroSection({ profile }: HeroSectionProps) {
               {/* 1. HERO IMAGE */}
               <div className="relative w-[250px] md:w-[280px] h-[330px] md:h-[360px] rounded-[2.5rem] overflow-hidden border border-white/15 shadow-2xl shrink-0 z-10 bg-[var(--bg-secondary)]">
                 {avatarUrl ? (
-                  <img
+                  <Image
                     src={avatarUrl}
                     alt={name}
+                    width={280}
+                    height={360}
                     className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500"
+                    unoptimized={avatarUrl.startsWith("http")}
                   />
                 ) : (
                   <div className="w-full h-full bg-[var(--bg-secondary)] flex items-center justify-center text-[var(--text-secondary)] font-mono text-xs">
                     Hero Image
                   </div>
                 )}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-                <div className="absolute top-4 left-4 px-3 py-1 rounded-full bg-black/60 border border-emerald-500/40 backdrop-blur-md flex items-center gap-1.5 text-[10px] font-mono text-emerald-400">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
+                <div className="absolute top-4 left-4 px-3 py-1 rounded-full bg-black/60 border border-emerald-500/40 backdrop-blur-md flex items-center gap-1.5 text-[10px] font-mono text-emerald-400 pointer-events-none">
                   <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
                   <span>Available</span>
                 </div>
@@ -440,6 +456,7 @@ export default function HeroSection({ profile }: HeroSectionProps) {
                           whileHover={{ scale: 1.2, y: -3 }}
                           whileTap={{ scale: 0.95 }}
                           onClick={() => handleSocialClick(social.link)}
+                          aria-label={social.label}
                           className="p-2 rounded-full bg-white/5 hover:bg-white/15 border border-white/10 hover:border-purple-400/40 text-[var(--text-primary)] transition-all cursor-pointer cursor-target shadow-lg"
                           title={social.label}
                         >

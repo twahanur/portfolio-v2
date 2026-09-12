@@ -562,7 +562,7 @@ export default function SkillSpiderChart({ categories }: SkillSpiderChartProps) 
                     >
                       <div className="p-4">
                         <div className="text-[11px] font-mono font-bold text-indigo-300 uppercase tracking-wider mb-3 flex items-center gap-1.5">
-                          <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
+                          <Sparkles className="w-3.5 h-3.5 text-indigo-400" aria-hidden="true" />
                           <span>Technologies & Capabilities:</span>
                         </div>
 
@@ -581,6 +581,7 @@ export default function SkillSpiderChart({ categories }: SkillSpiderChartProps) 
                                 onClick={(e) => handleEndorseClick(skill.id, e)}
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
+                                aria-label={`Endorse ${skill.name}`}
                                 className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-900/90 border transition-all duration-200 cursor-pointer"
                                 style={{
                                   borderColor: defaultBorder,
@@ -590,15 +591,16 @@ export default function SkillSpiderChart({ categories }: SkillSpiderChartProps) 
                               >
                                 {IconComp && (
                                   <span
+                                    aria-hidden="true"
                                     style={{ color: skill.iconColor || skill.color || undefined }}
-                                    className="text-sm shrink-0"
+                                    className="text-sm shrink-0 flex items-center"
                                   >
-                                    <IconComp className="w-4 h-4" />
+                                    <IconComp className="w-4 h-4" aria-hidden="true" role="presentation" />
                                   </span>
                                 )}
                                 <span className="text-white font-medium">{skill.name}</span>
-                                <span className="ml-1 text-[10px] px-1.5 py-0.5 rounded-md bg-indigo-500/20 text-indigo-300 font-mono font-bold border border-indigo-500/30 group-hover:scale-110 transition-transform flex items-center gap-0.5">
-                                  👍 {skill.endorsements || 0}
+                                <span className="ml-1 text-[10px] px-1.5 py-0.5 rounded-md bg-indigo-500/20 text-indigo-300 font-mono font-bold border border-indigo-500/30 group-hover:scale-110 transition-transform flex items-center gap-0.5" aria-label={`${skill.endorsements || 0} endorsements`}>
+                                  <span aria-hidden="true">👍</span> {skill.endorsements || 0}
                                 </span>
                               </motion.button>
                             );

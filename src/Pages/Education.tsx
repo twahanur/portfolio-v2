@@ -1,5 +1,6 @@
 "use client";
 
+/* eslint-disable @next/next/no-img-element */
 import { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence, useScroll, useSpring, useTransform } from "framer-motion";
 import { ChevronDown, ChevronUp, ChevronRight, Calendar, GraduationCap, Award } from "lucide-react";
@@ -70,40 +71,44 @@ const DEFAULT_EDUCATIONS = [
   },
 ];
 
+const formatEducations = (edus) => {
+  if (!edus || edus.length === 0) return DEFAULT_EDUCATIONS;
+  return edus.map((edu, i) => ({
+    id: edu.id || `edu-${i}`,
+    examTitle: edu.examTitle || edu.title || "Degree / Qualification",
+    major: edu.major || edu.fieldOfStudy || "",
+    institute: edu.institute || edu.university || "Institution",
+    result: edu.result || edu.grade || "",
+    passingYear: edu.passingYear ? String(edu.passingYear) : "",
+    period: edu.passingYear ? `Class of ${edu.passingYear}` : edu.period || "",
+    duration: edu.duration || "",
+    image: edu.image || FALLBACK_EDUCATION_IMAGES[i % FALLBACK_EDUCATION_IMAGES.length],
+    summary:
+      edu.summary ||
+      (edu.major && edu.institute
+        ? `Pursued ${edu.examTitle || "studies"} focusing on ${edu.major} at ${edu.institute}.`
+        : ""),
+    highlights:
+      edu.highlights && edu.highlights.length > 0
+        ? edu.highlights
+        : edu.result
+        ? [`Achieved result: ${edu.result}`]
+        : [],
+    techStack: edu.techStack || edu.subjects || [],
+  }));
+};
+
 export default function EducationPage({ educations: propEducations }) {
-  const [educations, setEducations] = useState([]);
+  const [educations, setEducations] = useState(() =>
+    propEducations && propEducations.length > 0
+      ? formatEducations(propEducations)
+      : DEFAULT_EDUCATIONS
+  );
   const [activeIdx, setActiveIdx] = useState(0);
 
   const containerRef = useRef(null);
   const timelineRef = useRef(null);
   const itemRefs = useRef([]);
-
-  const formatEducations = (edus) => {
-    if (!edus || edus.length === 0) return DEFAULT_EDUCATIONS;
-    return edus.map((edu, i) => ({
-      id: edu.id || `edu-${i}`,
-      examTitle: edu.examTitle || edu.title || "Degree / Qualification",
-      major: edu.major || edu.fieldOfStudy || "",
-      institute: edu.institute || edu.university || "Institution",
-      result: edu.result || edu.grade || "",
-      passingYear: edu.passingYear ? String(edu.passingYear) : "",
-      period: edu.passingYear ? `Class of ${edu.passingYear}` : edu.period || "",
-      duration: edu.duration || "",
-      image: edu.image || FALLBACK_EDUCATION_IMAGES[i % FALLBACK_EDUCATION_IMAGES.length],
-      summary:
-        edu.summary ||
-        (edu.major && edu.institute
-          ? `Pursued ${edu.examTitle || "studies"} focusing on ${edu.major} at ${edu.institute}.`
-          : ""),
-      highlights:
-        edu.highlights && edu.highlights.length > 0
-          ? edu.highlights
-          : edu.result
-          ? [`Achieved result: ${edu.result}`]
-          : [],
-      techStack: edu.techStack || edu.subjects || [],
-    }));
-  };
 
   useEffect(() => {
     if (propEducations && propEducations.length > 0) {
@@ -251,14 +256,15 @@ export default function EducationPage({ educations: propEducations }) {
                           {edu.passingYear || edu.period}
                         </span>
                         <button
-                          aria-label="Toggle details"
+                          type="button"
+                          aria-label={`Toggle details for ${edu.institute}`}
                           className={`p-1.5 rounded-lg transition-colors ${
                             isActive
                               ? "bg-purple-400/20 text-purple-400"
                               : "text-slate-400 group-hover:text-white"
                           }`}
                         >
-                          {isActive ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                          {isActive ? <ChevronUp size={18} aria-hidden="true" /> : <ChevronDown size={18} aria-hidden="true" />}
                         </button>
                       </div>
                     </div>
@@ -408,6 +414,8 @@ export default function EducationPage({ educations: propEducations }) {
                           <img
                             src={edu.image}
                             alt={edu.institute || edu.examTitle}
+                            loading="lazy"
+                            decoding="async"
                             className="w-full h-full object-cover"
                           />
                           <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent" />

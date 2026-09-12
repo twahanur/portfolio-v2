@@ -83,8 +83,11 @@ const getCategoryIcon = (slug) => {
 };
 
 export default function TechStackPage({ skills: propSkills, skillCategories: propSkillCategories }) {
-  const [skillsData, setSkillsData] = useState({ skills: [], skillCategories: [] });
-  const [hasLoaded, setHasLoaded] = useState(false);
+  const [skillsData, setSkillsData] = useState(() => ({
+    skills: propSkills || [],
+    skillCategories: propSkillCategories || [],
+  }));
+  const [hasLoaded, setHasLoaded] = useState(() => Boolean(propSkills && propSkills.length > 0));
 
   useEffect(() => {
     if (propSkills || propSkillCategories) {

@@ -1,0 +1,26 @@
+# Twahanur Rahman - Full Developer Profile & AI Reference
+
+## Overview
+Twahanur Rahman is a Full-Stack Web Developer and Software Engineer with extensive experience in architecting modern web platforms, multi-tenant SaaS applications, REST and GraphQL APIs, and AI integrations.
+
+## Core Competencies
+- Web Applications: Next.js (App Router), React, TypeScript, Responsive Web Design, SSR & SSG Optimization
+- Server & APIs: NestJS, Node.js, Express, RESTful APIs, Microservices, WebSockets
+- Data & Storage: PostgreSQL, Redis Caching, MongoDB, Prisma, TypeORM
+- Infrastructure: Docker, Cloudflare Workers, CI/CD Pipelines, Linux Server Administration
+- Artificial Intelligence: Retrieval-Augmented Generation (RAG), LLM Application Development, Embedding Generation, Vector Search
+
+## Portfolio Sections
+- Home / Hero: Interactive developer summary, status, and expertise
+- About: Biography, experience summary, and skills breakdown
+- Tech Stack: Comprehensive list of languages, frameworks, databases, and DevOps tools
+- Projects: Case studies and deployed web applications
+- Experience & Education: Professional history and academic background
+- Certificates: Validated certifications and credentials
+- Blog: Technical articles and software engineering tutorials
+- Contact: Inquiries and collaboration opportunities
+
+## Official Links
+- Site: https://twahanur.dev
+- GitHub: https://github.com/Twahanur
+- LinkedIn: https://linkedin.com/in/twahanur

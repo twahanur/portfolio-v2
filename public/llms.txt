@@ -1,0 +1,23 @@
+# Twahanur Rahman
+
+> Full-Stack Developer specializing in multi-tenant SaaS architecture, RAG systems, and scalable backends with NestJS, Next.js, PostgreSQL, Docker & Redis.
+
+## About
+Twahanur Rahman is a software engineer based in Dhaka, Bangladesh, building modern web applications, high-performance APIs, microservices, and AI-powered systems.
+
+## Primary Tech Stack
+- Frontend: Next.js, React 19, TypeScript, Tailwind CSS, Framer Motion
+- Backend: Node.js, NestJS, Express.js, TypeScript
+- Databases: PostgreSQL, MongoDB, Redis
+- DevOps & Cloud: Docker, Cloudflare Workers, Vercel, Linux
+- AI & LLM: Retrieval-Augmented Generation (RAG), Gemini API, OpenAI API, LangChain
+
+## Key Projects
+- [Portfolio Website](https://twahanur.dev): Full-stack developer portfolio and technical blog
+- [GitHub Repositories](https://github.com/Twahanur): Open-source projects, microservices, and libraries
+
+## Optional
+- [Full LLM Context](https://twahanur.dev/llms-full.txt): Complete detailed profile, skill sets, and project portfolio
+- [LinkedIn](https://linkedin.com/in/twahanur): Professional career timeline and recommendations
+- [LeetCode Profile](https://leetcode.com/u/Twahanur/): Data structures and algorithm problem solving solutions
+

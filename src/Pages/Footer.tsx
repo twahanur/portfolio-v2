@@ -20,15 +20,15 @@ const Footer = () => {
         if (payload.success && payload.data?.profile) {
           const p = payload.data.profile;
           const socials = [];
-          if (p.github) socials.push({ icon: Github, link: p.github });
-          if (p.linkedin) socials.push({ icon: Linkedin, link: p.linkedin });
-          if (p.instagram) socials.push({ icon: Instagram, link: p.instagram });
-          if (p.facebook) socials.push({ icon: Facebook, link: p.facebook });
-          if (p.twitter) socials.push({ icon: Twitter, link: p.twitter });
-          if (p.youtube) socials.push({ icon: Youtube, link: p.youtube });
-          if (p.stackoverflow) socials.push({ icon: Globe, link: p.stackoverflow });
-          if (p.medium) socials.push({ icon: Globe, link: p.medium });
-          if (p.devto) socials.push({ icon: Globe, link: p.devto });
+          if (p.github) socials.push({ icon: Github, link: p.github, label: "GitHub" });
+          if (p.linkedin) socials.push({ icon: Linkedin, link: p.linkedin, label: "LinkedIn" });
+          if (p.instagram) socials.push({ icon: Instagram, link: p.instagram, label: "Instagram" });
+          if (p.facebook) socials.push({ icon: Facebook, link: p.facebook, label: "Facebook" });
+          if (p.twitter) socials.push({ icon: Twitter, link: p.twitter, label: "Twitter" });
+          if (p.youtube) socials.push({ icon: Youtube, link: p.youtube, label: "YouTube" });
+          if (p.stackoverflow) socials.push({ icon: Globe, link: p.stackoverflow, label: "StackOverflow" });
+          if (p.medium) socials.push({ icon: Globe, link: p.medium, label: "Medium" });
+          if (p.devto) socials.push({ icon: Globe, link: p.devto, label: "Dev.to" });
 
           setSocialLinks(socials);
         }

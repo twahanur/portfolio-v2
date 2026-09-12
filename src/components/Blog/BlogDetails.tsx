@@ -1,6 +1,7 @@
 "use client";
 
 /* eslint-disable react/no-unknown-property */
+/* eslint-disable @next/next/no-img-element */
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { ArrowLeft, Code2, Star, ChevronRight } from "lucide-react";
@@ -230,10 +231,12 @@ const BlogDetails = () => {
                               </div>
                             </div>
                             <button
+                              type="button"
                               onClick={() => {
                                 setPageTransitionLoading("blog");
                                 router.push(`/blog/${blog.id}`);
                               }}
+                              aria-label={`Read more about ${blog.Title || "article"}`}
                               className="text-sm text-blue-400 mt-3 hover:underline self-start"
                             >
                               Read More →

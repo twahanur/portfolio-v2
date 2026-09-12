@@ -30,7 +30,7 @@ const TypingEffect = () => {
         setIsTyping(true);
       }
     }
-  }, [charIndex, isTyping, wordIndex]);
+  }, [charIndex, isTyping, wordIndex, WORDS]);
   useEffect(() => {
     const timeout = setTimeout(
       handleTyping,
